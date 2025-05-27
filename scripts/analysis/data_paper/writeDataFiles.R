@@ -58,9 +58,11 @@ master_dictionary <- tribble(~variable, ~definition,
                              "nhdplus_comid", "NDHPlusV2 waterbody comid",
                              "hylak_id", "HydroLAKES unique id",
                              "nla07_site_id", "Unique ID assigned to lakes included in EPA's 2007 National Lakes Assessment.",
+                             "nla12_site_id", "Unique ID assigned to lakes included in EPA's 2012 National Lakes Assessment.",
+                             "nla22_site_id", "Unique ID assigned to lakes included in EPA's 2022 National Lakes Assessment.",
                              "gnis_id", "A permanent, unique number assigned by the Geographic Names Information System (GNIS) to a geographic feature name for the sole purpose of uniquely identifying that name application as a record in any information system database, dataset, file, or document",
                              "lagoslakeid", "Unique ID assigned to lakes included in the LAGOS dataset (https://lagoslakes.org/).",
-                             "nla12_site_id", "Unique ID assigned to lakes included in EPA's 2012 National Lakes Assessment.",
+                             "grand_id", "Unique ID assigned to lakes included in the Global Reservoir and Dam Database v1.3.",
                              "nid_id", "Unique ID assigned to dams in the USACE National Inventory of Dams dataset.",
                              "nla17_site_id", "Unique ID assigned to lakes included in EPA's 2017 National Lakes Assessment.",
                              
@@ -968,12 +970,21 @@ lake_scale_data <- list(
   
   # e.	Links to existing data
   # this needs to be long due to numerous nhdplus_comid, lagos, etc values per lake
-  read.csv(paste0(userPath, "data\\siteDescriptors\\surge_master_crosswalk_long_hollister.csv"), header = T) %>% 
+  read.csv(paste0(userPath, "data\\siteDescriptors\\crosswalk_long.csv"), header = T) %>% 
     select(-lake_name) %>% 
     # A few variables are duplicated in this dataset: nl07_site_id == lmorpho_nla07, lmorpho_comid == hylak_comid == nhdplus_comid
     # omit the ones we don't want (e.g. getting NLA07 from nl07_site_id variable; comid from nhdplus_comid variable)
     filter(!(join_id_name %in% c("lmorpho_comid", "lmorpho_nla07", "hylak_comid"))) %>% 
     mutate(join_id_name = replace(join_id_name, join_id_name == "nl07_site_id", "nla07_site_id")) %>%
+    # lagos lake id is currently presented as comid_match_lagoslakeid and poly_intersect_lagoslakeid,
+    # based on how the match was made. Collapse to a single lagoslakeid field and eliminate
+    # duplicates. See issue #162.
+    mutate(join_id_name = replace(join_id_name, join_id_name == "comid_match_lagoslakeid", "lagoslakeid"),
+           join_id_name = replace(join_id_name, join_id_name == "poly_intersect_lagoslakeid", "lagoslakeid")) %>%
+    # eliminate duplicate lagoslakeid values created when collapsing lagoslakeid
+    # values determined using polygon intersection or comid matching. In many cases,
+    # both methods returned the same match.
+    distinct() %>%
     rename(name = join_id_name,
            value = join_id) %>%
     mutate(units = NA),
