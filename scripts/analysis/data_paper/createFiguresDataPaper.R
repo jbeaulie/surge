@@ -224,7 +224,7 @@ unstab
 
 ## UPDATED:  Plot of Variables that Survey was Designed on
 
-lake.list.plot = read.csv("communications/manuscript/data_paper/3_lake_scale.csv") %>%
+lake.list.plot = read.csv("communications/manuscript/data_paper/8_lake_scale.csv") %>%
   filter(name %in% c("ag_eco9_nm",
                      "depth_cat",
                      "chla_cat",
@@ -238,7 +238,7 @@ lake.list.plot = read.csv("communications/manuscript/data_paper/3_lake_scale.csv
   select(-units, -study) %>%
   pivot_longer(values_to = "value", names_to = "name",
                cols = c(ag_eco9_nm, depth_cat, chla_cat)) %>%
-  left_join(read.csv("communications/manuscript/data_paper/7_emissions_lake.csv") %>%
+  left_join(read.csv("communications/manuscript/data_paper/5_emissions_lake.csv") %>%
               select(lake_id, ch4_diffusion_lake, ch4_ebullition_lake, co2_total_lake) %>%
               pivot_longer(values_to = "rate_hourly", names_to = "pathway",
                            cols = c(ch4_diffusion_lake, ch4_ebullition_lake, co2_total_lake))) %>%
