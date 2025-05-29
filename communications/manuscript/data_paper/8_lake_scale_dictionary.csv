@@ -29,8 +29,13 @@
 "intermittent","percent of reservoir classified as intermittent subsystem of riverine in the National Wetlands Inventory"
 "lower_perennial","percent of reservoir classified as lower perennial subsystem of riverine in the National Wetlands Inventory"
 "upper_perennial","percent of reservoir classified as upper perennial subsystem of riverine in the National Wetlands Inventory"
+<<<<<<< HEAD
 "emergent","percent of reservoir classified as emergent class, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory"
 "aquatic_bed","percent of reservoir classified as aquatic bed, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory"
+=======
+"emergent","percent of reservoir classified as emergent class or split-class, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory"
+"aquatic_bed","percent of reservoir classified as aquatic bed class or split-class, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory"
+>>>>>>> 34c51cd9e61248026521d419dd7dd202c43ed78e
 "year_completed","Year dam was completed"
 "e_i","Proportion of water entering a lake that leaves through evaporation, estimated from water isotope data"
 "sd_e_i","Standard deviation of repeated estimates of the proportion of water entering a lake that leaves through evaporation"

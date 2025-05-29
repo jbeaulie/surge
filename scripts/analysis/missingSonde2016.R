@@ -30,96 +30,44 @@ dat_2016_missing_sonde<-dat_2016 %>%
   filter(!uniqueid %in% dat2016sondeni) %>%
   filter(!uniqueid %in% ind2016)
 
-#Create sonde flag fields & Replace deep sonde NA values with shallow 
-# measurements for sites less than 1 meter deep
+# Update sonde flags & replace deep sonde NA values with shallow 
+# measurements for sites less than 1 meter deep. Update flags 
+# accordingly
 
-#Dissolved Oxygen
-dat_2016$deep_do_mg_flags <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_do_mg),
-  "I",
-  NA
-)
-dat_2016$deep_do_mg <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_do_mg),
-  dat_2016$shallow_do_mg,
-  dat_2016$deep_do_mg
-)
+dat_2016 <- dat_2016 %>%
+  mutate(
+    # Dissolved Oxygen
+    deep_do_mg = case_when(site_depth <= 1 & is.na(deep_do_mg) ~ shallow_do_mg,
+                           TRUE ~ deep_do_mg),
+    deep_do_mg_flags = case_when(site_depth <= 1 & is.na(deep_do_mg) ~ "I",
+                                TRUE ~ as.character(deep_do_mg_flags)),
+    # temperature
+    deep_temp = case_when(site_depth <= 1 & is.na(deep_temp) ~ shallow_temp,
+                          TRUE ~ deep_temp),
+    deep_temp_flags = case_when(site_depth <= 1 & is.na(deep_temp) ~ "I",
+                               TRUE ~ as.character(deep_temp_flags)),
+    # conductivity
+    deep_sp_cond = case_when(site_depth <= 1 & is.na(deep_sp_cond) ~ shallow_sp_cond,
+                             TRUE ~ deep_sp_cond),
+    deep_sp_cond_flags = case_when(site_depth <= 1 & is.na(deep_sp_cond) ~ "I",
+                                  TRUE ~ as.character(deep_sp_cond_flags)),
+    # chl a
+    deep_chla_sonde = case_when(site_depth <= 1 & is.na(deep_chla_sonde) ~ shallow_chla_sonde,
+                                TRUE ~ deep_chla_sonde),
+    deep_chla_sonde_flags = case_when(site_depth <= 1 & is.na(deep_chla_sonde) ~ "I",
+                                     TRUE ~ as.character(deep_chla_sonde_flags)),
+    # turb
+    deep_turb = case_when(site_depth <= 1 & is.na(deep_turb) ~ shallow_turb,
+                          TRUE ~ deep_turb),
+    deep_turb_flags = case_when(site_depth <= 1 & is.na(deep_turb) ~ "I",
+                               TRUE ~ as.character(deep_turb_flags)),
+    # ph
+    deep_ph = case_when(site_depth <= 1 & is.na(deep_ph) ~ shallow_ph,
+                        TRUE ~ deep_ph),
+    deep_ph_flags = case_when(site_depth <= 1 & is.na(deep_ph) ~ "I",
+                             TRUE ~ as.character(deep_ph_flags))
+  )
 
-#Temperature
-dat_2016$deep_temp_flags <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_temp),
-  "I",
-  NA
-)
-dat_2016$deep_temp <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_temp),
-  dat_2016$shallow_temp,
-  dat_2016$deep_temp
-)
-
-#Conductivity
-dat_2016$deep_sp_cond_flags <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_sp_cond),
-  "I",
-  NA
-)
-
-dat_2016$deep_sp_cond <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_sp_cond),
-  dat_2016$shallow_sp_cond,
-  dat_2016$deep_sp_cond
-)
-
-#Chlorophyll a
-dat_2016$deep_chla_sonde_flags <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_chla_sonde),
-  "I",
-  NA
-)
-
-dat_2016$deep_chla_sonde <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_chla_sonde),
-  dat_2016$shallow_chla_sonde,
-  dat_2016$deep_chla_sonde
-)
-
-#Turbidity
-dat_2016$deep_turb_flags <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_turb),
-  "I",
-  NA
-)
-
-dat_2016$deep_turb <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_turb),
-  dat_2016$shallow_turb,
-  dat_2016$deep_turb
-)
-
-#pH
-dat_2016$deep_ph_flags <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_ph),
-  "I",
-  NA
-)
-
-dat_2016$deep_ph <- ifelse(
-  dat_2016$site_depth <= 1 &
-    is.na(dat_2016$deep_ph),
-  dat_2016$shallow_ph,
-  dat_2016$deep_ph
-)
 
 #Now use the index site profiles to interpolate deep sonde data for sites >1m deep
 

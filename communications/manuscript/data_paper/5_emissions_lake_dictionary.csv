@@ -2,6 +2,7 @@
 "lake_id","Unique identifier for each waterbody"
 "visit","First (1) or second (2) site visit"
 "ch4_ebullition_lake","lakewide areal methane ebullition flux estimated using survey site weights"
+<<<<<<< HEAD
 "ch4_ebullition_units_lake","units for ch4_ebullition_lake"
 "ch4_diffusion_lake","lakewide areal methane diffusion flux estimated using survey site weights"
 "ch4_diffusion_units_lake","units for ch4_diffusion_lake"
@@ -13,6 +14,19 @@
 "co2_diffusion_units_lake","units for co2_diffusion_lake"
 "co2_total_lake","lakewide areal total carbon dioxide flux estimated using survey site weights"
 "co2_total_units_lake","units for co2_total_lake_units"
+=======
+"ch4_ebullition_lake_units","units for ch4_ebullition_lake_units"
+"ch4_diffusion_lake","lakewide areal methane diffusion flux estimated using survey site weights"
+"ch4_diffusion_lake_units","units for ch4_diffusion_lake"
+"ch4_total_lake","lakewide total methane flux estimated using survey site weights"
+"ch4_total_lake_units","units for ch4_total_lake"
+"co2_ebullition_lake","lakewide areal carbon dioxide ebullition flux estimated using survey site weights"
+"co2_ebullition_lake_units","units for co2_ebullition_lake"
+"co2_diffusion_lake","lakewide areal carbon dioxide diffuion flux estimated using survey site weights"
+"co2_diffusion_lake_units","units for co2_diffusion_lake"
+"co2_total_lake","lakewide areal total carbon dioxide flux estimated using survey site weights"
+"co2_total_lake_units","units for co2_total_lake_units"
+>>>>>>> 34c51cd9e61248026521d419dd7dd202c43ed78e
 "ch4_ebullition_std_error_lake","standard error of ch4_ebullition_lake"
 "ch4_diffusion_std_error_lake","standard error of ch4_diffusion_lake"
 "ch4_total_std_error_lake","standard error of ch4_total_lake"
@@ -37,7 +51,10 @@
 "co2_ebullition_ucb95pct_lake","upper bound 95 percent confidence interval for co2_ebullition_lake"
 "co2_diffusion_ucb95pct_lake","upper bound 95 percent confidence interval for co2_diffusion_lake"
 "co2_total_ucb95pct_lake","upper bound 95 percent confidence interval for co2_total_lake"
+<<<<<<< HEAD
 "buoyancy_frequency","Brunt-Väisälä frequency (N2), or center buoyancy frequency, calculated in RLakeAnalyzer"
 "buoyancy_frequency_units","units for buoyancy_frequency"
 "thermocline_depth","depth where the maximum change in temperature-based density was observed, calculated in RLakeAnalyzer"
 "thermocline_depth_units","units for thermocline_depth"
+=======
+>>>>>>> 34c51cd9e61248026521d419dd7dd202c43ed78e
