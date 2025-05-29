@@ -93,8 +93,8 @@ master_dictionary <- tribble(~variable, ~definition,
                              "intermittent", "percent of reservoir classified as intermittent subsystem of riverine in the National Wetlands Inventory",
                              "lower_perennial", "percent of reservoir classified as lower perennial subsystem of riverine in the National Wetlands Inventory",
                              "upper_perennial", "percent of reservoir classified as upper perennial subsystem of riverine in the National Wetlands Inventory",
-                             "emergent", "percent of reservoir classified as emergent class, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory",
-                             "aquatic_bed", "percent of reservoir classified as aquatic bed, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory",     
+                             "emergent", "percent of reservoir classified as emergent class or split-class, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory",
+                             "aquatic_bed", "percent of reservoir classified as aquatic bed class or split-class, can come from combination of lacustrine, palustrine, and riverine systems, in the National Wetlands Inventory",     
                              
                              # sedimentation
                              "sedimentation", "Total sedimentation rate.",
@@ -304,7 +304,7 @@ master_dictionary <- tribble(~variable, ~definition,
                              "n2o_sat_ratio", "Ratio of observed to equilibrium dissolved nitrous oxide concentration",
                              "ch4_sat_ratio", "Ratio of observed to equilibrium dissolved methane concentration",
                              "co2_sat_ratio", "Ratio of observed to equilibrium dissolved carbon dioxide concentration",
-                             "flags", "1: failed post-deployment calibration check or value was otherwise suspicious. L: value is < reporting limit but > minimum detection limit. ND: analyte not detected and minimum detection limit reported. H: holding time violation. S: sampled warmed during shipping",
+                             "flags", "l: interpolated sonde value. 1: failed post-deployment calibration check or value was otherwise suspicious. L: value is < reporting limit but > minimum detection limit. ND: analyte not detected and minimum detection limit reported. H: holding time violation. S: sampled warmed during shipping",
                              
 
                              # 8. site descriptors
@@ -1185,12 +1185,12 @@ ifelse (
 
 # write data
 write.csv(x = phyto_data, 
-          file = "communications/manuscript/data_paper/10_phyto_data.csv",
+          file = "communications/manuscript/data_paper/9_phyto_data.csv",
           row.names = FALSE)
 
 # write dictionary
 write.csv(x = phyto_dictionary, 
-          file = "communications/manuscript/data_paper/10_phyto_dictionary.csv",
+          file = "communications/manuscript/data_paper/9_phyto_dictionary.csv",
           row.names = FALSE)
 
 

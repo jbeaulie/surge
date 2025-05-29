@@ -7,7 +7,9 @@
 
 # 1. Merge 2016 and SuRGE data----------
 # Names in dat_2016, but not in all_obs
-names(dat_2016)[!(names(dat_2016) %in% names(all_obs))] # chamb_deply_date_time, site_wgt, site_stratum, site_eval_status, uniqueid
+# chamb_deply_date_time, site_wgt, site_stratum, site_eval_status, uniqueid
+names(dat_2016)[!(names(dat_2016) %in% names(all_obs))]         
+
 # names in all_obs, but not in dat_2016
 names(all_obs)[!(names(all_obs) %in% names(dat_2016))] # lots, eval_status is for points= 
 

@@ -102,7 +102,7 @@ dissolved_gas_k %>%
   geom_point()
 
 # 3.2 k600
-# 103 observations
+# 101 observations
 dissolved_gas_k %>%
   filter(!is.na(k_co2_600) | !is.na(k_ch4_600)) %>%
   summarize(n = n())
@@ -144,7 +144,6 @@ summary(dissolved_gas_k %>% # SuRGE data
           pull(k600))
 
 # k600 figure
-
 bind_rows(
   # literature data
   k600_lit,
@@ -172,7 +171,20 @@ bind_rows(
         panel.grid.minor = element_blank()) 
 
 ggsave(filename = "scripts/analysis/data_paper/k600.tiff", width = 3, height = 2, units = "in")
-  
+
+# 3.3 k600_ch4 vs k600_co2
+t.test(dissolved_gas_k$k_ch4_600, dissolved_gas_k$k_co2_600, paired = TRUE) # p = 0.12
+
+dissolved_gas_k %>%
+  rowwise() %>%
+  mutate(diff = k_ch4_600 - k_co2_600,
+         rpd = (diff / ((k_ch4_600 + k_co2_600) / 2) * 100)) %>%
+  ungroup %>%
+  summarize(diff = mean(diff, na.rm = TRUE),
+            rpd = mean(rpd, na.rm = TRUE))
+
+lm(k_ch4_600 ~ k_co2_600, data = dissolved_gas_k) %>%
+  summary()
 
 # 4. EBULLITION DEPLOYMENT TIMES
 # deployment times in fld_sheet are UTC. Probably want to report in 
@@ -231,9 +243,9 @@ get_data_sheet <- function(paths){
                                                  format = "%Y-%m-%d%H:%M:%S"),
                chamb_deply_date_time = as.POSIXct(x = paste0(chamb_deply_date, chamb_deply_time),
                                                   format = "%Y-%m-%d%H:%M:%S"))
-      }) %>%
+    }) %>%
     map_dfr(., bind_rows) # rbinds into one df
-    
+  
 }
 
 
@@ -259,8 +271,8 @@ fld_sheet_tm %>%
 
 fld_sheet_tm %>% 
   mutate(max_trap_duration = trap_rtrvl_date_time - trap_deply_date_time,
-    trap_deply_date_time = format(trap_deply_date_time, format = "%H:%M")) %>%
+         trap_deply_date_time = format(trap_deply_date_time, format = "%H:%M")) %>%
   filter(trap_deply_date_time == "20:17" | # double check max deployment time, confirmed
-         trap_deply_date_time == "07:31" | # double check min deployment time, confirmed
-         max_trap_duration  > 40) %>% # double check long deployments, confirmed
+           trap_deply_date_time == "07:31" | # double check min deployment time, confirmed
+           max_trap_duration  > 40) %>% # double check long deployments, confirmed
   print(n=Inf)

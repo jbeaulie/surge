@@ -1,0 +1,202 @@
+name,analyte_group,mdl,ql,lab,units,preservative,filtered,holding_time,year
+br,anions,0.02,0.05,CIN,mg_l,Stored at 4oC,Y,28 days,2021
+br,anions,0.008,0.05,CIN,mg_l,Stored at 4oC,Y,28 days,2022
+br,anions,0.008,0.05,CIN,mg_l,Stored at 4oC,Y,28 days,2023
+cl,anions,0.03,0.4597,CIN,mg_l,Stored at 4oC,Y,28 days,2021
+cl,anions,0.03,0.5,CIN,mg_l,Stored at 4oC,Y,28 days,2022
+cl,anions,0.03,0.5,CIN,mg_l,Stored at 4oC,Y,28 days,2023
+f,anions,0.005,0.05,CIN,mg_l,Stored at 4oC,Y,28 days,2021
+f,anions,0.007,0.05,CIN,mg_l,Stored at 4oC,Y,28 days,2022
+br,anions,0.041,0.1,ADA,mg_l,Stored at 4oC,Y,28 days,2021
+f,anions,0.007,0.05,CIN,mg_l,Stored at 4oC,Y,28 days,2023
+cl,anions,0.026,0.5,ADA,mg_l,Stored at 4oC,Y,28 days,2021
+so4,anions,0.025,0.423,CIN,mg_l,Stored at 4oC,Y,28 days,2021
+f,anions,0.014,0.1,ADA,mg_l,Stored at 4oC,Y,28 days,2021
+so4,anions,0.05,0.5,CIN,mg_l,Stored at 4oC,Y,28 days,2022
+so4,anions,0.151,0.5,ADA,mg_l,Stored at 4oC,Y,28 days,2021
+so4,anions,0.05,0.5,CIN,mg_l,Stored at 4oC,Y,28 days,2023
+br,anions,0.034,0.1,ADA,mg_l,Stored at 4oC,Y,28 days,2022
+cl,anions,0.068,0.5,ADA,mg_l,Stored at 4oC,Y,28 days,2022
+f,anions,0.035,0.1,ADA,mg_l,Stored at 4oC,Y,28 days,2022
+so4,anions,0.022,0.5,ADA,mg_l,Stored at 4oC,Y,28 days,2022
+br,anions,0.013,0.1,ADA,mg_l,Stored at 4oC,Y,28 days,2023
+cl,anions,0.015,0.5,ADA,mg_l,Stored at 4oC,Y,28 days,2023
+f,anions,0.011,0.1,ADA,mg_l,Stored at 4oC,Y,28 days,2023
+so4,anions,0.022,0.5,ADA,mg_l,Stored at 4oC,Y,28 days,2023
+al,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+al,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+al,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+al,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+as,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+as,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+as,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+as,metals,0.004,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+ba,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+ba,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+ba,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+ba,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+be,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+be,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+be,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+be,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+ca,metals,0.01,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+ca,metals,0.01,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+ca,metals,0.01,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+ca,metals,0.01,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+cd,metals,3.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+cd,metals,3.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+cd,metals,3.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+cd,metals,3.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+cr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+cr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+cr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+cr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+cu,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+cu,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+cu,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+cu,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+fe,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+fe,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+fe,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+fe,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+k,metals,0.3,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+k,metals,0.3,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+k,metals,0.3,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+k,metals,0.3,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+li,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+li,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+li,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+li,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+mg,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+mg,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+mg,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+mg,metals,0.005,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+mn,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+mn,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+mn,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+mn,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+na,metals,0.03,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+na,metals,0.03,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+na,metals,0.03,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+na,metals,0.03,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+ni,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+ni,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+ni,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+ni,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+p,metals,0.005,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+p,metals,0.005,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+p,metals,0.005,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+p,metals,0.005,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+pb,metals,0.002,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+pb,metals,0.002,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+pb,metals,0.002,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+pb,metals,0.002,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+s,metals,0.003,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+s,metals,0.003,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+s,metals,0.003,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+s,metals,0.003,20,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+sb,metals,0.003,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+sb,metals,0.003,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+sb,metals,0.003,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+sb,metals,0.003,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+si,metals,0.02,4,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+si,metals,0.02,4,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+si,metals,0.02,4,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+si,metals,0.02,4,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+sn,metals,0.001,2,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+sn,metals,0.001,2,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+sn,metals,0.001,2,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+sn,metals,0.001,2,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+sr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+sr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+sr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+sr,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+v,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+v,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+v,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+v,metals,0.001,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+zn,metals,5.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2020
+zn,metals,5.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2021
+zn,metals,5.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2022
+zn,metals,5.00E-04,0.5,CIN,mg_l,Acidified to solubilize metals prior to analysis; stored at room temperature,N,6 months,2023
+nh4,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2016
+no2,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2016
+no2_3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2016
+no3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2016
+op,nutrients,3,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2016
+tn,nutrients,25,30,CIN,ug_n_l,Stored at -20oC,N,28 days,2016
+tp,nutrients,5,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2016
+nh4,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2018
+no2,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2018
+no2_3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2018
+no3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2018
+op,nutrients,3,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2018
+tn,nutrients,25,30,CIN,ug_n_l,Stored at -20oC,N,28 days,2018
+tp,nutrients,5,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2018
+nh4,nutrients,1.71,10,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,28 days,2020
+no2,nutrients,1.2,50,ADA,ug_n_l,Not acidified; stored at 4oC,Y,48 hours,2020
+no2_3,nutrients,10,50,ADA,ug_n_l,Not acidified; stored at 4oC,Y,28 days,2020
+no3,nutrients,10,50,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,48 hours,2020
+op,nutrients,2,25,ADA,ug_p_l,Stored at 4oC,N,48 hours,2020
+tn,nutrients,6,100,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2020
+tp,nutrients,2,100,ADA,ug_p_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2020
+nh4,nutrients,1.71,10,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,28 days,2021
+nh4,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2021
+no2,nutrients,1.2,50,ADA,ug_n_l,Not acidified; stored at 4oC,Y,48 hours,2021
+no2,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2021
+no2_3,nutrients,10,50,ADA,ug_n_l,Not acidified; stored at 4oC,Y,28 days,2021
+no2_3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2021
+no3,nutrients,10,50,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,48 hours,2021
+no3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2021
+op,nutrients,2,25,ADA,ug_p_l,Stored at 4oC,N,48 hours,2021
+op,nutrients,3,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2021
+tn,nutrients,6,100,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2021
+tn,nutrients,25,30,CIN,ug_n_l,Stored at -20oC,N,28 days,2021
+tp,nutrients,2,100,ADA,ug_p_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2021
+tp,nutrients,5,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2021
+nh4,nutrients,32,100,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,28 days,2022
+nh4,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2022
+no2,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2022
+no2,nutrients,22,100,ADA,ug_n_l,Not acidified; stored at 4oC,Y,48 hours,2022
+no2_3,nutrients,21,100,ADA,ug_n_l,Not acidified; stored at 4oC,Y,28 days,2022
+no2_3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2022
+no3,nutrients,32,100,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,48 hours,2022
+op,nutrients,2,50,ADA,ug_p_l,Stored at 4oC,N,48 hours,2022
+op,nutrients,3,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2022
+tn,nutrients,61,100,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2022
+tn,nutrients,25,30,CIN,ug_n_l,Stored at -20oC,N,28 days,2022
+tp,nutrients,10,100,ADA,ug_p_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2022
+tp,nutrients,5,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2022
+nh4,nutrients,32,100,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,28 days,2023
+nh4,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2023
+no2,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2023
+no2,nutrients,6,100,ADA,ug_n_l,Not acidified; stored at 4oC,Y,48 hours,2023
+no2_3,nutrients,21,100,ADA,ug_n_l,Not acidified; stored at 4oC,Y,28 days,2023
+no2_3,nutrients,6,20,CIN,ug_n_l,Stored at -20oC,N,28 days,2023
+no3,nutrients,14,500,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,Y,48 hours,2023
+op,nutrients,2,50,ADA,ug_p_l,Stored at 4oC,N,48 hours,2023
+op,nutrients,3,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2023
+tn,nutrients,30,100,ADA,ug_n_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2023
+tn,nutrients,25,30,CIN,ug_n_l,Stored at -20oC,N,28 days,2023
+tp,nutrients,29,100,ADA,ug_p_l,Acidified to pH of <2 with H2SO4; stored cold at 4oC ,N,28 days,2023
+tp,nutrients,5,5,CIN,ug_p_l,Stored at -20oC,N,28 days,2023
+doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y,28 days,2016
+toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2016
+doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y,28 days,2018
+toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2018
+doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y,28 days,2019
+toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2019
+doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y,28 days,2020
+toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2020
+doc,organic,0.102,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,Y,7 days,2021
+doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y,28 days,2021
+toc,organic,0.102,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,N,7 days,2021
+toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2021
+doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y,28 days,2022
+doc,organic,0.049,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,Y,7 days,2022
+toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2022
+toc,organic,0.049,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,N,7 days,2022
+doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y,28 days,2023
+doc,organic,0.096,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,Y,7 days,2023
+toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2023
+toc,organic,0.096,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,N,7 days,2023

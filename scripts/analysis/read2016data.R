@@ -218,7 +218,22 @@ dat_2016 <- dat_2016 %>%
     no2_3_units = "ug_n_l",
     toc_units = "mg_c_l",
     tp_units = "ug_p_l",
-    op_units = "ug_p_l") %>%
+    op_units = "ug_p_l",
+  
+   # sonde flags
+   # placeholders, values entered below
+    deep_chla_sonde_flags = NA,
+    shallow_chla_sonde_flags = NA,
+    deep_do_mg_flags = NA,
+    shallow_do_mg_flags = NA,
+    deep_ph_flags = NA,
+    shallow_ph_flags = NA,
+    deep_sp_cond_flags = NA,
+    shallow_sp_cond_flags = NA,
+    deep_temp_flags = NA,
+    shallow_temp_flags = NA,
+    deep_turb_flags = NA,
+    shallow_turb_flags = NA) %>%
   
   # add lake_id
   left_join(lake.list.2016 %>% select(lake_id, eval_status_code_comment), by = c("lake_name" = "eval_status_code_comment")) %>%
@@ -296,6 +311,26 @@ dat_2016 %>%
 # site depth wasn't measured in first few lakes (oops) but we have bathymetry data
 # for those lakes. need to add depth estimates for 2016 lakes missing this measurement 
 # (1001, 1002, 1012, 1013, 1016, 1017). See estimateDepth2016.R
+
+# Populate sonde flags for post-deployment issues. Only two violations:
+# turbidity [5/26/16 (Thur) - 6/6/16 (Mon) campaign] and DO [8/4/16 (Thur) - 8/12/16 (Fri)]
+dat_2016 <- dat_2016 %>%
+  mutate(
+    # turbidity [5/26/16 (Thur) - 6/6/16 (Mon) campaign includes 1001 (Acton), 1012 (Cowan)
+    deep_turb_flags = case_when(
+      sample_date >= as.Date("2016-05-16") & sample_date <= as.Date("2016-06-06") ~ "1", # character
+      TRUE ~ deep_turb_flags),
+    shallow_turb_flags = case_when(
+      sample_date >= as.Date("2016-05-16") & sample_date <= as.Date("2016-06-06") ~ "1", # character
+      TRUE ~ shallow_turb_flags),
+    # DO [8/4/16 (Thur) - 8/12/16 (Fri)] campaign includes 1010 Cave Rune
+    deep_do_mg_flags = case_when(
+      sample_date >= as.Date("2016-08-04") & sample_date <= as.Date("2016-08-12") ~ "1", # character
+      TRUE ~ deep_do_mg_flags),
+    shallow_do_mg_flags = case_when(
+      sample_date >= as.Date("2016-08-04") & sample_date <= as.Date("2016-08-12") ~ "1", # character
+      TRUE ~ shallow_do_mg_flags))
+
 
 
 
