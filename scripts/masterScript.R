@@ -94,8 +94,6 @@ source("scripts/analysis/sonde_criteria.R") #edits dat object to remove unreason
 # Annualize emissions
 source("scripts/analysis/annualizeEmissions.R")
 
-# Implement sonde criteria 
-source("scripts/analysis/sonde_criteria.R")
 
 # Random
 #source("scripts/analysis/readGps.R") # inform how much of LGR time series to use per site? 
