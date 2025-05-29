@@ -61,30 +61,30 @@ miss207$nlacond <- nlacond
 
 for (i in 1:12) {
   fld_sheet$sp_cond_d[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- miss207$nlacond[i]
-  fld_sheet$sp_cond_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$sp_cond_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$temp_d[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- miss207$nlatemp[i]
-  fld_sheet$temp_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$temp_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$turb_d[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- miss207$nlaturb[i]
-  fld_sheet$turb_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$turb_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$ph_d[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- miss207$nlaph[i]
-  fld_sheet$ph_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$ph_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$chla_sonde_d[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- miss207$nlachl[i]
-  fld_sheet$chla_sonde_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$chla_sonde_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$do_mg_d[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- miss207$nlado[i]
-  fld_sheet$do_mg_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$do_mg_d_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   #and the shallow sites too
   fld_sheet$sp_cond_s[match(miss207$uniqueid[i],fld_sheet$uniqueid)] <-nla207$sp.cond.us.cm[1]
-  fld_sheet$sp_cond_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$sp_cond_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$temp_s[match(miss207$uniqueid[i],fld_sheet$uniqueid)] <-nla207$temp.C[1]
-  fld_sheet$temp_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$temp_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$turb_s[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- nla207$turbidity.ntu[1]
-  fld_sheet$turb_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$turb_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$ph_s[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- nla207$pH[1]
-  fld_sheet$ph_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$ph_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$chla_sonde_s[match(miss207$uniqueid[i], fld_sheet$uniqueid)]<- nla207$chl.a.ug.l[1]
-  fld_sheet$chla_sonde_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$chla_sonde_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$do_mg_s[match(miss207$uniqueid[i], fld_sheet$uniqueid)]<- nla207$do.mg.l[1]
-  fld_sheet$do_mg_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$do_mg_s_flags[match(miss207$uniqueid[i], fld_sheet$uniqueid)] <- "I"
 }
 
 #Now look at how many additional missing sonde data there are
@@ -155,17 +155,17 @@ missing_bottom_temp$uidmatch <- uidmatch
 
 for (i in 1:7) {
   fld_sheet$sp_cond_d[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$sp_cond_d[match(missing_bottom_temp$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$sp_cond_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$sp_cond_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$temp_d[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$temp_d[match(missing_bottom_temp$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$temp_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$temp_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$turb_d[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$turb_d[match(missing_bottom_temp$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$turb_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$turb_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$ph_d[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$ph_d[match(missing_bottom_temp$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$ph_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$ph_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$chla_sonde_d[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$chla_sonde_d[match(missing_bottom_temp$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$chla_sonde_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$chla_sonde_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$do_mg_d[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$do_mg_d[match(missing_bottom_temp$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$do_mg_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$do_mg_d_flags[match(missing_bottom_temp$uniqueid[i], fld_sheet$uniqueid)] <- "I"
 }
 
 ## Now interpolate the two missing sites for lake 70 by manually identifying analagous sites from same region
@@ -183,17 +183,17 @@ missing_70 <- data.frame(uniqueid, sitematch, depmatch, uidmatch)
 
 for (i in 1:2) {
   fld_sheet$sp_cond_d[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$sp_cond_d[match(missing_70$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$sp_cond_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$sp_cond_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$temp_d[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$temp_d[match(missing_70$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$temp_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$temp_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$turb_d[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$turb_d[match(missing_70$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$turb_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$turb_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$ph_d[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$ph_d[match(missing_70$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$ph_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$ph_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$chla_sonde_d[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$chla_sonde_d[match(missing_70$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$chla_sonde_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$chla_sonde_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "I"
   fld_sheet$do_mg_d[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- fld_sheet$do_mg_d[match(missing_70$uidmatch[i], fld_sheet$uniqueid)]
-  fld_sheet$do_mg_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "l"
+  fld_sheet$do_mg_d_flags[match(missing_70$uniqueid[i], fld_sheet$uniqueid)] <- "I"
 }
 
 #Replace deep sonde NA values with shallow measurements for sites less than 1 meter deep & flag those values
@@ -201,7 +201,7 @@ for (i in 1:2) {
 #Dissolved Oxygen
 fld_sheet$do_mg_d_flags <- ifelse(fld_sheet$site_depth <= 1 &
                                     is.na(fld_sheet$do_mg_d),
-                                  "l",
+                                  "I",
                                   fld_sheet$do_mg_d_flags)
 fld_sheet$do_mg_d <- ifelse(
   fld_sheet$site_depth <= 1 &
@@ -212,7 +212,7 @@ fld_sheet$do_mg_d <- ifelse(
 #Temperature
 fld_sheet$temp_d_flags <- ifelse(fld_sheet$site_depth <= 1 &
                                    is.na(fld_sheet$temp_d),
-                                 "l",
+                                 "I",
                                  fld_sheet$temp_d_flags)
 fld_sheet$temp_d <- ifelse(
   fld_sheet$site_depth <= 1 &
@@ -223,7 +223,7 @@ fld_sheet$temp_d <- ifelse(
 #Conductivity
 fld_sheet$sp_cond_d_flags <- ifelse(fld_sheet$site_depth <= 1 &
                                       is.na(fld_sheet$sp_cond_d),
-                                    "l",
+                                    "I",
                                     fld_sheet$sp_cond_d_flags)
 fld_sheet$sp_cond_d <- ifelse(
   fld_sheet$site_depth <= 1 &
@@ -235,7 +235,7 @@ fld_sheet$sp_cond_d <- ifelse(
 fld_sheet$chla_sonde_d_flags <- ifelse(
   fld_sheet$site_depth <= 1 &
     is.na(fld_sheet$chla_sonde_d),
-  "l",
+  "I",
   fld_sheet$chla_sonde_d_flags
 )
 fld_sheet$chla_sonde_d <- ifelse(
@@ -247,7 +247,7 @@ fld_sheet$chla_sonde_d <- ifelse(
 #Turbidity
 fld_sheet$turb_d_flags <- ifelse(fld_sheet$site_depth <= 1 &
                                    is.na(fld_sheet$turb_d),
-                                 "l",
+                                 "I",
                                  fld_sheet$turb_d_flags)
 fld_sheet$turb_d <- ifelse(
   fld_sheet$site_depth <= 1 &
@@ -258,7 +258,7 @@ fld_sheet$turb_d <- ifelse(
 #pH
 fld_sheet$ph_d_flags <- ifelse(fld_sheet$site_depth <= 1 &
                                  is.na(fld_sheet$ph_d),
-                               "l",
+                               "I",
                                fld_sheet$ph_d_flags)
 fld_sheet$ph_d <- ifelse(fld_sheet$site_depth <= 1 &
                            is.na(fld_sheet$ph_d),
