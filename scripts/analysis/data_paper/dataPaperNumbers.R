@@ -186,7 +186,7 @@ dissolved_gas_k %>%
 lm(k_ch4_600 ~ k_co2_600, data = dissolved_gas_k) %>%
   summary()
 
-# 4. EBULLITION DEPLOYMENT TIMES
+# 4. EBULLITION DEPLOYMENT TIMES-----------
 # deployment times in fld_sheet are UTC. Probably want to report in 
 # local time zone for paper. Read in all files, but this time don't
 # specify a time zone. R will retain the clock time from the spreadsheet
@@ -276,3 +276,56 @@ fld_sheet_tm %>%
            trap_deply_date_time == "07:31" | # double check min deployment time, confirmed
            max_trap_duration  > 40) %>% # double check long deployments, confirmed
   print(n=Inf)
+
+
+# 5. WATER CHEMISTRY FLAGS-------------
+# Number and percent of L and ND flags
+site_data %>%
+  filter(!(name %in% c("chla_sonde", "do", "ph", "sp_cond", "temp", "turbidity",
+                       "phycocyanin_sonde", "ch4_sat_ratio", "co2_sat_ratio", 
+                       "dissolved_ch4", "dissolved_co2", "dissolved_n2o", "n2o_sat_ratio"))) %>%
+  mutate(analyte_group = case_when(name %in% metals ~ "metals",
+                                   name %in% c("br", "cl", "f", "so4") ~ "anions",
+                                   name %in% c("chla_lab", "microcystin") ~ "algal_indicators",
+                                   name %in% c("nh4", "no2_3", "no2", "tn", "tp", "op", "no3") ~ "nutrients",
+                                   name %in% c("doc", "toc") ~ "organic carbon",
+                                   TRUE ~ "FLY YOU FOOLS")) %>%
+group_by(analyte_group) %>%
+  summarize(
+    # grepl required to capture instances of multiple flags in same cell (e.g. ND S)
+    nd_flag_n = sum(grepl("ND", flags), na.rm = TRUE),
+    nd_flag_percent = (sum(grepl("ND", flags), na.rm = TRUE) / n()) * 100,
+    L_flag_n = sum(grepl("L", flags), na.rm = TRUE),
+    L_flag_percent = (sum(grepl("L", flags), na.rm = TRUE) / n()) * 100)
+
+
+# Number and percent of samples affected by S and H flags
+site_data %>%
+  filter(!(name %in% c("chla_sonde", "do", "ph", "sp_cond", "temp", "turbidity",
+                       "phycocyanin_sonde", "ch4_sat_ratio", "co2_sat_ratio", 
+                       "dissolved_ch4", "dissolved_co2", "dissolved_n2o", "n2o_sat_ratio"))) %>%
+  mutate(analyte_group = case_when(name %in% metals ~ "metals",
+                                   name %in% c("br", "cl", "f", "so4") ~ "anions",
+                                   name %in% c("chla_lab", "microcystin") ~ "algal_indicators",
+                                   name %in% c("nh4", "no2_3", "no2", "tn", "tp", "op", "no3") ~ "nutrients",
+                                   name %in% c("doc", "toc") ~ "organic carbon",
+                                   TRUE ~ "FLY YOU FOOLS")) %>%
+  # If one sample had S or H issues, it is likely that multiple analytes are
+  # assigned the flag. For example, S would pertain to all samples in the cooler,
+  # so all nutrient analytes (e.g. no2_3, NH4, tn, tp...) would all have the S flag. 
+  # We don't want to count these analyte specific flags, rather we want to report a single
+  # S flag for nutrients. Logic is similar for H flags. Here were detect any S
+  # or H flags by sample (defined by lake_id, site_id, visit) and analyte group
+  group_by(analyte_group, lake_id, site_id, visit) %>%
+  summarize(
+    # any(grepl(...)) will return T if any values within group contain pattern, otherwise F 
+    s_flag = any(grepl("S", flags)), # grepl to capture instances of multiple flags in same cell (e.g. ND S)
+    h_flag = any(grepl("H", flags))) %>% # grepl to capture instances of multiple flags in same cell (e.g. ND H)
+  # Now we can add up how many samples x analyte group have each flag
+  group_by(analyte_group) %>%
+  summarize(s_flag_n = sum(s_flag, na.rm = TRUE),
+            s_flag_percent = (sum(s_flag, na.rm = TRUE) / n()) * 100,
+            h_flag_n = sum(h_flag, na.rm = TRUE),
+            h_flag_percent = (sum(h_flag, na.rm = TRUE) / n()) * 100)
+
+
