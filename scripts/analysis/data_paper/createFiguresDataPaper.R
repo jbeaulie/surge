@@ -259,6 +259,7 @@ ecoregion = ggplot() +
   scale_fill_discrete(labels = c(expression(CH[4]~diffusion), 
                                  expression(CH[4]~ebullition), 
                                  expression(total~CO[2]~emissions))) +
+  scale_fill_manual(values = c("#56B4E9","#009E73","#D55E00"))+
   theme_bw() +
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
@@ -283,6 +284,7 @@ depth = ggplot() +
   scale_fill_discrete(labels = c(expression(CH[4]~diffusion), 
                                  expression(CH[4]~ebullition), 
                                  expression(total~CO[2]~emissions))) +
+  scale_fill_manual(values = c("#56B4E9","#009E73","#D55E00"))+
   theme_bw() +
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
@@ -306,6 +308,7 @@ productivity = ggplot() +
   scale_fill_discrete(labels = c(expression(CH[4]~diffusion), 
                                  expression(CH[4]~ebullition), 
                                  expression(total~CO[2]~emissions))) +
+  scale_fill_manual(values = c("#56B4E9","#009E73","#D55E00"))+
   theme_bw() +
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
