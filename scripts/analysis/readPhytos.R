@@ -1,8 +1,8 @@
 ## Read in phytoplankton community composition info for SuRGE Lakes
-## Received from Avery Tatters on 3/14/2025
+## Received from Avery Tatters on 6/3/2025
 
 phyto_data <-  read_excel(paste0(userPath,
-                                 "data/algalIndicators/SuRGE Taxonomy 2021-23 v4.xlsx"), 
+                                 "data/algalIndicators/SuRGE Taxonomy 2021-23 v5.xlsx"), 
                           sheet = "SuRGE Taxonomy- 2021-23") %>%
   janitor::clean_names() %>%
   select(site_id, year_col, algal_group, phylum,class, order, family, genus, density) %>%
