@@ -1148,7 +1148,7 @@ write.csv(x = lake_scale_dictionary,
 
 # 9. PHYTOPLANKTON-------------------
 phyto_data <-  read_excel(paste0(userPath,
-                                 "data/algalIndicators/SuRGE Taxonomy 2021-23 v4.xlsx"), 
+                                 "data/algalIndicators/SuRGE Taxonomy 2021-23 v5.xlsx"), 
                           sheet = "SuRGE Taxonomy- 2021-23") %>%
   janitor::clean_names() %>%
   select(site_id, year_col, algal_group, phylum,class, order, family, genus, density) %>%
