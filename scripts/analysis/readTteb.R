@@ -98,29 +98,33 @@ tteb.prelim.toc <- read_excel(
   mutate(lab_id = str_extract(lab_id, "[0-9]+") %>% # remove non-numeric
            as.numeric()) # make numeric
 
-# Vectors of analyte names, grouped by reporting limit
-analytes_0.005 <- "no2" 
-analytes_0.006 <- "no3"
-analytes_0.007 <- "f"  # this is mdl
-analytes_0.008 <- "br" # this is mdl
-analytes_0.011 <- "po4" 
-analytes_0.03 <- "cl"  # this is mdl
-analytes_0.05 <- "so4" # this is mdl
-# lowest standard is 0.5 for these (e-mail from Eugenia Riddick on 9/30/2022)
-analytes_0.5 <- c("al", "as", "ba", "be", "ca", "cd", "cr", "cu", "fe", "k",  "li", 
-                  "mg", "mn", "na", "ni", "pb", "sb", "sr", "v", "zn") 
-analytes_1 <-c("toc", "doc") # lowest standard, this is RL
-analytes_2 <- "sn" # lowest standard, this is RL
-analytes_4 <- "si" # lowest standard, this is RL
-analytes_20 <- c("s", "p") # lowest standard, this is RL
-analyte_names <- c(analytes_0.005, analytes_0.006, analytes_0.007, 
-                   analytes_0.008, analytes_0.011, analytes_0.03,
-                   analytes_0.05, analytes_0.5, 
-                   analytes_1, analytes_2, analytes_4, analytes_20)
+# Create dataframe of analyte detection and reporting limits
+limits <- tibble(
+  # Analyte vector
+  analyte = c("al", "as", "ba", "be", "ca", "cd", "cr", "cu", "fe", "k", 
+              "li", "mg", "mn", "na", "ni", "pb", "p", "sb", "si", "sn", 
+              "sr", "s", "v", "zn", 
+              "no2", "no3", "f", "br",  
+              "cl", "so4", "toc", "doc"),
+  
+  # Detection limit vector
+  detection_limit = c(0.004, 0.004, 0.001, 0.005, 0.010, 0.0003, 0.001, 0.001, 
+                      0.001, 0.3, 0.005, 0.005, 0.001, 0.03, 0.001, 0.002, 
+                      0.005, 0.003, 0.020, 0.001, 0.001, 0.003, 0.001, 0.0005,
+                      0.005, 0.006, 0.007, 0.008, 0.03, 0.05, 0.05, 0.05),
+  
+  # Reporting limit vector
+  reporting_limit = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+                      0.5, 0.5, 0.5, 0.5, 0.5, 20.0, 0.5, 4.0, 2.0, 0.5, 20, 
+                      0.5, 0.5, 0.05, 0.05, 0.05, 0.05, 0.5, 0.5, 1, 1),
+)
+
 
 tteb <- bind_rows(tteb.BEAULIEU, tteb.SURGE2021, tteb.SURGE2022, 
                   tteb.SURGE2023) %>% 
   janitor::clean_names() %>%
+  # Remove PO4 (not used)
+  select(-po4i_cas_p) %>%
   rename_with(~ if_else( # rename any column names containing an underscore _
     str_detect(., "_"), str_extract(., "^[^_]*"), .)) %>% # keep chars before _
   rename_with(~ if_else( # rename any column names containing a number
@@ -141,46 +145,37 @@ tteb <- bind_rows(tteb.BEAULIEU, tteb.SURGE2021, tteb.SURGE2022,
   # updated with re-run value.  This is the case for labid 203173.
   mutate(across(where(is.numeric), # replace lab's placeholder numbers with 'NA'
                 ~ na_if(., 9999999999999990.000))) %>%
-  # create 'flag' columns for every analyte to flag observations < det. limit
-  mutate(across(ends_with(analyte_names), # nice code Joe!
-                ~ if_else(. < 0 , "ND", ""), # bd reported as -detection limit
-                .names = "{col}_flag")) %>%
-  # create 'qual' for hold time violations
-  mutate(across(ends_with(analyte_names), 
-                ~ if_else(str_detect(flag, "H"), "H", ""),
-                .names = "{col}_qual")) %>%
-  # create 'bql' columns to flag observations < reporting limit. 
-  mutate(across(contains(analyte_names) & !ends_with(c("flag", "qual", "sampid")), 
-                ~ case_when(
-                  cur_column() %in% analytes_0.005 & . < 0.005 & . > 0  ~ "L", 
-                  cur_column() %in% analytes_0.006 & . < 0.006 & . > 0  ~ "L",
-                  cur_column() %in% analytes_0.007 & . < 0.007 & . > 0  ~ "L",
-                  cur_column() %in% analytes_0.008 & . < 0.008 & . > 0  ~ "L",
-                  cur_column() %in% analytes_0.011 & . < 0.011 & . > 0  ~ "L",
-                  cur_column() %in% analytes_0.03 & . < 0.03 & . > 0  ~ "L",
-                  cur_column() %in% analytes_0.05 & . < 0.05 & . > 0  ~ "L",
-                  cur_column() %in% analytes_0.5 & . < 0.5 & . > 0 ~ "L", 
-                  cur_column() %in% analytes_1 & . < 1 & . > 0 ~ "L",
-                  cur_column() %in% analytes_2 & . < 2 & . > 0 ~ "L", 
-                  cur_column() %in% analytes_4 & . < 4 & . > 0 ~ "L", 
-                  cur_column() %in% analytes_20 & . < 20 & . > 0  ~ "L", 
-                  TRUE ~ ""),
-                .names = "{col}_bql")) %>%
-  # create 'units' columns. Most units in mg/L 
-  mutate(across(ends_with(analyte_names) & !contains("qual"), # 
-                ~ "mg_l", 
-                .names = "{col}_units")) %>%
-  mutate(toc_units = "mg_c_l") %>% # TOC is the exception
-  mutate(across(al:so4, # make all values positive. absolute value of - detection limit
-                ~ abs(.))) %>%
-  select(order(colnames(.))) %>% # alphabetize column names
-  select(lab_id, sampid, colldate, flag, 
-         comment, everything()) %>% # put these columns first
+  
+  # pivot longer to apply flags 
+  pivot_longer(cols = where(is.numeric) & !lab_id, names_to = "analyte") %>% 
+  left_join(limits, by = "analyte") %>% 
+  mutate(
+    qual = case_when(
+      str_detect(flag, "H") ~ "H",
+      .default = ""), 
+    flag = case_when(
+      value < detection_limit ~ "ND", 
+      .default = ""), 
+    bql = case_when(
+      value >= detection_limit & value < reporting_limit ~ "L",
+      .default = ""), 
+    value = abs(value)) %>% 
   # extra shallow collected.  See note in ttebSampleIds.xlsx
   # and chemistry065NARtoCIN06September2022.pdf.  Easier
   # to delete than integrate into analysis
   filter(!(lab_id == 214171),
-         !(lab_id == 0)) # lab qaqc sample 
+         !(lab_id == 0)) %>% # lab qaqc sample 
+  unite(flags, flag, bql, qual, sep = " ") %>%
+  mutate(flags = str_squish(flags)) %>%
+  # remove _limit columns 
+  select(-detection_limit, -reporting_limit) %>%
+  # Pivot wider with analytes and _flags as columns 
+  pivot_wider(
+    names_from = analyte,
+    values_from = c(value, flags),
+    names_glue = "{analyte}_{.value}") %>%
+  # Get rid of "_value" in column names
+  rename_with(~ str_remove(., "_value"))
 
 # Add the tteb prelim data, which already has matching column names
 tteb <- bind_rows(tteb, tteb.prelim.toc, tteb.prelim.anions.ic)
@@ -255,13 +250,8 @@ nrow(tteb.all) # 849 records [3/20/2025]
 tteb.all <- tteb.all %>%
   mutate(doc = case_when(analyte == "doc" ~ toc,
                          TRUE ~ NA_real_),
-         doc_units = "mg_c_l",
-         doc_flag = case_when(analyte == "doc" ~ toc_flag,
-                              TRUE ~ ""),
-         doc_qual = case_when(analyte == "doc" ~ toc_qual,
-                              TRUE ~ ""),
-         doc_bql = case_when(analyte == "doc" ~ toc_bql,
-                             TRUE ~ "")) %>%
+         doc_flags = case_when(analyte == "doc" ~ toc_flags,
+                               TRUE ~ "")) %>%
   mutate(toc = case_when(analyte == "doc" ~ NA_real_,
                          TRUE ~ toc)) %>%
   # Remove shipping_notes; they're added in mergeChemistry.R
@@ -319,20 +309,18 @@ tteb.all <- tteb.all %>%
       x %>% select(lake_id, site_id, sample_depth, sample_type, visit, contains("toc")) # select toc stuff
     } else if (unique(x$analyte == "anions")) { # if contains anions
       x %>% select(lake_id, site_id, sample_depth, sample_type, visit,
-                   f, f_bql, f_flag, f_qual, f_units,
-                   cl, cl_bql, cl_flag, cl_qual, cl_units,
-                   br, br_bql, br_flag, br_qual, br_units,
-                   so4, so4_bql, so4_flag, so4_qual, so4_units)
+                   f, f_flags, 
+                   cl, cl_flags, 
+                   br, br_flags, 
+                   so4, so4_flags)
     } else if (unique(x$analyte == "metals")) { # if contains metals
       x %>% select(lake_id, site_id, sample_depth, sample_type, visit,
-                   s, s_flag, s_qual, 
-                   s_bql, s_units, # if s in matches, grabs too many variables
+                   s, s_flags, # if s in matches, grabs too many variables
                    matches("^(al|as|ba|be|ca|cd|cr|cu|fe|k|li|mg|mn|na|ni|p|pb|sb|si|sn|sr|v|zn)")) # select metals stuff
     }) %>%
   reduce(., full_join) # merge on lake_id, site_id, sample_depth, sample_type, visit
 
 dim(tteb.all) #333 rows.  Good, reduced from 847 to 335.  [5/18/2024]
-
 
 
 
@@ -342,64 +330,29 @@ tteb.all <- tteb.all %>%
   mutate(site_id = as.numeric(
     gsub(".*?([0-9]+).*", "\\1", site_id))) %>% # remove non numeric chars
   # rename the toc, doc, and anion fields to enable a clean join with other objects 
-  rename(tteb.toc = toc, 
-         tteb.doc = doc, 
-         tteb.toc_units = toc_units, 
-         tteb.doc_units = doc_units,
-         tteb.f = f,
-         tteb.f_units = f_units,
-         tteb.cl = cl,
-         tteb.cl_units = cl_units,
-         tteb.br = br,
-         tteb.br_units = br_units,
-         tteb.so4 = so4,
-         tteb.so4_units = so4_units) %>%
-  unite("tteb.f_flags", f_flag, f_bql, f_qual, sep = " ") %>%
-  unite("tteb.cl_flags", cl_flag, cl_bql, cl_qual, sep = " ") %>%  
-  unite("tteb.br_flags", br_flag, br_bql, br_qual, sep = " ") %>%
-  unite("tteb.so4_flags", so4_flag, so4_bql, so4_qual, sep = " ") %>%
-  unite("tteb.toc_flags", toc_flag, toc_bql, toc_qual,sep = " ")  %>%
-  unite("tteb.doc_flags", doc_flag, doc_bql, doc_qual, sep = " ")  %>%
-  unite("al_flags", al_flag, al_bql, al_qual, sep = " ")  %>%
-  unite("as_flags", as_flag, as_bql, as_qual,sep = " ")  %>%
-  unite("ba_flags", ba_flag, ba_bql, ba_qual,sep = " ")  %>%
-  unite("be_flags", be_flag, be_bql, be_qual,sep = " ")  %>%
-  unite("ca_flags", ca_flag, ca_bql, ca_qual, sep = " ")  %>%
-  unite("cd_flags", cd_flag, cd_bql, cd_qual, sep = " ")  %>%
-  unite("cr_flags", cr_flag, cr_bql, cr_qual, sep = " ")  %>%
-  unite("cu_flags", cu_flag, cu_bql, cu_qual,sep = " ")  %>%
-  unite("fe_flags", fe_flag, fe_bql, fe_qual,sep = " ")  %>%
-  unite("k_flags", k_flag, k_bql, k_qual, sep = " ")  %>%
-  unite("li_flags", li_flag, li_bql,li_qual, sep = " ")  %>%
-  unite("mg_flags", mg_flag, mg_bql, mg_qual,sep = " ")  %>%
-  unite("mn_flags", mn_flag, mn_bql, mn_qual, sep = " ")  %>%
-  unite("na_flags", na_flag, na_bql,  na_qual,sep = " ")  %>%
-  unite("ni_flags", ni_flag, ni_bql, ni_qual,sep = " ")  %>%
-  unite("p_flags", p_flag, p_bql, p_qual, sep = " ")  %>%
-  unite("pb_flags", pb_flag, pb_bql, pb_qual, sep = " ")  %>%
-  unite("po4_flags", po4_flag, po4_bql, po4_qual, sep = " ")  %>%
-  unite("s_flags", s_flag, s_bql, s_qual, sep = " ")  %>%
-  unite("sb_flags", sb_flag, sb_bql, sb_qual, sep = " ")  %>%
-  unite("si_flags", si_flag, si_bql, si_qual, sep = " ")  %>%
-  unite("sn_flags", sn_flag, sn_bql, sn_qual, sep = " ")  %>%
-  unite("sr_flags", sr_flag, sr_bql, sr_qual, sep = " ")  %>%
-  unite("v_flags", v_flag, v_bql, v_qual, sep = " ")  %>%
-  unite("zn_flags", zn_flag, zn_bql, zn_qual, sep = " ")
+  rename_with(.cols = c("toc", "doc", "f", "cl", "br", "so4", 
+                        "toc_flags", "doc_flags", "f_flags", 
+                        "cl_flags", "br_flags", "so4_flags"), 
+              ~ paste0("tteb.", .x, recycle0 = TRUE))
 
 
 # 8 CLEAN UP FINAL OBJECT, STEP 2
 tteb.all <- tteb.all %>%
   mutate(across(ends_with("flags"),
-                ~ str_remove_all(., "NA"))) %>%
-  mutate(across(ends_with("flags"),
-                ~ if_else(str_detect(., "ND L"), "L", .))) %>%
+                ~ if_else(is.na(.), "", .))) %>%
   mutate(across(ends_with("flags"),   # replace any blank _flags with NA
-                ~ if_else(str_detect(., "\\w"), ., NA_character_) %>%
-                  str_squish()))  # remove any extra white spaces 
-
+                ~ str_squish(.))) %>% # remove any extra white spaces 
+  # Add units columns (using the '_flags' columns to generate names)
+  mutate(across(ends_with("flags"),   
+                ~ "mg_l", 
+                .names = "{.col}_units")) %>%
+  # Remove the '_flags' text from unit column names
+  rename_with(.cols = contains("units"), 
+              ~ str_remove_all(., "_flags")) %>%
+  # Change the units for toc only
+  mutate(tteb.toc_units = "mg_c_l")
 
 # Final check for dupes
 # if dups, check for duplicate records between final and preliminary data.
 janitor::get_dupes(tteb.all, lake_id, site_id, visit, sample_depth, sample_type)
-
 

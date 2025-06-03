@@ -51,18 +51,14 @@ get_ada_data <- function(path, datasheet) {
                 .cols = starts_with("data")) %>% # rename w/ analyte names
     # rename_with(~paste0(analyte_names, "_date_analyzed"), 
     #             .cols = starts_with("date_a")) %>% # rename w/ analyte names
-    mutate(across(ends_with("analyzed"), # select the latest date in range
-                  ~ word(., -1) %>% 
-                    as.Date(., tryFormats = c("%m/%d/%Y", "%Y-%m-%d")))) %>%
-    mutate(across(ends_with("analyzed"), # compute holding time
-                  ~ as.numeric(as.Date(., tryFormats = c("%m/%d/%Y", 
-                                                         "%Y-%m-%d")) - 
-                                 as.Date(date_collected, 
-                                         format = "%m/%d/%Y")))) 
+    mutate(across(contains("analyzed"), # select the latest date in range
+                  ~ date(.))) %>%
+    mutate(across(contains("analyzed"), # compute holding time
+                  ~ difftime(., date(date_collected)) %>% as.numeric())) 
   
   
   # Pull column of date data (it doesn't matter which, since they're identical)
-  analyzed_dates <- maintable_1 %>% select(contains("date_analyzed")) %>% pull()
+  analyzed_dates <- maintable_2 %>% select(contains("date_analyzed")) %>% pull()
   
   maintable_2.5 <- maintable_2 %>%
     mutate(across(ends_with("/L"), # create date columns for all analytes
@@ -71,7 +67,6 @@ get_ada_data <- function(path, datasheet) {
   
   # maintable_3: remove extra rows, create ND flag and apply MDL value, 
   # create L (i.e., BQL) flag, create 'visit' column
-  
   maintable_3 <- maintable_2.5 %>%
     mutate(field_sample_id = # remove "(TN or DN)" field_sample_id
              str_remove_all(field_sample_id, "\\s|\\(|\\)|TN or DN")) %>% 
@@ -114,7 +109,7 @@ get_ada_data <- function(path, datasheet) {
                                          c("B" = "blank", 
                                            "U" =  "unknown", 
                                            "D" =  "duplicate"))) %>%
-    mutate(across(ends_with("analyzed"), # check if hold time violated
+    mutate(across(contains("analyzed"), # check if hold time violated
                   ~ ifelse(.>28, "H", ""))) %>%
     select(-field_sample_id) # no longer needed
   
@@ -248,7 +243,7 @@ cin.ada.path <-
 
 ove1 <- 
   get_ada_data(cin.ada.path, 
-              "EPAGPA059SS7777AE2.6Overholser7-27-21NPOCNPDOCGPMS.xlsx") %>%
+               "EPAGPA059SS7777AE2.6Overholser7-27-21NPOCNPDOCGPMS.xlsx") %>%
   mutate(site_id = "6") %>% # add site_id
   conv_units(
     filename = "EPAGPA059SS7777AE2.6Overholser7-27-21NPOCNPDOCGPMS.xlsx") %>%
