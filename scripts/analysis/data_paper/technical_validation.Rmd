@@ -1,0 +1,141 @@
+---
+title: "Technical Validation"
+author: "Joe Corra"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(tidyverse)
+library(plotly)
+library(gt)
+tvd <- readRDS("technical_validation_data")
+```
+
+## Flags
+
+```{r flags, echo=FALSE}
+
+flags_table <- tribble(
+  ~Condition, ~ Value, ~Flag,
+ "< MDL", "MDL",	"ND",
+   "MDL and < RL",	"Measured concentration",	"L",
+  "Holding time violation",	"Measured concentration",	"H",
+  "Shipping issue",	"Measured concentration",	"S"
+) 
+
+mdl_table <- tvd$detlimits %>% 
+  mutate(mdl = as.character(mdl), 
+         year = if_else (year == "2020_2021", "2020 - 2021", year), 
+         analyte_group = if_else(analyte_group == "organic", "organic carbon", analyte_group), 
+         name = str_to_upper(name), 
+         name = if_else(name == "NO2_3", "combined NO2 and NO3", name),
+         lab = if_else(lab == "CIN", "Cincinnati", "Ada")) %>%
+  # group_by(analyte_group, lab, name, units) %>%
+  # summarize(mdl = str_c(year, mdl, sep = ": ", collapse = "; "), .groups = "drop") %>%
+  # ungroup() %>%
+ select('analyte group' = analyte_group, analyte = name, lab, filtered, preservative, 'holding time' = holding_time, MDL = mdl, 'reporting limit' = ql) %>%
+  arrange('analyte group')
+
+# Break out by analyte group for easier in-text coding
+anion_flags <- bind_rows(tvd$flags$ada.anions, tvd$flags$d.anions_formatted)  
+nutrient_flags <- bind_rows(tvd$flags$ada.nutrients, tvd$flags$chem18, tvd$flags$chemCinNutrients) 
+oc_flags <- bind_rows(tvd$flags$toc.masi, tvd$flags$ada.oc) 
+metal_flags <- tvd$flags$tteb.all
+pigment_flags <- bind_rows(tvd$flags$pigments, tvd$flags$chl18) 
+
+# Break out by key analytes for easier in-text coding
+sulfate_flags <- anion_flags %>% filter(analyte == "so4") 
+ammonium_flags <- nutrient_flags %>% filter(analyte == "nh4")
+nitrite_nitrate_flags <- nutrient_flags %>% filter(analyte == "no2.3")
+tn_flags  <- nutrient_flags %>% filter(analyte == "tn")
+tp_flags <- nutrient_flags %>% filter(analyte == "tp")
+orthophosphate_flags <- nutrient_flags %>% filter(analyte == "op")
+calcium_flags <- metal_flags %>% filter(analyte == "ca")
+magnesium_flags <- metal_flags %>% filter(analyte == "mg")
+tocdoc_flags <- oc_flags %>% filter(analyte %in% c("toc", "doc"))
+
+kable(flags_table, caption = "Table ???: Flag Descriptions")
+kable(mdl_table, caption = "Table ???: Minimum Detect Limit (MDL) for Key Analytes")
+# kable(anion_flags)  
+# kable(nutrient_flags)
+# kable(oc_flags)  
+# kable(metal_flags)
+# kable(pigment_flags) 
+# kable(tocdoc_flags)
+
+```
+
+Four types of flags assigned to samples based on data returned from labs: 1) “ND” indicating that the measured concentration was below the method detection limit (MDL); 2) “L” for measured concentrations that exceeded the MDL but were less than the reporting limit (RL); 3) “H” for holding time violations; and 4) “S” for shipping issues. Procedures varied across labs for defining the RL. We assumed equivalency between the terms “quantification limit” and “reporting limit” provided by the labs. If neither value was reported by the lab, we assumed the RL was equal to the lowest non-zero standard in the standard curve. In some cases, one duplicate was flagged for a detection limit issue, but the other was not; in such instances, the aggregated value was not flagged. In cases where duplicates had different flags, the flag associated with the higher-concentration sample was applied to the aggregated value. For example, if a duplicate was flagged ND and the corresponding sample was flagged L, the aggregated value received an L flag.
+
+The incidence of detection limit flags varied considerably among the 39 analytes. For this technical validation, we assessed the results for selected key analytes—i.e., those most relevant to the modeling of greenhouse gas emissions. These key analytes were sulfate (SO~4~),total nitrogen (TN), total phosphorus (TP), ammonium (NH~4~), combined nitrite-nitrate (NO~2~ and NO~3~), orthophosphate (OP), magnesium samples (Mg), calcium (Ca), and organic carbon, the last comprising both total organic carbon (TOC) and dissolved organic carbon (DOC). Notably, the incidence of L flags differed among many key analytes relative to their corresponding analyte groups overall. L flags were present for `r (sum(sulfate_flags$L)/sum(sulfate_flags$total) * 100) %>% round(1)` percent of sulfate (SO~4~) samples compared to `r (sum(anion_flags$L)/sum(anion_flags$total) * 100) %>% round(1)` percent of all anion samples. Among nutrient samples, `r (sum(tn_flags$L)/sum(tn_flags$total) * 100) %>% round(1)` percent of total nitrogen (TN) samples, `r (sum(tp_flags$L)/sum(tp_flags$total) * 100) %>% round(1)` percent of total phosphorus (TP) samples, `r (sum(ammonium_flags$L)/sum(ammonium_flags$total) * 100) %>% round(1)` percent of ammonium (NH~4~) samples, `r (sum(nitrite_nitrate_flags$L)/sum(nitrite_nitrate_flags$total) * 100) %>% round(1)` percent of combined nitrite-nitrate (NO~2~ and NO~3~) samples, and `r (sum(orthophosphate_flags$L)/sum(orthophosphate_flags$total) * 100) %>% round(1)` percent of orthophosphate (OP) samples had L flags, compared to `r (sum(nutrient_flags$L)/sum(nutrient_flags$total) * 100) %>% round(1)` percent of nutrient samples overall. Among metal samples, `r (sum(magnesium_flags$L)/sum(magnesium_flags$total) * 100) %>% round(1)` percent of magnesium samples (Mg) had L flags, as did `r (sum(calcium_flags$L)/sum(calcium_flags$total) * 100) %>% round(1)` percent of calcium (Ca) samples, compared to `r (sum(metal_flags$L)/sum(metal_flags$total) * 100) %>% round(1)` percent of all metal samples. In addition, L flags occurred in `r (sum(oc_flags$L)/sum(oc_flags$total) * 100) %>% round(1)` percent of organic carbon (TOC and TOC) samples and `r (sum(pigment_flags$L)/sum(pigment_flags$total) * 100) %>% round(1)` percent of pigment (chlorophyll) samples.
+
+> Similarly, the incidence of ND flags differed among some key analytes when compared to their broader analyte groups. ND flags occurred in `r (sum(sulfate_flags$ND)/sum(sulfate_flags$total) * 100) %>% round(1)` percent of sulfate (SO~4~) samples compared to `r (sum(anion_flags$ND)/sum(anion_flags$total) * 100) %>% round(1)` percent of all anion samples. Among nutrient samples, `r (sum(tn_flags$ND)/sum(tn_flags$total) * 100) %>% round(1)` percent of total nitrogen (TN) samples, `r (sum(tp_flags$ND)/sum(tp_flags$total) * 100) %>% round(1)` percent of total phosphorus (TP) samples, `r (sum(nitrite_nitrate_flags$ND)/sum(nitrite_nitrate_flags$total) * 100) %>% round(1)` percent of combined nitrite-nitrate (NO~2~ and NO~3~) samples, `r (sum(ammonium_flags$ND)/sum(ammonium_flags$total) * 100) %>% round(1)` percent of ammonium (NH~4~) samples, and `r (sum(orthophosphate_flags$ND)/sum(orthophosphate_flags$total) * 100) %>% round(1)` percent of orthophosphate (OP) samples had ND flags, compared to `r (sum(nutrient_flags$ND)/sum(nutrient_flags$total) * 100) %>% round(1)` percent of nutrient samples overall. Among metal samples, `r (sum(magnesium_flags$ND)/sum(magnesium_flags$total) * 100) %>% round(1)` percent of magnesium samples (Mg) had ND flags, as did `r (sum(calcium_flags$ND)/sum(calcium_flags$total) * 100) %>% round(1)` percent of calcium (Ca) samples, compared to `r (sum(metal_flags$ND)/sum(metal_flags$total) * 100) %>% round(1)` percent of all metal samples. Finally, `r (sum(oc_flags$ND)/sum(oc_flags$total) * 100) %>% round(1)` percent of organic carbon samples and `r (sum(pigment_flags$ND)/sum(pigment_flags$total) * 100) %>% round(1)` percent of pigment samples had ND flags.
+
+Shipping issues were rare and occurred only among pigment samples collected from 2020 onward. Samples with S flags comprised only `r (sum(pigment_flags$S)/sum(pigment_flags$total) * 100) %>% round(1)` percent of pigment samples across all years. No S flags were present in pigment samples collection prior to 2020, nor among any other analytes. Holding time violations were more numerous and occurred across all analyte groups. H flags were present for `r (sum(anion_flags$H)/sum(anion_flags$total) * 100) %>% round(1)` percent of anion samples, `r (sum(nutrient_flags$H)/sum(nutrient_flags$total) * 100) %>% round(1)` percent of nutrient samples, `r (sum(metal_flags$H)/sum(metal_flags$total) * 100) %>% round(1)` percent of metals samples, `r (sum(oc_flags$H)/sum(oc_flags$total) * 100) %>% round(1)` percent of organic carbon samples, and `r (sum(pigment_flags$H)/sum(pigment_flags$total) * 100) %>% round(1)` percent of pigment samples.
+
+## Field Blanks
+
+```{r blanks, echo=FALSE}
+
+  
+# functions to get key values
+blank_above_mdl <- function(df, analyte_select)
+{summarize(df %>% list_rbind() %>% filter(analyte %in% analyte_select), x = (sum(blank >= mdl, na.rm = TRUE) / sum(n())) * 100) %>%
+    pull(x) %>% round(2)}
+
+blank_below_mdl <- function(df, analyte_select)
+{summarize(df %>% list_rbind() %>% filter(analyte %in% analyte_select), x = (sum(blank < mdl, na.rm = TRUE) / sum(n())) * 100) %>%
+    pull(x) %>% round(2)}
+
+get_blank_mean <- function(data, analyte_select) {
+  blanks_mean <- list_rbind(data) %>%
+    filter(analyte %in% analyte_select) %>%
+    filter(blank >= mdl, mean_unknown >= ql) %>%
+    pull(blank_prop) %>%
+    mean(na.rm = TRUE) 
+  
+  return(blanks_mean)
+}
+
+# Break out by analyte for easier in-text coding
+blanks_so4 <- (get_blank_mean(tvd$blanks, "so4") *100) %>% round(2)
+blanks_nh4 <- (get_blank_mean(tvd$blanks, "nh4") *100) %>% round(2)
+blanks_no2.3 <- (get_blank_mean(tvd$blanks, "no2_3") *100) %>% round(2)
+blanks_tn <-( get_blank_mean(tvd$blanks, "tn") *100) %>% round(2)
+blanks_tp <- (get_blank_mean(tvd$blanks, "tp") *100) %>% round(2)
+blanks_op <- (get_blank_mean(tvd$blanks, "op") *100) %>% round(2)
+blanks_ca <- (get_blank_mean(tvd$blanks, "ca") *100) %>% round(2)
+blanks_mg <- (get_blank_mean(tvd$blanks, "mg") *100) %>% round(2)
+blanks_oc <- (get_blank_mean(tvd$blanks, c("toc", "doc")) *100) %>% round(2)
+
+# percent of blanks < reporting limit
+blanks_ql <- tvd$blanks %>% list_rbind() 
+blanks_ql <- (100 * mean(blanks_ql$blank < blanks_ql$ql, na.rm = TRUE)) %>% round(2) 
+
+blanks_mdl <- tvd$blanks %>% list_rbind() 
+blanks_mdl <- (100 * mean(blanks_mdl$blank < blanks_mdl$mdl, na.rm = TRUE)) %>% round(2) 
+
+blank_op <- tvd$blanks %>% list_rbind() %>% 
+  filter(analyte == "op", blank >= mdl, mean_unknown >= ql) %>% 
+  pull(blank) %>% mean(na.rm = TRUE) %>% round(2)
+
+blank_tp <- tvd$blanks %>% list_rbind() %>% 
+  filter(analyte == "tp", blank >= mdl, mean_unknown >= ql) %>% 
+  pull(blank) %>% mean(na.rm = TRUE) %>% round(2)
+
+unk_op <- tvd$blanks %>% list_rbind() %>% 
+  filter(analyte == "op", blank >= mdl, mean_unknown >= ql) %>% 
+  pull(mean_unknown) %>% mean(na.rm = TRUE) %>% round(2)
+
+unk_tp <- tvd$blanks %>% list_rbind() %>% 
+  filter(analyte == "tp", blank >= mdl, mean_unknown >= ql) %>% 
+  pull(mean_unknown) %>% mean(na.rm = TRUE) %>% round(2)
+
+```
+
+Among blanks, the measured concentrations of key analytes typically met or exceeded the MDL. Among sulfate samples, `r blank_above_mdl(tvd$blanks, "so4")` percent of measured concentrations were equal to or above the MDL, while `r blank_below_mdl(tvd$blanks, "so4")` percent were below the MDL. For total nitrogen samples, `r blank_above_mdl(tvd$blanks, "tn")` percent were equal to or above the MDL, while `r blank_below_mdl(tvd$blanks, "tn")` percent were below the MDL. For organic carbon (both TOC and DOC) samples, `r blank_above_mdl(tvd$blanks, c("toc", "doc"))` percent were equal to or above the MDL, while `r blank_below_mdl(tvd$blanks, c("toc", "doc"))` percent were below the MDL. Among blanks of ammonium, combined nitrite-nitrate, total phosphorus, orthophosphate, calcium, and magnesium, 100 percent of measured concentrations were above the MDL. Across all analytes (Table S1), measured concentrations in field blanks were below the MDL in `r blanks_mdl` percent of samples, while `r blanks_ql` percent were below the reporting limit.
+
+Of the blanks that exceeded the MDL, the measured concentration was generally small when compared to the unknowns where the mean of unknown samples exceeded the reporting limit. For example, sulfate, calcium, and magnesium sample blanks were, on average, equivalent to `r paste0(blanks_so4, ", ", blanks_ca, ", and ", blanks_mg)` percent of the concentrations in the unknown samples. Ammonium, nitrite-nitrate, and total nitrogen concentrations in field blanks were equivalent to `r paste0(blanks_nh4, ", ", blanks_no2.3, ", and ", blanks_tn)` percent of those in the unknowns. Concentration of phosphorus species in field blanks were equivalent to a larger fraction of those in the unknown as compared to other analytes (e.g., total phosphorus blanks equivalent to `r blanks_tp` percent of unknown samples, orthophosphate blanks equivalent to `r blanks_op` percent of unknowns), but concentration were quite low in both blank (mean TP = `r blank_tp`, mean orthophosphate = `r blank_op`) and unknown samples (mean TP = `r unk_tp`, mean orthophosphate = `r unk_op`). Measured concentrations of organic carbon blanks were `r blanks_oc` percent of unknown samples.
