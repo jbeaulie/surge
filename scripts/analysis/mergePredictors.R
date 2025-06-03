@@ -213,7 +213,7 @@ dim(dat) # 2367
    left_join(.,
              morpho)
 
- dim(morpho) # 156
+ dim(morpho) # 147
  dim(dat) # 2367
 
 # 12. Merge hydroLakes ID----
