@@ -1,44 +1,34 @@
-userPath <- paste0(Sys.getenv("USERPROFILE"), 
-                   "/Environmental Protection Agency (EPA)/",
-                   "SuRGE Survey of Reservoir Greenhouse gas Emissions - Documents/")
-
-# R proj folder at SP.
-localName <- if (grepl("JBEAULIE", userPath, ignore.case = TRUE)) {
-  "Jake/"
-} else if (grepl("JCOR", userPath, ignore.case = TRUE)) {
-  "Joe/"} 
-
 # load project libraries
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/masterLibrary.R"))
+source(paste0("scripts/masterLibrary.R"))
 
 # load data
 # Analysis
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readSurgeLakes.R")) # read in survey design file
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/chemSampleList.R")) # creates chem.samples.foo, an inventory of all collected chem sample
+source(paste0( "scripts/analysis/readSurgeLakes.R")) # read in survey design file
+source(paste0( "scripts/analysis/chemSampleList.R")) # creates chem.samples.foo, an inventory of all collected chem sample
 
 
 # Read chemistry
 # uncomment rows to bring in more data
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readFieldSheets.R")) # read surgeData...xlsx.  fld_sheet, dg_sheet
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readAnionsAda.R")) # read ADA lab anions
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readAnionsDaniels.R")) # read Kit Daniels anions
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readNutrientsAda.R")) # read nutrients ran in ADA lab
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readNutrientsAwberc.R")) # read AWBERC lab nutrient results
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readNutrientsR10_2018.R")) # read AWBERC nutrients for 2018 R10
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readOcAda.R")) # read ADA TOC/DOC data
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readOcMasi.R")) # read 2020 TOC run at MASI lab
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readTteb.R")) # TTEB metals, TOC, DOC
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readPigmentsMicrocystin.R")) # NAR chl, phyco, and microcystin
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readTaxonomy.R")) # GB taxonomy
-source(paste0(userPath, "rProjects/", localName, "SuRGE/scripts/analysis/readChlorophyllR10_2018.R")) # 2018 R10 chlorophyll
-
-source(paste0(userPath, "rProjects/", localName,
-              "SuRGE/scripts/analysis/mergeChemistry.R")) # merge all chem objects #chemistry all
+source(paste0( "scripts/analysis/readFieldSheets.R")) # read surgeData...xlsx.  fld_sheet, dg_sheet
+source(paste0( "scripts/analysis/readAnionsAda.R")) # read ADA lab anions
+source(paste0( "scripts/analysis/readAnionsDaniels.R")) # read Kit Daniels anions
+source(paste0( "scripts/analysis/readNutrientsAda.R")) # read nutrients ran in ADA lab
+source(paste0( "scripts/analysis/readNutrientsAwberc.R")) # read AWBERC lab nutrient results
+source(paste0( "scripts/analysis/readNutrientsR10_2018.R")) # read AWBERC nutrients for 2018 R10
+source(paste0( "scripts/analysis/readOcAda.R")) # read ADA TOC/DOC data
+source(paste0( "scripts/analysis/readOcMasi.R")) # read 2020 TOC run at MASI lab
+source(paste0( "scripts/analysis/readTteb.R")) # TTEB metals, TOC, DOC
+source(paste0( "scripts/analysis/readPigments.R")) # NAR chl, phyco
+source(paste0( "scripts/analysis/readMicrocystin.R")) # microcystin
+source(paste0( "scripts/analysis/readChlorophyllR10_2018.R")) # 2018 R10 chlorophyll
+source("scripts/analysis/readGc.R") # gc_lakeid_agg
+source("scripts/analysis/calculateDissolvedGas.R") # dissolved_gas
+source(paste0( "scripts/analysis/mergeChemistry.R")) # merge all chem objects #chemistry all
 
 
 # Data Setup---------------------------------------------
 
-detlimits <- read_xls(path = paste0("detectionLimits.xls"))
+detlimits <- read_csv("scripts/analysis/data_paper/dataPaperDetectionLimits.csv")
 
 # d.anions needs to have flags consolidated into '_flags' columns
 d.anions_formatted <- d.anions %>% 
@@ -48,17 +38,10 @@ d.anions_formatted <- d.anions %>%
   unite(starts_with("cl_"), col = "cl_flags", sep = " ") %>%
   unite(starts_with("so4_"), col = "so4_flags", sep = " ")
 
-# Create list of data
-chemdata <- lst(ada.anions, d.anions_formatted, chem18, ada.nutrients, 
-                chemCinNutrients, tteb.all, toc.masi, ada.oc, chl18, pigments) 
-  
-# Do not use phycocyanin
-chemdata$pigments <- chemdata$pigments %>% select(!starts_with("phyco"))
 
-# Create 'visit' column if it doesn't exist 
-chemdata_formatted <- chemdata %>% map(\(.x) 
-                 {if (!"visit" %in% names(.x)) mutate(.x, visit = 1) 
-                   else .x}) 
+# Do not use phycocyanin
+chemdata <- chemistry_all %>% select(!starts_with("phyc"))
+
 
 # Flags-------------------------------------------------
 
@@ -86,12 +69,12 @@ tally_flags <- function(data) {
 }
 
 # Create summary tables of flags by analyte and sample type
-flags <- chemdata_formatted %>% map(\(.x) tally_flags(.x))
+flags <- chemdata %>% tally_flags()
 
 
 # Field Blanks------------------------------------------
 
- summarize_blanks <- function(df, groupname) { 
+ summarize_blanks <- function(df) { 
    
    df <- df %>%
      ungroup() %>%
@@ -130,29 +113,22 @@ flags <- chemdata_formatted %>% map(\(.x) tally_flags(.x))
 
  }
  
-# 'pigments' has no blanks
-chemdata_formatted$pigments <- NULL 
 
-  blanks <- imap(chemdata_formatted, summarize_blanks) %>%
-    list_rbind() %>%
+  blanks <- summarize_blanks(chemdata) %>%
     group_by(analyte_group) %>%
     group_split()
- 
-  # Don't understand this... found in toc.masi and ada.oc
-  # mutate(mdl = sprintf("%.2f", mdl))
-  # mutate(mdl = sprintf("%.2f", mdl)) 
 
 # Field Duplicates------------------------------------------
 
 ## Field Duplicates Setup----------------------------------
   
 # identify lakes, sites, and depths with duplicates
-duplicate_ids <- chemistry_all %>% filter(sample_type == "duplicate") %>%
+duplicate_ids <- chemdata %>% filter(sample_type == "duplicate") %>%
   select(lake_id, site_id, sample_depth, visit) %>%
   mutate(id = paste0(lake_id, site_id, sample_depth, visit))
 
 # pull out data from lakes, sites, and depths with duplicates
-chemistry_all_dups <- chemistry_all %>%
+chemistry_all_dups <- chemdata %>%
   mutate(id = paste0(lake_id, site_id, sample_depth, visit)) %>% # create unique id
   filter(id %in% duplicate_ids$id) %>% # pull out duplicates and corresponding unknowns
   select(-contains("flag"), -contains("qual"), -contains("units"),
@@ -251,5 +227,6 @@ flags_table <- tribble(
 
 technical_validation_data <- lst(dupes, blanks, flags, detlimits, chemistry_all)
 
-saveRDS(technical_validation_data, "scripts/analysis/data_paper/technical_validation_data")
+saveRDS(technical_validation_data, 
+        "scripts/analysis/data_paper/technical_validation_chemistry_data")
 
