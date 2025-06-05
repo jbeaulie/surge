@@ -76,7 +76,7 @@ flags <- chemdata %>% tally_flags()
 
  summarize_blanks <- function(df) { 
    
-   df <- df %>%
+   df <- chemdata %>%
      ungroup() %>%
      mutate(sample_type = case_when(sample_type == "duplicate" ~ "unknown", TRUE ~ sample_type)) %>%
      select(!c(site_id, sample_depth), -matches("flag|units")) %>%
@@ -92,13 +92,15 @@ flags <- chemdata %>% tally_flags()
    
    df <- df %>%
      # apply conditional filtering to detlimits based on dataframe name
-     left_join(y = {if (groupname %in% c("ada.anions", "ada.nutrients", "ada.oc")) 
-       filter(detlimits, lab == "ADA")
-       else if (groupname %in% c("d.anions_revised", "tteb.all", "toc.masi")) 
-         filter(detlimits, lab == "CIN")
-       else if (groupname == "chem18") 
-         filter(detlimits, lab == "CIN" & year == "2018")
-       else filter(detlimits, lab == "CIN" & year == "2021") }, by = "name") %>%
+     left_join(lake.list.all %>% distinct(lake_id, lab, year = sample_year), by = "lake_id") %>%
+     left_join(detlimits %>% distinct(name, lab, year, .keep_all = TRUE), by = "lab") %>%
+     # left_join(y = {if (groupname %in% c("ada.anions", "ada.nutrients", "ada.oc")) 
+     #   filter(detlimits, lab == "ADA")
+     #   else if (groupname %in% c("d.anions_revised", "tteb.all", "toc.masi")) 
+     #     filter(detlimits, lab == "CIN")
+     #   else if (groupname == "chem18") 
+     #     filter(detlimits, lab == "CIN" & year == "2018")
+     #   else filter(detlimits, lab == "CIN" & year == "2021") }, by = "name") %>%
      select(-lab, -year, -units) %>%
      rename(analyte = name, blank = min_blank, 
             minimum = min_unknown, maximum = max_unknown) %>%
