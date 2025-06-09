@@ -90,11 +90,14 @@ class(chemistry$lake_id) == class(fld_sheet_sonde1$lake_id) # TRUE
 class(chemistry$site_id) == class(fld_sheet_sonde1$site_id) # TRUE
 
 # Check dimensions
-dim(chemistry) # 260, 145 [4/17/2025]
+dim(chemistry) # 259, 143 [6/9/2025]
 dim(fld_sheet_sonde1) # 3738, 33 [4/17/2025]
 
 # Check for correspondence among unique identifiers
-chemistry %>% filter(!(lake_id %in% fld_sheet_sonde1$lake_id)) %>%
+# unique identifiers in chemistry no present in fld_sheet
+chemistry %>% filter(!(paste0(lake_id, site_id, sample_depth, visit) %in% 
+                         paste0(fld_sheet_sonde1$lake_id, fld_sheet_sonde1$site_id, 
+                                fld_sheet_sonde1$sample_depth, fld_sheet_sonde1$visit))) %>%
   select(lake_id) %>% distinct() %>% print(n=Inf)
 
 
@@ -103,9 +106,10 @@ chemistry %>% filter(!(lake_id %in% fld_sheet_sonde1$lake_id)) %>%
 fld_sheet_sonde1 %>% filter(!(lake_id %in% chemistry$lake_id)) %>%
   select(lake_id) %>% distinct() %>% print(n=Inf)
 
+# natural join on lake_id, site_id, sample_depth, visit
 chem_fld <- full_join(chemistry, fld_sheet_sonde1) %>%
   relocate(lake_id, site_id, lat, long, sample_date, site_depth, sample_depth, sample_depth_m)
-dim(chem_fld) # 3738, 174 [4/17/2025]
+dim(chem_fld) # 3738, 172 [6/9/2025]
 
 # write to disk for reference in lake reports
 #save(chem_fld, file = paste0("output/chem_fld_", Sys.Date(), ".RData"))

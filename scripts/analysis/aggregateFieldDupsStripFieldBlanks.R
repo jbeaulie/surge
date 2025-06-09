@@ -117,8 +117,8 @@ clean_chem <- function(data) {
 } 
 
 chemistry <- clean_chem(chemistry_all)
-dim(chemistry_all) # 410, 146 [4/17/2025]
-dim(chemistry) # 260, 145 [5/19/2024], lost sample_type
+dim(chemistry_all) # 368, 144 [6/9/2025]
+dim(chemistry) # 259, 143 [6/9/2025], lost sample_type
 
 names(chemistry_all)[!names(chemistry_all) %in% names(chemistry)] # sample_type
 

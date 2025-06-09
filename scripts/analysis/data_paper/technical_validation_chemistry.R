@@ -102,7 +102,7 @@ flags <- chemdata %>% tally_flags()
                                                   "si", "sn", "sr", "s", "v", "zn") ~ "metals",
                                       name %in% c("toc", "doc") ~ "organic",
                                       name == "microcystin" ~ "algal_indicators",
-                                      TRUE ~ NA_character_)) %>%
+                                      TRUE ~ NA_character_)) %>% 
      
      # 3. detection limits differ between CIN and ADA. Current "lab" field is for
      #    field crew (eg. R10, RTP, etc) not which lab ran chemistry. Create 
@@ -110,6 +110,7 @@ flags <- chemdata %>% tally_flags()
      mutate(analytical_lab = 
               case_when(year == 2020 & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp") ~ "ADA", # all 2020 nutrients sent to ADA
                         lab == "ADA" & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp", "br", "cl", "so4", "f", "toc", "doc") ~ "ADA", # ADA ran their own nutrients, anions, OC
+                        name == "microcystin" ~ "NAR", # NAR ran microcystin
                         TRUE ~ "CIN")) %>% # all others ran in CIN
      
      # 4. Join with detlimits to bring in detection limits
@@ -214,7 +215,7 @@ organic_rpd <- chemistry_all_dups %>%
   distinct() 
 
 
-## Pigments----------------------------------
+## Algal indicators----------------------------------
 
 chlorophyll_rpd <- chemistry_all_dups %>% 
   filter(name == "chla_lab") %>%
@@ -224,6 +225,13 @@ chlorophyll_rpd <- chemistry_all_dups %>%
          rpd = (ad/mean)*100) %>% # rpd
   distinct()
 
+microcystin_rpd <- chemistry_all_dups %>% 
+  filter(name == "microcystin") %>%
+  group_by(lake_id, site_id, sample_depth, name, visit) %>%
+  mutate(ad = abs(diff(value)), # difference between dup and unknown
+         mean = mean(value), # mean of dup and unknown
+         rpd = (ad/mean)*100) %>% # rpd
+  distinct()
 
 dupes <- lst(anions_rpd, nutrients_rpd, chlorophyll_rpd, metals_rpd, organic_rpd)
 
