@@ -28468,7 +28468,7 @@
 1,"8",1,"k",7.7,NA,NA,"shallow","mg_l",7.7
 1,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 1,"8",1,"mg",5.872,NA,NA,"shallow","mg_l",5.872
-1,"8",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+1,"8",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 1,"8",1,"mn",0.0013,"L",NA,"shallow","mg_l",0.0013
 1,"8",1,"n2o_sat_ratio",0.714281347425404,NA,NA,"shallow","unitless",NA
 1,"8",1,"na",12.67,NA,NA,"shallow","mg_l",12.67
@@ -28628,7 +28628,7 @@
 3,"20",1,"k",4.75,NA,NA,"shallow","mg_l",4.75
 3,"20",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 3,"20",1,"mg",3.26,NA,NA,"shallow","mg_l",3.26
-3,"20",1,"microcystin",0.081,NA,NA,"shallow","mg/L",NA
+3,"20",1,"microcystin",0.081,"ND",NA,"shallow","mg/L",NA
 3,"20",1,"mn",0.0229,"L",NA,"shallow","mg_l",0.0229
 3,"20",1,"n2o_sat_ratio",0.842485022637604,NA,NA,"shallow","unitless",NA
 3,"20",1,"na",15.3,NA,NA,"shallow","mg_l",15.3
@@ -28712,7 +28712,7 @@
 4,"3",1,"k",1.225,NA,NA,"shallow","mg_l",1.225
 4,"3",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 4,"3",1,"mg",1.146,NA,NA,"shallow","mg_l",1.146
-4,"3",1,"microcystin",0.045,NA,NA,"shallow","mg/L",NA
+4,"3",1,"microcystin",0.045,"ND",NA,"shallow","mg/L",NA
 4,"3",1,"mn",0.0145,"L",NA,"shallow","mg_l",0.0145
 4,"3",1,"n2o_sat_ratio",0.691625676114986,NA,NA,"shallow","unitless",NA
 4,"3",1,"na",4.886,NA,NA,"shallow","mg_l",4.886
@@ -28786,7 +28786,7 @@
 10,"2",1,"k",1.744,NA,NA,"shallow","mg_l",1.744
 10,"2",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 10,"2",1,"mg",2.802,NA,NA,"shallow","mg_l",2.802
-10,"2",1,"microcystin",0.057,NA,NA,"shallow","mg/L",NA
+10,"2",1,"microcystin",0.057,"ND",NA,"shallow","mg/L",NA
 10,"2",1,"mn",0.0049,"L",NA,"shallow","mg_l",0.0049
 10,"2",1,"na",17.99,NA,NA,"shallow","mg_l",17.99
 10,"2",1,"nh4",6,"ND",NA,"shallow","ug_n_l",6
@@ -28949,6 +28949,7 @@
 13,"7",1,"k",2.272,NA,NA,"shallow","mg_l",2.272
 13,"7",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 13,"7",1,"mg",2.209,NA,NA,"shallow","mg_l",2.209
+13,"7",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 13,"7",1,"mn",0.0296,"L",NA,"shallow","mg_l",0.0296
 13,"7",1,"n2o_sat_ratio",5.26581061323277,NA,NA,"shallow","unitless",NA
 13,"7",1,"na",7.851,NA,NA,"shallow","mg_l",7.851
@@ -29023,7 +29024,7 @@
 14,"8",1,"k",1.312,NA,NA,"shallow","mg_l",1.312
 14,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 14,"8",1,"mg",1.4035,NA,NA,"shallow","mg_l",1.4035
-14,"8",1,"microcystin",0.001,NA,NA,"shallow","mg/L",NA
+14,"8",1,"microcystin",0.001,"ND",NA,"shallow","mg/L",NA
 14,"8",1,"mn",0.00385,NA,NA,"shallow","mg_l",0.00385
 14,"8",1,"na",4.8205,NA,NA,"shallow","mg_l",4.8205
 14,"8",1,"ni",0.001,"ND",NA,"shallow","mg_l",0.001
@@ -29103,7 +29104,7 @@
 16,"8",1,"k",1.076,NA,NA,"shallow","mg_l",1.076
 16,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 16,"8",1,"mg",0.8282,NA,NA,"shallow","mg_l",0.8282
-16,"8",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+16,"8",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 16,"8",1,"mn",0.0021,"L",NA,"shallow","mg_l",0.0021
 16,"8",1,"n2o_sat_ratio",1.36521627899364,NA,NA,"shallow","unitless",NA
 16,"8",1,"na",2.611,NA,NA,"shallow","mg_l",2.611
@@ -29262,7 +29263,7 @@
 18,"26",1,"k",1.8035,NA,NA,"shallow","mg_l",1.8035
 18,"26",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 18,"26",1,"mg",0.5777,NA,NA,"shallow","mg_l",0.5777
-18,"26",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+18,"26",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 18,"26",1,"mn",0.01785,"L",NA,"shallow","mg_l",0.01785
 18,"26",1,"na",3.2215,NA,NA,"shallow","mg_l",3.2215
 18,"26",1,"nh4",42.2,"L",NA,"shallow","ug_n_l",42.2
@@ -29336,6 +29337,7 @@
 44,"7",1,"k",0.3,"ND",NA,"shallow","mg_l",0.3
 44,"7",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 44,"7",1,"mg",0.2532,"L",NA,"shallow","mg_l",0.2532
+44,"7",1,"microcystin",0.061,"ND",NA,"shallow","mg/L",NA
 44,"7",1,"mn",0.0143,"L",NA,"shallow","mg_l",0.0143
 44,"7",1,"n2o_sat_ratio",1.13727296308809,NA,NA,"shallow","unitless",NA
 44,"7",1,"na",1.126,NA,NA,"shallow","mg_l",1.126
@@ -29499,7 +29501,7 @@
 46,"12",1,"k",0.8903,NA,NA,"shallow","mg_l",0.8903
 46,"12",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 46,"12",1,"mg",0.9002,NA,NA,"shallow","mg_l",0.9002
-46,"12",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+46,"12",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 46,"12",1,"mn",0.0044,"L",NA,"shallow","mg_l",0.0044
 46,"12",1,"n2o_sat_ratio",1.0843138333175,NA,NA,"shallow","unitless",NA
 46,"12",1,"na",5.537,NA,NA,"shallow","mg_l",5.537
@@ -29577,7 +29579,7 @@
 47,"1",1,"k",0.9871,NA,NA,"shallow","mg_l",0.9871
 47,"1",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 47,"1",1,"mg",1.0725,NA,NA,"shallow","mg_l",1.0725
-47,"1",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+47,"1",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 47,"1",1,"mn",0.02855,"L",NA,"shallow","mg_l",0.02855
 47,"1",1,"na",8.2425,NA,NA,"shallow","mg_l",8.2425
 47,"1",1,"nh4",185.5,"ND",NA,"shallow","ug_n_l",185.5
@@ -29661,7 +29663,7 @@
 49,"21",1,"k",1.551,NA,NA,"shallow","mg_l",1.551
 49,"21",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 49,"21",1,"mg",1.588,NA,NA,"shallow","mg_l",1.588
-49,"21",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+49,"21",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 49,"21",1,"mn",0.0668,"L",NA,"shallow","mg_l",0.0668
 49,"21",1,"n2o_sat_ratio",1.16133318972254,NA,NA,"shallow","unitless",NA
 49,"21",1,"na",23.99,NA,NA,"shallow","mg_l",23.99
@@ -29827,7 +29829,7 @@
 52,"9",1,"k",2.002,NA,NA,"shallow","mg_l",2.002
 52,"9",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 52,"9",1,"mg",9.974,NA,NA,"shallow","mg_l",9.974
-52,"9",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+52,"9",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 52,"9",1,"mn",0.0014,"L",NA,"shallow","mg_l",0.0014
 52,"9",1,"n2o_sat_ratio",0.991655289944919,NA,NA,"shallow","unitless",NA
 52,"9",1,"na",19.67,NA,NA,"shallow","mg_l",19.67
@@ -29908,7 +29910,7 @@
 53,"6",1,"k",1.458,NA,NA,"shallow","mg_l",1.458
 53,"6",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 53,"6",1,"mg",2.205,NA,NA,"shallow","mg_l",2.205
-53,"6",1,"microcystin",0.0495,NA,NA,"shallow","mg/L",NA
+53,"6",1,"microcystin",0.0495,"ND",NA,"shallow","mg/L",NA
 53,"6",1,"mn",0.0089,"L",NA,"shallow","mg_l",0.0089
 53,"6",1,"na",8.779,NA,NA,"shallow","mg_l",8.779
 53,"6",1,"nh4",42.5,"ND",NA,"shallow","ug_n_l",42.5
@@ -30131,7 +30133,7 @@
 57,"4",1,"k",1.6395,NA,NA,"shallow","mg_l",1.6395
 57,"4",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 57,"4",1,"mg",0.766,NA,NA,"shallow","mg_l",0.766
-57,"4",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+57,"4",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 57,"4",1,"mn",0.0411,"L",NA,"shallow","mg_l",0.0411
 57,"4",1,"na",16.95,NA,NA,"shallow","mg_l",16.95
 57,"4",1,"ni",0.001,"ND",NA,"shallow","mg_l",0.001
@@ -30275,7 +30277,7 @@
 65,"8",1,"k",0.63725,NA,NA,"shallow","mg_l",0.63725
 65,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 65,"8",1,"mg",2.9035,NA,NA,"shallow","mg_l",2.9035
-65,"8",1,"microcystin",0.02,NA,NA,"shallow","mg/L",NA
+65,"8",1,"microcystin",0.02,"ND",NA,"shallow","mg/L",NA
 65,"8",1,"mn",0.05195,"L",NA,"shallow","mg_l",0.05195
 65,"8",1,"na",8.6335,NA,NA,"shallow","mg_l",8.6335
 65,"8",1,"nh4",8.2,NA,NA,"shallow","ug_n_l",8.2
@@ -30335,7 +30337,7 @@
 66,"16",1,"k",2.039,NA,NA,"shallow","mg_l",2.039
 66,"16",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 66,"16",1,"mg",2.103,NA,NA,"shallow","mg_l",2.103
-66,"16",1,"microcystin",0.003,NA,NA,"shallow","mg/L",NA
+66,"16",1,"microcystin",0.003,"ND",NA,"shallow","mg/L",NA
 66,"16",1,"mn",0.1619,"L",NA,"shallow","mg_l",0.1619
 66,"16",1,"n2o_sat_ratio",1.01347059449935,NA,NA,"shallow","unitless",NA
 66,"16",1,"na",72.78,NA,NA,"shallow","mg_l",72.78
@@ -30415,7 +30417,7 @@
 67,"4",1,"k",10.775,NA,NA,"shallow","mg_l",10.775
 67,"4",1,"li",0.3046,"L",NA,"shallow","mg_l",0.3046
 67,"4",1,"mg",53.895,NA,NA,"shallow","mg_l",53.895
-67,"4",1,"microcystin",0.074,NA,NA,"shallow","mg/L",NA
+67,"4",1,"microcystin",0.074,"ND",NA,"shallow","mg/L",NA
 67,"4",1,"mn",0.0127,NA,NA,"shallow","mg_l",0.0127
 67,"4",1,"na",493.9,NA,NA,"shallow","mg_l",493.9
 67,"4",1,"nh4",21.2,NA,NA,"shallow","ug_n_l",21.2
@@ -30570,6 +30572,7 @@
 69,"12_transitional",1,"k",4.545,NA,NA,"shallow","mg_l",4.545
 69,"12_transitional",1,"li",0.0437,"L",NA,"shallow","mg_l",0.0437
 69,"12_transitional",1,"mg",22.23,NA,NA,"shallow","mg_l",22.23
+69,"12_transitional",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 69,"12_transitional",1,"mn",0.0104,"L",NA,"shallow","mg_l",0.0104
 69,"12_transitional",1,"n2o_sat_ratio",1.10004167513664,NA,NA,"shallow","unitless",NA
 69,"12_transitional",1,"na",68.61,NA,NA,"shallow","mg_l",68.61
@@ -30613,6 +30616,7 @@
 69,"4_lacustrine",1,"k",4.694,NA,NA,"shallow","mg_l",4.694
 69,"4_lacustrine",1,"li",0.0459,"L",NA,"shallow","mg_l",0.0459
 69,"4_lacustrine",1,"mg",23.01,NA,NA,"shallow","mg_l",23.01
+69,"4_lacustrine",1,"microcystin",0.025,"ND",NA,"shallow","mg/L",NA
 69,"4_lacustrine",1,"mn",0.0034,"L",NA,"shallow","mg_l",0.0034
 69,"4_lacustrine",1,"n2o_sat_ratio",1.14584178634916,NA,NA,"shallow","unitless",NA
 69,"4_lacustrine",1,"na",72.81,NA,NA,"shallow","mg_l",72.81
@@ -30698,6 +30702,7 @@
 69,"7_riverine",1,"k",4.527,NA,NA,"shallow","mg_l",4.527
 69,"7_riverine",1,"li",0.05,"L",NA,"shallow","mg_l",0.05
 69,"7_riverine",1,"mg",22.85,NA,NA,"shallow","mg_l",22.85
+69,"7_riverine",1,"microcystin",0.027,"ND",NA,"shallow","mg/L",NA
 69,"7_riverine",1,"mn",0.0154,"L",NA,"shallow","mg_l",0.0154
 69,"7_riverine",1,"n2o_sat_ratio",1.06681450551963,NA,NA,"shallow","unitless",NA
 69,"7_riverine",1,"na",66.04,NA,NA,"shallow","mg_l",66.04
@@ -30778,6 +30783,7 @@
 70,"6_lacustrine",1,"k",5.239,NA,NA,"shallow","mg_l",5.239
 70,"6_lacustrine",1,"li",0.03915,"L",NA,"shallow","mg_l",0.03915
 70,"6_lacustrine",1,"mg",20.57,NA,NA,"shallow","mg_l",20.57
+70,"6_lacustrine",1,"microcystin",0.002,"ND",NA,"shallow","mg/L",NA
 70,"6_lacustrine",1,"mn",0.0095,"L",NA,"shallow","mg_l",0.0095
 70,"6_lacustrine",1,"na",73.065,NA,NA,"shallow","mg_l",73.065
 70,"6_lacustrine",1,"nh4",6,"ND H",NA,"shallow","ug_n_l",6
@@ -30851,6 +30857,7 @@
 70,"6_riverine",1,"k",5.816,NA,NA,"shallow","mg_l",5.816
 70,"6_riverine",1,"li",0.0467,"L",NA,"shallow","mg_l",0.0467
 70,"6_riverine",1,"mg",24.38,NA,NA,"shallow","mg_l",24.38
+70,"6_riverine",1,"microcystin",0.009,"ND",NA,"shallow","mg/L",NA
 70,"6_riverine",1,"mn",0.008,"L",NA,"shallow","mg_l",0.008
 70,"6_riverine",1,"na",84.18,NA,NA,"shallow","mg_l",84.18
 70,"6_riverine",1,"nh4",6,"ND H",NA,"shallow","ug_n_l",6
@@ -30924,6 +30931,7 @@
 70,"7_transitional",1,"k",5.751,NA,NA,"shallow","mg_l",5.751
 70,"7_transitional",1,"li",0.0514,"L",NA,"shallow","mg_l",0.0514
 70,"7_transitional",1,"mg",25.41,NA,NA,"shallow","mg_l",25.41
+70,"7_transitional",1,"microcystin",0.016,"ND",NA,"shallow","mg/L",NA
 70,"7_transitional",1,"mn",0.0018,"L",NA,"shallow","mg_l",0.0018
 70,"7_transitional",1,"na",82.93,NA,NA,"shallow","mg_l",82.93
 70,"7_transitional",1,"nh4",6,"ND H",NA,"shallow","ug_n_l",6
@@ -31008,6 +31016,7 @@
 71,"2",1,"k",1.777,NA,NA,"shallow","mg_l",1.777
 71,"2",1,"li",0.0201,"L",NA,"shallow","mg_l",0.0201
 71,"2",1,"mg",21.66,NA,NA,"shallow","mg_l",21.66
+71,"2",1,"microcystin",0.015,"ND",NA,"shallow","mg/L",NA
 71,"2",1,"mn",0.0059,"L",NA,"shallow","mg_l",0.0059
 71,"2",1,"n2o_sat_ratio",0.997386676283026,NA,NA,"shallow","unitless",NA
 71,"2",1,"na",18.96,NA,NA,"shallow","mg_l",18.96
@@ -31188,7 +31197,6 @@
 75,"8",1,"tp",109.2,"H",NA,"shallow","ug_p_l",109.2
 75,"8",1,"v",0.01645,"L",NA,"shallow","mg_l",0.01645
 75,"8",1,"zn",0.0072,"L",NA,"shallow","mg_l",0.0072
-76,"2",1,"microcystin",0.015,NA,NA,"shallow","mg/L",NA
 76,"7",1,"al",0.004,"ND",NA,"deep","mg_l",0.004
 76,"7",1,"as",0.004,"ND",NA,"deep","mg_l",0.004
 76,"7",1,"ba",0.0525,"L",NA,"deep","mg_l",0.0525
@@ -31248,7 +31256,7 @@
 76,"7",1,"k",0.67785,NA,NA,"shallow","mg_l",0.67785
 76,"7",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 76,"7",1,"mg",16.845,NA,NA,"shallow","mg_l",16.845
-76,"7",1,"microcystin",0.0355,NA,NA,"shallow","mg/L",NA
+76,"7",1,"microcystin",0.0355,"ND",NA,"shallow","mg/L",NA
 76,"7",1,"mn",0.00695,NA,NA,"shallow","mg_l",0.00695
 76,"7",1,"na",2.217,NA,NA,"shallow","mg_l",2.217
 76,"7",1,"nh4",17,NA,NA,"shallow","ug_n_l",17
@@ -31332,7 +31340,7 @@
 77,"12",1,"k",3.504,NA,NA,"shallow","mg_l",3.504
 77,"12",1,"li",0.0084,"L",NA,"shallow","mg_l",0.0084
 77,"12",1,"mg",34.19,NA,NA,"shallow","mg_l",34.19
-77,"12",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+77,"12",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 77,"12",1,"mn",0.046,"L",NA,"shallow","mg_l",0.046
 77,"12",1,"n2o_sat_ratio",1.08299005492232,NA,NA,"shallow","unitless",NA
 77,"12",1,"na",79.72,NA,NA,"shallow","mg_l",79.72
@@ -31590,7 +31598,7 @@
 82,"11",1,"k",2.144,NA,NA,"shallow","mg_l",2.144
 82,"11",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 82,"11",1,"mg",3.5,NA,NA,"shallow","mg_l",3.5
-82,"11",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+82,"11",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 82,"11",1,"mn",0.0018,"L",NA,"shallow","mg_l",0.0018
 82,"11",1,"n2o_sat_ratio",1.19470038511608,NA,NA,"shallow","unitless",NA
 82,"11",1,"na",11.68,NA,NA,"shallow","mg_l",11.68
@@ -31661,7 +31669,7 @@
 83,"18",1,"k",1.4415,NA,NA,"shallow","mg_l",1.4415
 83,"18",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 83,"18",1,"mg",3.504,NA,NA,"shallow","mg_l",3.504
-83,"18",1,"microcystin",0.0425,NA,NA,"shallow","mg/L",NA
+83,"18",1,"microcystin",0.0425,"ND",NA,"shallow","mg/L",NA
 83,"18",1,"mn",0.00445,"L",NA,"shallow","mg_l",0.00445
 83,"18",1,"na",3.981,NA,NA,"shallow","mg_l",3.981
 83,"18",1,"nh4",6.5,"H",NA,"shallow","ug_n_l",6.5
@@ -31819,7 +31827,7 @@
 98,"11",1,"k",1.222,NA,NA,"shallow","mg_l",1.222
 98,"11",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 98,"11",1,"mg",1.357,NA,NA,"shallow","mg_l",1.357
-98,"11",1,"microcystin",0.009,NA,NA,"shallow","mg/L",NA
+98,"11",1,"microcystin",0.009,"ND",NA,"shallow","mg/L",NA
 98,"11",1,"mn",0.0066,"L",NA,"shallow","mg_l",0.0066
 98,"11",1,"n2o_sat_ratio",1.03138176062023,NA,NA,"shallow","unitless",NA
 98,"11",1,"na",2.5,NA,NA,"shallow","mg_l",2.5
@@ -31897,7 +31905,7 @@
 99,"16",1,"k",1.01715,NA,NA,"shallow","mg_l",1.01715
 99,"16",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 99,"16",1,"mg",1.26,NA,NA,"shallow","mg_l",1.26
-99,"16",1,"microcystin",0.0425,NA,NA,"shallow","mg/L",NA
+99,"16",1,"microcystin",0.0425,"ND",NA,"shallow","mg/L",NA
 99,"16",1,"mn",0.01545,"L",NA,"shallow","mg_l",0.01545
 99,"16",1,"na",1.978,NA,NA,"shallow","mg_l",1.978
 99,"16",1,"nh4",32,"ND",NA,"shallow","ug_n_l",32
@@ -31980,7 +31988,7 @@
 100,"11",1,"k",2.313,NA,NA,"shallow","mg_l",2.313
 100,"11",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 100,"11",1,"mg",6.436,NA,NA,"shallow","mg_l",6.436
-100,"11",1,"microcystin",0.116,NA,NA,"shallow","mg/L",NA
+100,"11",1,"microcystin",0.116,"L",NA,"shallow","mg/L",NA
 100,"11",1,"mn",0.0078,"L",NA,"shallow","mg_l",0.0078
 100,"11",1,"n2o_sat_ratio",1.10140253477498,NA,NA,"shallow","unitless",NA
 100,"11",1,"na",5.753,NA,NA,"shallow","mg_l",5.753
@@ -32055,7 +32063,7 @@
 101,"15",1,"k",1.267,NA,NA,"shallow","mg_l",1.267
 101,"15",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 101,"15",1,"mg",3.441,NA,NA,"shallow","mg_l",3.441
-101,"15",1,"microcystin",0.005,NA,NA,"shallow","mg/L",NA
+101,"15",1,"microcystin",0.005,"ND",NA,"shallow","mg/L",NA
 101,"15",1,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 101,"15",1,"n2o_sat_ratio",1.04242756352424,NA,NA,"shallow","unitless",NA
 101,"15",1,"na",2.26,NA,NA,"shallow","mg_l",2.26
@@ -32075,7 +32083,7 @@
 101,"15",1,"tp",11,"L H",NA,"shallow","ug_p_l",11
 101,"15",1,"v",0.001,"ND",NA,"shallow","mg_l",0.001
 101,"15",1,"zn",0.0034,"L",NA,"shallow","mg_l",0.0034
-101,"3",1,"microcystin",0.029,NA,NA,"shallow","mg/L",NA
+101,"3",1,"microcystin",0.029,"ND",NA,"shallow","mg/L",NA
 102,"3",1,"al",0.004,"ND",NA,"deep","mg_l",0.004
 102,"3",1,"as",0.004,"ND",NA,"deep","mg_l",0.004
 102,"3",1,"ba",0.0281,"L",NA,"deep","mg_l",0.0281
@@ -32208,7 +32216,7 @@
 103,"11",1,"k",2.047,NA,NA,"shallow","mg_l",2.047
 103,"11",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 103,"11",1,"mg",5.4515,NA,NA,"shallow","mg_l",5.4515
-103,"11",1,"microcystin",0.002,NA,NA,"shallow","mg/L",NA
+103,"11",1,"microcystin",0.002,"ND",NA,"shallow","mg/L",NA
 103,"11",1,"mn",0.0322,"L",NA,"shallow","mg_l",0.0322
 103,"11",1,"na",13.545,NA,NA,"shallow","mg_l",13.545
 103,"11",1,"nh4",13.2,"L",NA,"shallow","ug_n_l",13.2
@@ -32276,7 +32284,7 @@
 116,"11",1,"k",1.814,NA,NA,"shallow","mg_l",1.814
 116,"11",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 116,"11",1,"mg",4.509,NA,NA,"shallow","mg_l",4.509
-116,"11",1,"microcystin",0.0525,NA,NA,"shallow","mg/L",NA
+116,"11",1,"microcystin",0.0525,"ND",NA,"shallow","mg/L",NA
 116,"11",1,"mn",0.06755,"L",NA,"shallow","mg_l",0.06755
 116,"11",1,"na",5.2565,NA,NA,"shallow","mg_l",5.2565
 116,"11",1,"nh4",11.5,"H",NA,"shallow","ug_n_l",11.5
@@ -32353,7 +32361,7 @@
 117,"12",1,"k",2.106,NA,NA,"shallow","mg_l",2.106
 117,"12",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 117,"12",1,"mg",2.785,NA,NA,"shallow","mg_l",2.785
-117,"12",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+117,"12",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 117,"12",1,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 117,"12",1,"na",3.814,NA,NA,"shallow","mg_l",3.814
 117,"12",1,"nh4",6,"ND",NA,"shallow","ug_n_l",6
@@ -32437,7 +32445,7 @@
 119,"4",1,"k",3.173,NA,NA,"shallow","mg_l",3.173
 119,"4",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 119,"4",1,"mg",3.27,NA,NA,"shallow","mg_l",3.27
-119,"4",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+119,"4",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 119,"4",1,"mn",0.0203,"L",NA,"shallow","mg_l",0.0203
 119,"4",1,"n2o_sat_ratio",1.02439696287154,NA,NA,"shallow","unitless",NA
 119,"4",1,"na",4.85,NA,NA,"shallow","mg_l",4.85
@@ -32517,7 +32525,7 @@
 136,"13",1,"k",0.8309,NA,NA,"shallow","mg_l",0.8309
 136,"13",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 136,"13",1,"mg",8.9925,NA,NA,"shallow","mg_l",8.9925
-136,"13",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+136,"13",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 136,"13",1,"mn",0.002,NA,NA,"shallow","mg_l",0.002
 136,"13",1,"na",2.191,NA,NA,"shallow","mg_l",2.191
 136,"13",1,"nh4",26.2,"L",NA,"shallow","ug_n_l",26.2
@@ -32596,7 +32604,7 @@
 137,"4",1,"k",1.015,NA,NA,"shallow","mg_l",1.015
 137,"4",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 137,"4",1,"mg",1.3345,NA,NA,"shallow","mg_l",1.3345
-137,"4",1,"microcystin",0.0345,NA,NA,"shallow","mg/L",NA
+137,"4",1,"microcystin",0.0345,"ND",NA,"shallow","mg/L",NA
 137,"4",1,"mn",0.01905,NA,NA,"shallow","mg_l",0.01905
 137,"4",1,"na",1.703,NA,NA,"shallow","mg_l",1.703
 137,"4",1,"nh4",12.6,NA,NA,"shallow","ug_n_l",12.6
@@ -32816,7 +32824,7 @@
 147,"1",1,"k",3.157,NA,NA,"shallow","mg_l",3.157
 147,"1",1,"li",0.00975,"L",NA,"shallow","mg_l",0.00975
 147,"1",1,"mg",7.199,NA,NA,"shallow","mg_l",7.199
-147,"1",1,"microcystin",0.009,NA,NA,"shallow","mg/L",NA
+147,"1",1,"microcystin",0.009,"ND",NA,"shallow","mg/L",NA
 147,"1",1,"mn",0.0041,"L",NA,"shallow","mg_l",0.0041
 147,"1",1,"na",12.4625,NA,NA,"shallow","mg_l",12.4625
 147,"1",1,"nh4",1.7,"ND",NA,"shallow","ug_n_l",1.7
@@ -32901,7 +32909,7 @@
 147,"1",2,"k",3.161,NA,NA,"shallow","mg_l",3.161
 147,"1",2,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 147,"1",2,"mg",7.496,NA,NA,"shallow","mg_l",7.496
-147,"1",2,"microcystin",0.017,NA,NA,"shallow","mg/L",NA
+147,"1",2,"microcystin",0.017,"ND",NA,"shallow","mg/L",NA
 147,"1",2,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 147,"1",2,"n2o_sat_ratio",0.634673512906459,NA,NA,"shallow","unitless",NA
 147,"1",2,"na",11.79,NA,NA,"shallow","mg_l",11.79
@@ -32981,7 +32989,7 @@
 148,"7",1,"k",6.208,NA,NA,"shallow","mg_l",6.208
 148,"7",1,"li",0.0098,"L",NA,"shallow","mg_l",0.0098
 148,"7",1,"mg",12.83,NA,NA,"shallow","mg_l",12.83
-148,"7",1,"microcystin",0.0395,NA,NA,"shallow","mg/L",NA
+148,"7",1,"microcystin",0.0395,"ND",NA,"shallow","mg/L",NA
 148,"7",1,"mn",0.0111,"L",NA,"shallow","mg_l",0.0111
 148,"7",1,"na",91.8,NA,NA,"shallow","mg_l",91.8
 148,"7",1,"nh4",7.2,NA,NA,"shallow","ug_n_l",7.2
@@ -33060,7 +33068,7 @@
 148,"7",2,"k",7.0405,NA,NA,"shallow","mg_l",7.0405
 148,"7",2,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 148,"7",2,"mg",17.12,NA,NA,"shallow","mg_l",17.12
-148,"7",2,"microcystin",0.0115,NA,NA,"shallow","mg/L",NA
+148,"7",2,"microcystin",0.0115,"ND",NA,"shallow","mg/L",NA
 148,"7",2,"mn",0.0053,"L",NA,"shallow","mg_l",0.0053
 148,"7",2,"na",327.85,NA,NA,"shallow","mg_l",327.85
 148,"7",2,"nh4",28,NA,NA,"shallow","ug_n_l",28
@@ -33144,7 +33152,7 @@
 149,"8",1,"k",7.326,NA,NA,"shallow","mg_l",7.326
 149,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 149,"8",1,"mg",4.294,NA,NA,"shallow","mg_l",4.294
-149,"8",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+149,"8",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 149,"8",1,"mn",0.0032,"L",NA,"shallow","mg_l",0.0032
 149,"8",1,"n2o_sat_ratio",1.39858474479914,NA,NA,"shallow","unitless",NA
 149,"8",1,"na",9.311,NA,NA,"shallow","mg_l",9.311
@@ -33224,7 +33232,7 @@
 155,"25",1,"k",4.328,NA,NA,"shallow","mg_l",4.328
 155,"25",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 155,"25",1,"mg",19.965,NA,NA,"shallow","mg_l",19.965
-155,"25",1,"microcystin",0.0065,NA,NA,"shallow","mg/L",NA
+155,"25",1,"microcystin",0.0065,"ND",NA,"shallow","mg/L",NA
 155,"25",1,"mn",0.00945,"L",NA,"shallow","mg_l",0.00945
 155,"25",1,"na",48.325,NA,NA,"shallow","mg_l",48.325
 155,"25",1,"nh4",29.6,"H",NA,"shallow","ug_n_l",29.6
@@ -33465,7 +33473,7 @@
 165,"6",1,"k",4.496,NA,NA,"shallow","mg_l",4.496
 165,"6",1,"li",0.041,"L",NA,"shallow","mg_l",0.041
 165,"6",1,"mg",59.61,NA,NA,"shallow","mg_l",59.61
-165,"6",1,"microcystin",0.04,NA,NA,"shallow","mg/L",NA
+165,"6",1,"microcystin",0.04,"ND",NA,"shallow","mg/L",NA
 165,"6",1,"mn",0.0016,"L",NA,"shallow","mg_l",0.0016
 165,"6",1,"n2o_sat_ratio",1.51306350397505,NA,NA,"shallow","unitless",NA
 165,"6",1,"na",94.38,NA,NA,"shallow","mg_l",94.38
@@ -33630,7 +33638,7 @@
 167,"6",1,"k",7.748,NA,NA,"shallow","mg_l",7.748
 167,"6",1,"li",0.0291,"L",NA,"shallow","mg_l",0.0291
 167,"6",1,"mg",33.095,NA,NA,"shallow","mg_l",33.095
-167,"6",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+167,"6",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 167,"6",1,"mn",0.01895,"L",NA,"shallow","mg_l",0.01895
 167,"6",1,"na",91.6,NA,NA,"shallow","mg_l",91.6
 167,"6",1,"nh4",3.4,NA,NA,"shallow","ug_n_l",3.4
@@ -33715,7 +33723,7 @@
 184,"3",1,"k",3.8,NA,NA,"shallow","mg_l",3.8
 184,"3",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 184,"3",1,"mg",14.93,NA,NA,"shallow","mg_l",14.93
-184,"3",1,"microcystin",0.054,NA,NA,"shallow","mg/L",NA
+184,"3",1,"microcystin",0.054,"ND",NA,"shallow","mg/L",NA
 184,"3",1,"mn",0.0023,"L",NA,"shallow","mg_l",0.0023
 184,"3",1,"n2o_sat_ratio",1.16028197339539,NA,NA,"shallow","unitless",NA
 184,"3",1,"na",13.54,NA,NA,"shallow","mg_l",13.54
@@ -33799,7 +33807,7 @@
 186,"8",1,"k",1.74,NA,NA,"shallow","mg_l",1.74
 186,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 186,"8",1,"mg",12.26,NA,NA,"shallow","mg_l",12.26
-186,"8",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+186,"8",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 186,"8",1,"mn",0.0207,"L",NA,"shallow","mg_l",0.0207
 186,"8",1,"n2o_sat_ratio",0.739629477983399,NA,NA,"shallow","unitless",NA
 186,"8",1,"na",12.79,NA,NA,"shallow","mg_l",12.79
@@ -33968,7 +33976,7 @@
 190,"8",1,"k",2.66,NA,NA,"shallow","mg_l",2.66
 190,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 190,"8",1,"mg",5.438,NA,NA,"shallow","mg_l",5.438
-190,"8",1,"microcystin",0.043,NA,NA,"shallow","mg/L",NA
+190,"8",1,"microcystin",0.043,"ND",NA,"shallow","mg/L",NA
 190,"8",1,"mn",0.0017,"L",NA,"shallow","mg_l",0.0017
 190,"8",1,"n2o_sat_ratio",1.13230418563948,NA,NA,"shallow","unitless",NA
 190,"8",1,"na",8.617,NA,NA,"shallow","mg_l",8.617
@@ -34038,7 +34046,7 @@
 191,"13",1,"k",5.997,NA,NA,"shallow","mg_l",5.997
 191,"13",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 191,"13",1,"mg",7.3315,NA,NA,"shallow","mg_l",7.3315
-191,"13",1,"microcystin",0.0655,NA,NA,"shallow","mg/L",NA
+191,"13",1,"microcystin",0.0655,"ND",NA,"shallow","mg/L",NA
 191,"13",1,"mn",0.03275,"L",NA,"shallow","mg_l",0.03275
 191,"13",1,"na",9.0835,NA,NA,"shallow","mg_l",9.0835
 191,"13",1,"nh4",207.5,"H",NA,"shallow","ug_n_l",207.5
@@ -34115,7 +34123,7 @@
 195,"11",1,"k",2.4045,NA,NA,"shallow","mg_l",2.4045
 195,"11",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 195,"11",1,"mg",18.25,NA,NA,"shallow","mg_l",18.25
-195,"11",1,"microcystin",0.0155,NA,NA,"shallow","mg/L",NA
+195,"11",1,"microcystin",0.0155,"ND",NA,"shallow","mg/L",NA
 195,"11",1,"mn",0.0311,"L",NA,"shallow","mg_l",0.0311
 195,"11",1,"na",75.85,NA,NA,"shallow","mg_l",75.85
 195,"11",1,"nh4",14,"L",NA,"shallow","ug_n_l",14
@@ -34262,7 +34270,7 @@
 205,"7",1,"k",3.42,NA,NA,"shallow","mg_l",3.42
 205,"7",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 205,"7",1,"mg",14.12,NA,NA,"shallow","mg_l",14.12
-205,"7",1,"microcystin",0.113,NA,NA,"shallow","mg/L",NA
+205,"7",1,"microcystin",0.113,"L",NA,"shallow","mg/L",NA
 205,"7",1,"mn",0.0018,"L",NA,"shallow","mg_l",0.0018
 205,"7",1,"n2o_sat_ratio",0.891188486478097,NA,NA,"shallow","unitless",NA
 205,"7",1,"na",41.87,NA,NA,"shallow","mg_l",41.87
@@ -34345,7 +34353,7 @@
 206,"2",1,"k",3.091,NA,NA,"shallow","mg_l",3.091
 206,"2",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 206,"2",1,"mg",9.152,NA,NA,"shallow","mg_l",9.152
-206,"2",1,"microcystin",0.028,NA,NA,"shallow","mg/L",NA
+206,"2",1,"microcystin",0.028,"ND",NA,"shallow","mg/L",NA
 206,"2",1,"mn",0.0236,"L",NA,"shallow","mg_l",0.0236
 206,"2",1,"n2o_sat_ratio",0.925850772430036,NA,NA,"shallow","unitless",NA
 206,"2",1,"na",41.06,NA,NA,"shallow","mg_l",41.06
@@ -34494,7 +34502,7 @@
 208,"1",1,"k",3.624,NA,NA,"shallow","mg_l",3.624
 208,"1",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 208,"1",1,"mg",22.54,NA,NA,"shallow","mg_l",22.54
-208,"1",1,"microcystin",0.072,NA,NA,"shallow","mg/L",NA
+208,"1",1,"microcystin",0.072,"ND",NA,"shallow","mg/L",NA
 208,"1",1,"mn",0.0021,"L",NA,"shallow","mg_l",0.0021
 208,"1",1,"n2o_sat_ratio",1.81155552171023,NA,NA,"shallow","unitless",NA
 208,"1",1,"na",24.32,NA,NA,"shallow","mg_l",24.32
@@ -34568,7 +34576,7 @@
 209,"14",1,"k",1.216,NA,NA,"shallow","mg_l",1.216
 209,"14",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 209,"14",1,"mg",4.906,NA,NA,"shallow","mg_l",4.906
-209,"14",1,"microcystin",0.11,NA,NA,"shallow","mg/L",NA
+209,"14",1,"microcystin",0.11,"L",NA,"shallow","mg/L",NA
 209,"14",1,"mn",0.0071,"L",NA,"shallow","mg_l",0.0071
 209,"14",1,"n2o_sat_ratio",1.11793466496347,NA,NA,"shallow","unitless",NA
 209,"14",1,"na",5.468,NA,NA,"shallow","mg_l",5.468
@@ -34637,7 +34645,7 @@
 210,"5",1,"k",3.477,NA,NA,"shallow","mg_l",3.477
 210,"5",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 210,"5",1,"mg",16.985,NA,NA,"shallow","mg_l",16.985
-210,"5",1,"microcystin",1.4825,NA,NA,"shallow","mg/L",NA
+210,"5",1,"microcystin",5.93,NA,NA,"shallow","mg/L",NA
 210,"5",1,"mn",0.0474,"L",NA,"shallow","mg_l",0.0474
 210,"5",1,"na",30.44,NA,NA,"shallow","mg_l",30.44
 210,"5",1,"nh4",46,"H",NA,"shallow","ug_n_l",46
@@ -34705,7 +34713,7 @@
 211,"14",1,"k",2.421,NA,NA,"shallow","mg_l",2.421
 211,"14",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 211,"14",1,"mg",27.18,NA,NA,"shallow","mg_l",27.18
-211,"14",1,"microcystin",0.1325,NA,NA,"shallow","mg/L",NA
+211,"14",1,"microcystin",0.1325,"L",NA,"shallow","mg/L",NA
 211,"14",1,"mn",0.00205,"L",NA,"shallow","mg_l",0.00205
 211,"14",1,"na",20.34,NA,NA,"shallow","mg_l",20.34
 211,"14",1,"nh4",2,"ND H",NA,"shallow","ug_n_l",2
@@ -34788,7 +34796,7 @@
 214,"4",1,"k",1.858,NA,NA,"shallow","mg_l",1.858
 214,"4",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 214,"4",1,"mg",21.58,NA,NA,"shallow","mg_l",21.58
-214,"4",1,"microcystin",0.017,NA,NA,"shallow","mg/L",NA
+214,"4",1,"microcystin",0.017,"ND",NA,"shallow","mg/L",NA
 214,"4",1,"mn",0.1166,"L",NA,"shallow","mg_l",0.1166
 214,"4",1,"n2o_sat_ratio",0.655184895091314,NA,NA,"shallow","unitless",NA
 214,"4",1,"na",34.97,NA,NA,"shallow","mg_l",34.97
@@ -34874,6 +34882,7 @@
 230,"15",1,"k",1.321,NA,NA,"shallow","mg_l",1.321
 230,"15",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 230,"15",1,"mg",6.714,NA,NA,"shallow","mg_l",6.714
+230,"15",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 230,"15",1,"mn",0.8618,NA,NA,"shallow","mg_l",0.8618
 230,"15",1,"n2o_sat_ratio",0.69701537142924,NA,NA,"shallow","unitless",NA
 230,"15",1,"na",4.864,NA,NA,"shallow","mg_l",4.864
@@ -35103,7 +35112,7 @@
 233,"18",1,"k",1.537,NA,NA,"shallow","mg_l",1.537
 233,"18",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 233,"18",1,"mg",13.83,NA,NA,"shallow","mg_l",13.83
-233,"18",1,"microcystin",0.0175,NA,NA,"shallow","mg/L",NA
+233,"18",1,"microcystin",0.0175,"ND",NA,"shallow","mg/L",NA
 233,"18",1,"mn",0.0153,"L",NA,"shallow","mg_l",0.0153
 233,"18",1,"na",4.6955,NA,NA,"shallow","mg_l",4.6955
 233,"18",1,"nh4",7.1,"H",NA,"shallow","ug_n_l",7.1
@@ -35167,7 +35176,7 @@
 234,"20",1,"k",2.331,NA,NA,"shallow","mg_l",2.331
 234,"20",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 234,"20",1,"mg",18.63,NA,NA,"shallow","mg_l",18.63
-234,"20",1,"microcystin",0.08,NA,NA,"shallow","mg/L",NA
+234,"20",1,"microcystin",0.08,"ND",NA,"shallow","mg/L",NA
 234,"20",1,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 234,"20",1,"na",8.192,NA,NA,"shallow","mg_l",8.192
 234,"20",1,"nh4",23,"H",NA,"shallow","ug_n_l",23
@@ -35229,6 +35238,7 @@
 235,"3",1,"k",2.529,NA,NA,"shallow","mg_l",2.529
 235,"3",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 235,"3",1,"mg",15.43,NA,NA,"shallow","mg_l",15.43
+235,"3",1,"microcystin",0.546,NA,NA,"shallow","mg/L",NA
 235,"3",1,"mn",0.00105,NA,NA,"shallow","mg_l",0.00105
 235,"3",1,"na",23.17,NA,NA,"shallow","mg_l",23.17
 235,"3",1,"nh4",38.5,"H",NA,"shallow","ug_n_l",38.5
@@ -35311,7 +35321,7 @@
 236,"7",1,"k",1.932,NA,NA,"shallow","mg_l",1.932
 236,"7",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 236,"7",1,"mg",28.74,NA,NA,"shallow","mg_l",28.74
-236,"7",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+236,"7",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 236,"7",1,"mn",0.0824,"L",NA,"shallow","mg_l",0.0824
 236,"7",1,"n2o_sat_ratio",5.97981902335829,NA,NA,"shallow","unitless",NA
 236,"7",1,"na",8.634,NA,NA,"shallow","mg_l",8.634
@@ -35397,7 +35407,7 @@
 237,"15",1,"k",0.3464,"L",NA,"shallow","mg_l",0.3464
 237,"15",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 237,"15",1,"mg",30.61,NA,NA,"shallow","mg_l",30.61
-237,"15",1,"microcystin",0.081,NA,NA,"shallow","mg/L",NA
+237,"15",1,"microcystin",0.081,"ND",NA,"shallow","mg/L",NA
 237,"15",1,"mn",0.0011,"L",NA,"shallow","mg_l",0.0011
 237,"15",1,"n2o_sat_ratio",4.86017422426488,NA,NA,"shallow","unitless",NA
 237,"15",1,"na",5.115,NA,NA,"shallow","mg_l",5.115
@@ -35462,7 +35472,7 @@
 238,"8",1,"k",2.194,NA,NA,"shallow","mg_l",2.194
 238,"8",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 238,"8",1,"mg",3.596,NA,NA,"shallow","mg_l",3.596
-238,"8",1,"microcystin",0.043,NA,NA,"shallow","mg/L",NA
+238,"8",1,"microcystin",0.043,"ND",NA,"shallow","mg/L",NA
 238,"8",1,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 238,"8",1,"na",9.891,NA,NA,"shallow","mg_l",9.891
 238,"8",1,"nh4",36,"H",NA,"shallow","ug_n_l",36
@@ -35563,7 +35573,7 @@
 240,"1",1,"k",5.235,NA,NA,"shallow","mg_l",5.235
 240,"1",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 240,"1",1,"mg",15.19,NA,NA,"shallow","mg_l",15.19
-240,"1",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+240,"1",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 240,"1",1,"mn",0.0323,"L",NA,"shallow","mg_l",0.0323
 240,"1",1,"n2o_sat_ratio",1.33920471743414,NA,NA,"shallow","unitless",NA
 240,"1",1,"na",19.41,NA,NA,"shallow","mg_l",19.41
@@ -35638,7 +35648,7 @@
 247,"6",1,"k",1.4845,NA,NA,"shallow","mg_l",1.4845
 247,"6",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 247,"6",1,"mg",4.335,NA,NA,"shallow","mg_l",4.335
-247,"6",1,"microcystin",0.0185,NA,NA,"shallow","mg/L",NA
+247,"6",1,"microcystin",0.0185,"ND",NA,"shallow","mg/L",NA
 247,"6",1,"mn",0.00435,"L",NA,"shallow","mg_l",0.00435
 247,"6",1,"na",8.8495,NA,NA,"shallow","mg_l",8.8495
 247,"6",1,"nh4",6,"ND",NA,"shallow","ug_n_l",6
@@ -35714,7 +35724,7 @@
 249,"6",1,"toc",2.9,"H",NA,"deep","mg_c_l",2.9
 249,"6",1,"tp",52,"L H",NA,"deep","ug_p_l",52
 249,"6",1,"chla_lab",4.34,NA,NA,"shallow","ug_l",4.34
-249,"6",1,"microcystin",0.0665,NA,NA,"shallow","mg/L",NA
+249,"6",1,"microcystin",0.0665,"ND",NA,"shallow","mg/L",NA
 249,"6",1,"nh4",5.5,"H",NA,"shallow","ug_n_l",5.5
 249,"6",1,"no2_3",10,"H",NA,"shallow","ug_n_l",10
 249,"6",1,"op",23,"L H",NA,"shallow","ug_p_l",23
@@ -35793,7 +35803,7 @@
 250,"3",2,"k",1.006,NA,NA,"shallow","mg_l",1.006
 250,"3",2,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 250,"3",2,"mg",7.917,NA,NA,"shallow","mg_l",7.917
-250,"3",2,"microcystin",0.072,NA,NA,"shallow","mg/L",NA
+250,"3",2,"microcystin",0.072,"ND",NA,"shallow","mg/L",NA
 250,"3",2,"mn",0.0109,"L",NA,"shallow","mg_l",0.0109
 250,"3",2,"n2o_sat_ratio",0.922460233330679,NA,NA,"shallow","unitless",NA
 250,"3",2,"na",0.8416,NA,NA,"shallow","mg_l",0.8416
@@ -35964,7 +35974,7 @@
 265,"2",1,"k",0.4444,"L",NA,"shallow","mg_l",0.4444
 265,"2",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 265,"2",1,"mg",0.7747,NA,NA,"shallow","mg_l",0.7747
-265,"2",1,"microcystin",0.022,NA,NA,"shallow","mg/L",NA
+265,"2",1,"microcystin",0.022,"ND",NA,"shallow","mg/L",NA
 265,"2",1,"mn",0.01705,"L",NA,"shallow","mg_l",0.01705
 265,"2",1,"na",2.4275,NA,NA,"shallow","mg_l",2.4275
 265,"2",1,"nh4",2.5,"H",NA,"shallow","ug_n_l",2.5
@@ -36126,6 +36136,7 @@
 276,"20",1,"k",0.3,"ND",NA,"shallow","mg_l",0.3
 276,"20",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 276,"20",1,"mg",11.4,NA,NA,"shallow","mg_l",11.4
+276,"20",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 276,"20",1,"mn",0.0049,"L",NA,"shallow","mg_l",0.0049
 276,"20",1,"n2o_sat_ratio",0.938716882474611,NA,NA,"shallow","unitless",NA
 276,"20",1,"na",2.61,NA,NA,"shallow","mg_l",2.61
@@ -36199,7 +36210,7 @@
 281,"12",2,"k",0.3,"ND",NA,"shallow","mg_l",0.3
 281,"12",2,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 281,"12",2,"mg",0.0625,"L",NA,"shallow","mg_l",0.0625
-281,"12",2,"microcystin",0,NA,NA,"shallow","mg/L",NA
+281,"12",2,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 281,"12",2,"mn",0.00175,"L",NA,"shallow","mg_l",0.00175
 281,"12",2,"na",0.47285,"L",NA,"shallow","mg_l",0.47285
 281,"12",2,"ni",0.001,"ND",NA,"shallow","mg_l",0.001
@@ -36284,7 +36295,7 @@
 287,"13",1,"k",3.429,NA,NA,"shallow","mg_l",3.429
 287,"13",1,"li",0.0058,"L",NA,"shallow","mg_l",0.0058
 287,"13",1,"mg",5.581,NA,NA,"shallow","mg_l",5.581
-287,"13",1,"microcystin",0.022,NA,NA,"shallow","mg/L",NA
+287,"13",1,"microcystin",0.022,"ND",NA,"shallow","mg/L",NA
 287,"13",1,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 287,"13",1,"na",25.89,NA,NA,"shallow","mg_l",25.89
 287,"13",1,"nh4",17,"H",NA,"shallow","ug_n_l",17
@@ -36362,7 +36373,7 @@
 288,"10",1,"k",6.6855,NA,NA,"shallow","mg_l",6.6855
 288,"10",1,"li",0.14495,"L",NA,"shallow","mg_l",0.14495
 288,"10",1,"mg",14.09,NA,NA,"shallow","mg_l",14.09
-288,"10",1,"microcystin",0.0355,NA,NA,"shallow","mg/L",NA
+288,"10",1,"microcystin",0.0355,"ND",NA,"shallow","mg/L",NA
 288,"10",1,"mn",0.02135,NA,NA,"shallow","mg_l",0.02135
 288,"10",1,"na",218,NA,NA,"shallow","mg_l",218
 288,"10",1,"nh4",29.3,"H S",NA,"shallow","ug_n_l",29.3
@@ -36442,7 +36453,7 @@
 291,"13",1,"k",1.3615,NA,NA,"shallow","mg_l",1.3615
 291,"13",1,"li",0.00615,"L",NA,"shallow","mg_l",0.00615
 291,"13",1,"mg",9.48,NA,NA,"shallow","mg_l",9.48
-291,"13",1,"microcystin",0.01,NA,NA,"shallow","mg/L",NA
+291,"13",1,"microcystin",0.01,"ND",NA,"shallow","mg/L",NA
 291,"13",1,"mn",0.00375,NA,NA,"shallow","mg_l",0.00375
 291,"13",1,"na",13.81,NA,NA,"shallow","mg_l",13.81
 291,"13",1,"nh4",31.1,NA,NA,"shallow","ug_n_l",31.1
@@ -36527,7 +36538,7 @@
 296,"17",1,"k",4.141,NA,NA,"shallow","mg_l",4.141
 296,"17",1,"li",0.0168,"L",NA,"shallow","mg_l",0.0168
 296,"17",1,"mg",35.06,NA,NA,"shallow","mg_l",35.06
-296,"17",1,"microcystin",0.047,NA,NA,"shallow","mg/L",NA
+296,"17",1,"microcystin",0.047,"ND",NA,"shallow","mg/L",NA
 296,"17",1,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 296,"17",1,"n2o_sat_ratio",1.00459224622402,NA,NA,"shallow","unitless",NA
 296,"17",1,"na",82.36,NA,NA,"shallow","mg_l",82.36
@@ -36613,7 +36624,7 @@
 297,"41",1,"k",0.9962,NA,NA,"shallow","mg_l",0.9962
 297,"41",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 297,"41",1,"mg",1.854,NA,NA,"shallow","mg_l",1.854
-297,"41",1,"microcystin",0,NA,NA,"shallow","mg/L",NA
+297,"41",1,"microcystin",0,"ND",NA,"shallow","mg/L",NA
 297,"41",1,"mn",0.0028,"L",NA,"shallow","mg_l",0.0028
 297,"41",1,"n2o_sat_ratio",1.12779495918033,NA,NA,"shallow","unitless",NA
 297,"41",1,"na",2.748,NA,NA,"shallow","mg_l",2.748
@@ -36694,7 +36705,7 @@
 298,"1",1,"k",3.407,NA,NA,"shallow","mg_l",3.407
 298,"1",1,"li",0.0205,"L",NA,"shallow","mg_l",0.0205
 298,"1",1,"mg",4.913,NA,NA,"shallow","mg_l",4.913
-298,"1",1,"microcystin",0.026,NA,NA,"shallow","mg/L",NA
+298,"1",1,"microcystin",0.026,"ND",NA,"shallow","mg/L",NA
 298,"1",1,"mn",0.00685,"L",NA,"shallow","mg_l",0.00685
 298,"1",1,"na",12.7,NA,NA,"shallow","mg_l",12.7
 298,"1",1,"nh4",13.8,"L H",NA,"shallow","ug_n_l",13.8
@@ -36817,7 +36828,7 @@
 316,"3",1,"k",6.337,NA,NA,"shallow","mg_l",6.337
 316,"3",1,"li",0.115,"L",NA,"shallow","mg_l",0.115
 316,"3",1,"mg",36.79,NA,NA,"shallow","mg_l",36.79
-316,"3",1,"microcystin",0.089,NA,NA,"shallow","mg/L",NA
+316,"3",1,"microcystin",0.089,"ND",NA,"shallow","mg/L",NA
 316,"3",1,"mn",0.001,"ND",NA,"shallow","mg_l",0.001
 316,"3",1,"n2o_sat_ratio",1.07055694845367,NA,NA,"shallow","unitless",NA
 316,"3",1,"na",210,NA,NA,"shallow","mg_l",210
@@ -36903,7 +36914,7 @@
 317,"18",1,"k",3.727,NA,NA,"shallow","mg_l",3.727
 317,"18",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 317,"18",1,"mg",18.44,NA,NA,"shallow","mg_l",18.44
-317,"18",1,"microcystin",0.075,NA,NA,"shallow","mg/L",NA
+317,"18",1,"microcystin",0.075,"ND",NA,"shallow","mg/L",NA
 317,"18",1,"mn",0.0018,"L",NA,"shallow","mg_l",0.0018
 317,"18",1,"n2o_sat_ratio",0.748215473478419,NA,NA,"shallow","unitless",NA
 317,"18",1,"na",129.7,NA,NA,"shallow","mg_l",129.7
@@ -37097,7 +37108,7 @@
 327,"5",1,"k",12.89,NA,NA,"shallow","mg_l",12.89
 327,"5",1,"li",0.1061,"L",NA,"shallow","mg_l",0.1061
 327,"5",1,"mg",40.75,NA,NA,"shallow","mg_l",40.75
-327,"5",1,"microcystin",0.1,NA,NA,"shallow","mg/L",NA
+327,"5",1,"microcystin",0.1,"L",NA,"shallow","mg/L",NA
 327,"5",1,"mn",0.0026,"L",NA,"shallow","mg_l",0.0026
 327,"5",1,"n2o_sat_ratio",0.884418955046395,NA,NA,"shallow","unitless",NA
 327,"5",1,"na",50.86,NA,NA,"shallow","mg_l",50.86
@@ -37177,7 +37188,7 @@
 328,"7",1,"k",0.9451,NA,NA,"shallow","mg_l",0.9451
 328,"7",1,"li",0.005,"ND",NA,"shallow","mg_l",0.005
 328,"7",1,"mg",10.5,NA,NA,"shallow","mg_l",10.5
-328,"7",1,"microcystin",5e-04,NA,NA,"shallow","mg/L",NA
+328,"7",1,"microcystin",5e-04,"ND",NA,"shallow","mg/L",NA
 328,"7",1,"mn",0.0486,"L",NA,"shallow","mg_l",0.0486
 328,"7",1,"na",4.4295,NA,NA,"shallow","mg_l",4.4295
 328,"7",1,"nh4",7.1,NA,NA,"shallow","ug_n_l",7.1
