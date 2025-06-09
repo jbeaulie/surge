@@ -45,7 +45,21 @@ get_microcystin_data <- function(path) {
                                  date == as.Date("2021-06-29") ~ "70_riverine",
                                lake_id == 70 & 
                                  date == as.Date("2021-07-12") ~ "70_transitional",
-                               TRUE ~ as.character(lake_id))) %>%
+                               TRUE ~ as.character(lake_id)),
+           
+           # random lake_id errors
+           lake_id = case_when(
+             # 71 incorrectly labeled 76
+             date == as.Date("2021-08-09") & site_id == 2 ~ "71",
+             # 276 incorrectly labeled 76
+             date == as.Date("2022-07-22") & site_id == 20 ~ "276",
+             TRUE ~ lake_id),
+           
+           # random site_id errors
+           site_id = case_when(lake_id == "230" & site_id == 0 ~ 15, #CONFIRMED
+                               lake_id == "44" & site_id == 77 ~ 7, #CONFIRMED
+                               TRUE ~ site_id)) %>%
+    
     select(lake_id, site_id, sample_type, sample_depth, visit,
            microcystin, microcystin_units, microcystin_flags) 
   
@@ -61,3 +75,17 @@ microcystin <- get_microcystin_data(path)
 # none
 microcystin %>% janitor::get_dupes(lake_id, lake_id, site_id, sample_depth, sample_type, visit)
 
+# inventory
+# No sample received from 204. 81 bottle broken.
+# what about 1000, 102, and 84?
+chem.samples.foo %>% # df of expected samples
+  filter(analyte == "microcystin") %>%
+  filter(!(lake_id %in% microcystin$lake_id))
+
+
+# all microcystin lake_id values are expected
+microcystin %>%
+  filter(!(lake_id %in% (chem.samples.foo %>% # df of expected samples
+           filter(analyte == "microcystin") %>%
+           select(lake_id) %>%
+           pull)))
