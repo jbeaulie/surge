@@ -5,31 +5,47 @@
 
 get_microcystin_data <- function(path) { 
   
-  d <- read_csv(path, na = "NA") %>% #
-    janitor::clean_names() %>% # 
-    mutate(site_id = as.numeric(gsub(".*?([0-9]+).*", "\\1", site)), # convert to numeric
-           sample_depth = "shallow", # all samples were collected near a-w interface
-           lake_id = str_remove(waterbody, "^0+"), # remove leading 0 from character string
-           
-           # Create visit field
-           visit = case_when(lake_id %in% c("281", "250") &
-                               between(date %>% as.Date(format = "%m/%d/%Y"),
-                                       as.Date("2022-08-15"),
-                                       as.Date("2022-09-23")) ~ 2,
-                             lake_id %in% c("147", "148") &
-                               between(date %>% as.Date(format = "%m/%d/%Y"),
-                                       as.Date("2023-08-01"),
-                                       as.Date("2023-08-30")) ~ 2,
-                             TRUE ~ 1),
-           # deal with instances of "<0.000", which causes the field to be character
-           value = case_when(value == "<0.000" ~ 0,
-                             TRUE ~ as.numeric(value))) %>%
+  d <- read_csv(path, na = "NA", 
+                col_types = "Dnncccncc") %>% #D=date,n=number,c=character
+    janitor::clean_names() %>% 
     rename(sample_type = field_dups,
+           lake_id = waterbody,
+           site_id = site,
            microcystin = value,
            microcystin_units = units,
            microcystin_flags = flag) %>%
-    
-    
+    mutate(sample_depth = 
+             case_when(sample_type == "blank" ~ "blank", # depth == blank for all blanks
+                       sample_type %in% c("unknown", "duplicate") ~ "shallow", # all unknowns collected near a-w interface
+                       TRUE ~ "FLY YOU FOOLS!"), # error code
+           # Create visit field
+           visit = case_when(lake_id %in% c("281", "250") &
+                               between(date,
+                                       as.Date("2022-08-15"),
+                                       as.Date("2022-09-23")) ~ 2,
+                             lake_id %in% c("147", "148") &
+                               dplyr::between(date,
+                                              as.Date("2023-08-01"),
+                                              as.Date("2023-08-30")) ~ 2,
+                             TRUE ~ 1),
+           # flags
+           microcystin_flags = case_when(microcystin_flags == "below detection limit; below reporting limit" ~ "ND",
+                                         microcystin_flags == "below reporting limit" ~ "L",
+                                         TRUE ~ microcystin_flags),
+           # fix 69 and 70 lake_id values
+           lake_id = case_when(lake_id == 69 & 
+                                 date == as.Date("2021-06-22") ~ "69_transitional",
+                               lake_id == 69 & 
+                                 date == as.Date("2021-06-24") ~ "69_lacustrine",
+                               lake_id == 69 & 
+                                 date == as.Date("2021-07-13") ~ "69_riverine",
+                               lake_id == 70 & 
+                                 date == as.Date("2021-06-25") ~ "70_lacustrine",
+                               lake_id == 70 & 
+                                 date == as.Date("2021-06-29") ~ "70_riverine",
+                               lake_id == 70 & 
+                                 date == as.Date("2021-07-12") ~ "70_transitional",
+                               TRUE ~ as.character(lake_id))) %>%
     select(lake_id, site_id, sample_type, sample_depth, visit,
            microcystin, microcystin_units, microcystin_flags) 
   
@@ -42,21 +58,6 @@ path <- paste0(userPath, "data/algalIndicators/surge_microcystin.csv")
 microcystin <- get_microcystin_data(path)
 
 # check for dups
-# 20 on 4/16/2025. Asked Jeff to investigate. Will strip out for now
+# none
 microcystin %>% janitor::get_dupes(lake_id, lake_id, site_id, sample_depth, sample_type, visit)
 
-# remove dups for now
-microcystin <- microcystin[!duplicated(microcystin[c("lake_id", "lake_id", "site_id", "sample_depth", "sample_type", "visit")]), ]
-
-# confirm no dups
-microcystin %>% janitor::get_dupes(lake_id, lake_id, site_id, sample_depth, sample_type, visit)
-
-# lakes 69 and 70 do not have _lac, _riv, _trans, etc. 
-# a few lakes with incorrect site_id value
-# Strip until Jeff fixes. Issue # 9 at surge_algal repo
-microcystin <- microcystin %>%
-  filter(!(lake_id %in% c("69", "70")),
-         !(lake_id == 230 & site_id == 0 & visit == 1), # site_id 0?
-         !(lake_id == 44 & site_id == 77 & visit == 1), # site_id == 77?
-         !(lake_id == 76 & site_id == 20 & visit == 1) # site_id == 20?
-  )
