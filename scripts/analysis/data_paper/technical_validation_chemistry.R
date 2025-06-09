@@ -28,19 +28,13 @@ source(paste0( "scripts/analysis/mergeChemistry.R")) # merge all chem objects #c
 
 # Data Setup---------------------------------------------
 
-detlimits <- read_csv("scripts/analysis/data_paper/dataPaperDetectionLimits.csv")
+detlimits <- read_csv("SuRGE_Sharepoint/data/chemistry/dataPaperDetectionLimits.csv")
 
-# d.anions needs to have flags consolidated into '_flags' columns
-d.anions_formatted <- d.anions %>% 
-  select(!ends_with("units")) %>%
-  unite(starts_with("f_"), col = "f_flags", sep = " ") %>% 
-  unite(starts_with("br_"), col = "br_flags", sep = " ") %>%
-  unite(starts_with("cl_"), col = "cl_flags", sep = " ") %>%
-  unite(starts_with("so4_"), col = "so4_flags", sep = " ")
-
-
-# Do not use phycocyanin
-chemdata <- chemistry_all %>% select(!starts_with("phyc"))
+# chemistry_all contains all chemistry analytes, field duplicates, and blanks
+# Exclude variables we don't want
+chemdata <- chemistry_all %>% 
+  # exclude phycocyanin and gases
+  select(!(starts_with("phyc") | matches(c("ch4|co2|n2o")))) 
 
 
 # Flags-------------------------------------------------
@@ -81,6 +75,7 @@ flags <- chemdata %>% tally_flags()
      mutate(sample_type = case_when(sample_type == "duplicate" ~ "unknown", TRUE ~ sample_type)) %>%
      select(!c(site_id, sample_depth), -matches("flag|units")) %>%
      pivot_longer(!c(lake_id, sample_type, visit)) %>%
+     filter(!(name == "chla_lab")) %>% # no field blanks for chlorophyll
      group_by(lake_id, name, sample_type, visit) %>%
      summarize(min = min(value, na.rm = TRUE), 
                max = max(value, na.rm = TRUE)) %>%
@@ -92,27 +87,44 @@ flags <- chemdata %>% tally_flags()
    
    df <- df %>%
      # apply conditional filtering to detlimits based on dataframe name
-     left_join(lake.list.all %>% distinct(lake_id, lab, year = sample_year), by = "lake_id") %>%
-     left_join(detlimits %>% distinct(name, lab, year, .keep_all = TRUE), by = "lab") %>%
-     # left_join(y = {if (groupname %in% c("ada.anions", "ada.nutrients", "ada.oc")) 
-     #   filter(detlimits, lab == "ADA")
-     #   else if (groupname %in% c("d.anions_revised", "tteb.all", "toc.masi")) 
-     #     filter(detlimits, lab == "CIN")
-     #   else if (groupname == "chem18") 
-     #     filter(detlimits, lab == "CIN" & year == "2018")
-     #   else filter(detlimits, lab == "CIN" & year == "2021") }, by = "name") %>%
-     select(-lab, -year, -units) %>%
+     
+     # 1. Join with lake list to bring in year and lab
+     #    Naturally joins on lake_id and visit
+     left_join(lake.list.all %>% 
+                 distinct(lake_id, visit, lab, year = sample_year)) %>%
+
+     # 2. Create analyte_group field
+     mutate(analyte_group = case_when(name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp") ~ "nutrients",
+                                      name %in% c("br", "cl", "so4", "f") ~ "anions",
+                                      name %in% c("al", "as", "ba", "be", "ca", "cd", 
+                                                  "cr", "cu", "fe", "k", "li", "mg", 
+                                                  "mn", "na", "ni", "pb", "p", "sb", 
+                                                  "si", "sn", "sr", "s", "v", "zn") ~ "metals",
+                                      name %in% c("toc", "doc") ~ "organic",
+                                      name == "microcystin" ~ "algal_indicators",
+                                      TRUE ~ NA_character_)) %>%
+     
+     # 3. detection limits differ between CIN and ADA. Current "lab" field is for
+     #    field crew (eg. R10, RTP, etc) not which lab ran chemistry. Create 
+     #    "analytical_lab" field with either ADA and CIN as only legitimate values.
+     mutate(analytical_lab = 
+              case_when(year == 2020 & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp") ~ "ADA", # all 2020 nutrients sent to ADA
+                        lab == "ADA" & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp", "br", "cl", "so4", "f", "toc", "doc") ~ "ADA", # ADA ran their own nutrients, anions, OC
+                        TRUE ~ "CIN")) %>% # all others ran in CIN
+     
+     # 4. Join with detlimits to bring in detection limits
+     #    naturally joins on name, analytical_lab, year
+     left_join(detlimits %>%
+                 select(name, mdl, ql, year, analytical_lab = lab)) %>% 
+     
+     # 5. select and rename
+     select(-lab, -year) %>%
      rename(analyte = name, blank = min_blank, 
             minimum = min_unknown, maximum = max_unknown) %>%
+     
+     # 6. derived values
      mutate(mean_unknown = (minimum + maximum) / 2, 
             blank_prop = round((blank / mean_unknown), 2))
-   
-    # mutate(blank_v_unknown = case_when(blank < minimum ~ blank/minimum, 
-    #                                    blank > maximum ~ blank/maximum,
-    #                                    blank >= minimum & blank <= maximum ~ 0, 
-    #                                    .default = NA
-    #        ))
-
  }
  
 
@@ -125,7 +137,8 @@ flags <- chemdata %>% tally_flags()
 ## Field Duplicates Setup----------------------------------
   
 # identify lakes, sites, and depths with duplicates
-duplicate_ids <- chemdata %>% filter(sample_type == "duplicate") %>%
+duplicate_ids <- chemdata %>% 
+    filter(sample_type == "duplicate") %>%
   select(lake_id, site_id, sample_depth, visit) %>%
   mutate(id = paste0(lake_id, site_id, sample_depth, visit))
 
