@@ -200,3 +200,7 @@ doc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,Y
 doc,organic,0.096,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,Y,7 days,2023
 toc,organic,0.1,0.5,CIN,mg_c_l,Acidified with 2 drops 50% H3PO4; stored at 4oC,N,28 days,2023
 toc,organic,0.096,0.5,ADA,mg_c_l,Not acidified; stored at 4oC,N,7 days,2023
+microcystin,algal_indicators,0.1,0.15,NAR,ug_l,Stored at -20C,N,,2020
+microcystin,algal_indicators,0.1,0.15,NAR,ug_l,Stored at -20C,N,,2021
+microcystin,algal_indicators,0.1,0.15,NAR,ug_l,Stored at -20C,N,,2022
+microcystin,algal_indicators,0.1,0.15,NAR,ug_l,Stored at -20C,N,,2023
