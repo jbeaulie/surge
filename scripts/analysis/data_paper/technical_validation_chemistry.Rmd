@@ -11,7 +11,7 @@ library(kableExtra)
 library(tidyverse)
 library(plotly)
 library(gt)
-tvd <- readRDS("technical_validation_chemistry_data")
+tvd <- readRDS("scripts/analysis/data_paper/technical_validation_chemistry_data")
 ```
 
 ## Flags
@@ -28,7 +28,7 @@ flags_table <- tribble(
 
 mdl_table <- tvd$detlimits %>% 
   mutate(mdl = as.character(mdl), 
-         year = if_else (year == "2020_2021", "2020 - 2021", year), 
+         year = ifelse (year == "2020_2021", "2020 - 2021", year), 
          analyte_group = if_else(analyte_group == "organic", "organic carbon", analyte_group), 
          name = str_to_upper(name), 
          name = if_else(name == "NO2_3", "combined NO2 and NO3", name),
@@ -40,11 +40,11 @@ mdl_table <- tvd$detlimits %>%
   arrange('analyte group')
 
 # Break out by analyte group for easier in-text coding
-anion_flags <- bind_rows(tvd$flags$ada.anions, tvd$flags$d.anions_formatted)  
-nutrient_flags <- bind_rows(tvd$flags$ada.nutrients, tvd$flags$chem18, tvd$flags$chemCinNutrients) 
-oc_flags <- bind_rows(tvd$flags$toc.masi, tvd$flags$ada.oc) 
-metal_flags <- tvd$flags$tteb.all
-pigment_flags <- bind_rows(tvd$flags$pigments, tvd$flags$chl18) 
+anion_flags <- tvd$flags %>% filter(analyte_group == "anions") 
+nutrient_flags <- tvd$flags %>% filter(analyte_group == "nutrients") 
+oc_flags <- tvd$flags %>% filter(analyte_group == "organic carbon")  
+metal_flags <- tvd$flags %>% filter(analyte_group == "metals") 
+pigment_flags <- tvd$flags %>% filter(analyte_group == "algal indicators") 
 
 # Break out by key analytes for easier in-text coding
 sulfate_flags <- anion_flags %>% filter(analyte == "so4") 
@@ -57,8 +57,8 @@ calcium_flags <- metal_flags %>% filter(analyte == "ca")
 magnesium_flags <- metal_flags %>% filter(analyte == "mg")
 tocdoc_flags <- oc_flags %>% filter(analyte %in% c("toc", "doc"))
 
-kable(flags_table, caption = "Table ???: Flag Descriptions")
-kable(mdl_table, caption = "Table ???: Minimum Detect Limit (MDL) for Key Analytes")
+# kable(flags_table, caption = "Table ???: Flag Descriptions")
+# kable(mdl_table, caption = "Table ???: Minimum Detect Limit (MDL) for Key Analytes")
 # kable(anion_flags)  
 # kable(nutrient_flags)
 # kable(oc_flags)  
@@ -75,6 +75,14 @@ The incidence of detection limit flags varied considerably among the 39 analytes
 > Similarly, the incidence of ND flags differed among some key analytes when compared to their broader analyte groups. ND flags occurred in `r (sum(sulfate_flags$ND)/sum(sulfate_flags$total) * 100) %>% round(1)` percent of sulfate (SO~4~) samples compared to `r (sum(anion_flags$ND)/sum(anion_flags$total) * 100) %>% round(1)` percent of all anion samples. Among nutrient samples, `r (sum(tn_flags$ND)/sum(tn_flags$total) * 100) %>% round(1)` percent of total nitrogen (TN) samples, `r (sum(tp_flags$ND)/sum(tp_flags$total) * 100) %>% round(1)` percent of total phosphorus (TP) samples, `r (sum(nitrite_nitrate_flags$ND)/sum(nitrite_nitrate_flags$total) * 100) %>% round(1)` percent of combined nitrite-nitrate (NO~2~ and NO~3~) samples, `r (sum(ammonium_flags$ND)/sum(ammonium_flags$total) * 100) %>% round(1)` percent of ammonium (NH~4~) samples, and `r (sum(orthophosphate_flags$ND)/sum(orthophosphate_flags$total) * 100) %>% round(1)` percent of orthophosphate (OP) samples had ND flags, compared to `r (sum(nutrient_flags$ND)/sum(nutrient_flags$total) * 100) %>% round(1)` percent of nutrient samples overall. Among metal samples, `r (sum(magnesium_flags$ND)/sum(magnesium_flags$total) * 100) %>% round(1)` percent of magnesium samples (Mg) had ND flags, as did `r (sum(calcium_flags$ND)/sum(calcium_flags$total) * 100) %>% round(1)` percent of calcium (Ca) samples, compared to `r (sum(metal_flags$ND)/sum(metal_flags$total) * 100) %>% round(1)` percent of all metal samples. Finally, `r (sum(oc_flags$ND)/sum(oc_flags$total) * 100) %>% round(1)` percent of organic carbon samples and `r (sum(pigment_flags$ND)/sum(pigment_flags$total) * 100) %>% round(1)` percent of pigment samples had ND flags.
 
 Shipping issues were rare and occurred only among pigment samples collected from 2020 onward. Samples with S flags comprised only `r (sum(pigment_flags$S)/sum(pigment_flags$total) * 100) %>% round(1)` percent of pigment samples across all years. No S flags were present in pigment samples collection prior to 2020, nor among any other analytes. Holding time violations were more numerous and occurred across all analyte groups. H flags were present for `r (sum(anion_flags$H)/sum(anion_flags$total) * 100) %>% round(1)` percent of anion samples, `r (sum(nutrient_flags$H)/sum(nutrient_flags$total) * 100) %>% round(1)` percent of nutrient samples, `r (sum(metal_flags$H)/sum(metal_flags$total) * 100) %>% round(1)` percent of metals samples, `r (sum(oc_flags$H)/sum(oc_flags$total) * 100) %>% round(1)` percent of organic carbon samples, and `r (sum(pigment_flags$H)/sum(pigment_flags$total) * 100) %>% round(1)` percent of pigment samples.
+
+## Revised LOL Flag text--------------------------------------------------------
+
+Four types of flags were assigned to chemistry samples based on data returned from labs: 1) “ND” if measured concentration was below the method detection limit (MDL), 2) “L” if measured concentration exceeded the MDL but was less than the reporting limit (RL), 3) “H” for holding time violations, and 4) “S” for shipping issues. Procedures varied across labs for defining the RL. We assumed equivalency between the terms “quantification limit” and “reporting limit” provided by the labs. If neither value was reported by the lab, we assumed the RL was equal to the lowest non-zero standard in the standard curve. In some cases, one field duplicate was flagged for a detection limit issue, but the other was not; in such instances, the aggregated value was not flagged. In cases where duplicates had different flags, the flag associated with the higher-concentration sample was applied to the aggregated value. For example, if one duplicate was flagged ND and one received an L flag, the aggregated value received an L flag. 
+
+Metal analytes had the greatest incidence of ND and L flags (`r metal_flags %>% summarize(nd = sum(ND)/sum(total)) %>% pull(nd)` and `r metal_flags %>% summarize(l = sum(L)/sum(total)) %>% pull(l)`, respectively), followed by anions (`r anion_flags %>% summarize(nd = sum(ND)/sum(total)) %>% pull(nd)` and `r anion_flags %>% summarize(l = sum(L)/sum(total)) %>% pull(l)`, respectively) and nutrients (`r nutrient_flags %>% summarize(nd = sum(ND)/sum(total)) %>% pull(nd)` and `r nutrient_flags %>% summarize(l = sum(L)/sum(total)) %>% pull(l)`, respectively). Total and dissolved organic carbon concentrations were typically well above detection limit, with only `r oc_flags %>% summarize(nd = sum(ND)) %>% pull(nd)` ND flag and `r oc_flags %>% summarize(l = sum(L)) %>% pull(l)` L flag. Similarly, algal indicators had only `r pigment_flags %>% summarize(nd = sum(ND)) %>% pull(nd)` ND flag and `r pigment_flags %>% summarize(l = sum(L)) %>% pull(l)` L flags. See SI text for a more detailed discussion. 
+
+Shipping issues were rare and affected only `r pigment_flags %>% summarize(s = sum(S)) %>% pull(s)` chlorophyll-a samples, `r anion_flags %>% summarize(s = sum(S)) %>% pull(s)` anion samples, and `r nutrient_flags %>% summarize(s = sum(S)) %>% pull(s)` nutrient samples. Holding time violations were more numerous and were present for `r anion_flags %>% summarize(h = sum(H)/sum(total)) %>% pull(h)`% of anion samples, `r nutrient_flags %>% summarize(h = sum(H)/sum(total)) %>% pull(h)`% of nutrient samples, `r pigment_flags %>% summarize(h = sum(H)/sum(total)) %>% pull(h)`% of algal indicator samples, and `r oc_flags %>% summarize(h = sum(H)/sum(total)) %>% pull(h)`% of organic carbon samples. Many of these were due to disruptions in laboratory operations during the COVID pandemic. 
 
 ## Field Blanks
 

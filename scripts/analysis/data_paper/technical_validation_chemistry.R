@@ -34,7 +34,7 @@ detlimits <- read_csv("SuRGE_Sharepoint/data/chemistry/dataPaperDetectionLimits.
 # Exclude variables we don't want
 chemdata <- chemistry_all %>% 
   # exclude phycocyanin and gases
-  select(!(starts_with("phyc") | matches(c("ch4|co2|n2o")))) 
+  select(!(starts_with("phyc") | matches(c("ch4|co2|n2o"))))
 
 
 # Flags-------------------------------------------------
@@ -247,6 +247,18 @@ flags_table <- tribble(
   "Holding time violation",	"Measured concentration",	"H",
   "Shipping issue",	"Measured concentration",	"S"
 ) 
+
+# Add analyte groupings
+flags <- flags %>%
+  mutate(analyte_group = case_when(
+    analyte %in% c("al", "as", "ba", "be", "ca", "cd", "cr", "cu", "fe", "k", 
+                   "li", "mg", "mn", "na", "ni", "p", "pb", "s", "sb", "si", 
+                   "sn", "sr", "v", "zn") ~ "metals",
+    analyte %in% c("no2", "no3", "no2.3", "nh4", "tn", "tp", "op") ~ "nutrients",
+    analyte %in% c("toc", "doc") ~ "organic carbon",
+    analyte %in% c("br", "cl", "f", "so4") ~ "anions",
+    analyte %in% c("microcystin", "chla") ~ "algal indicators"
+  ))
 
 technical_validation_data <- lst(dupes, blanks, flags, detlimits, chemistry_all)
 
