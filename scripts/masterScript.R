@@ -49,6 +49,7 @@ source("scripts/analysis/readNWIS.R") # read water level data for subset of rese
 source("scripts/analysis/readDepthProfile.R") # read SuRGE, 2016, and Falls Lake depth profile
 source("scripts/analysis/missingSonde2016.R") # Interpolate based on profiles
 source("scripts/analysis/readGriddedTemp.R") # ERA5 derived estimates of air, shallow, and deep temperature
+#source("scripts/analysis/crosswalk.R") # Jeff's script to for link to external datasets (e.g. lagos, nla)
 
 # Calculate derived quantities
 source("scripts/analysis/calculateStratification.R") # stratification indices
