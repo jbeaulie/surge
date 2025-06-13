@@ -1,4 +1,4 @@
-# 3.6.2 -> 4.4.0
+# 4.4.0
 library(devtools) # this was needed to install LAGOSUS and hydrolinkgs from github.  Keeping this library call so
                   # the package is captured by renv in case it is needed for fresh clones.
                   # might not be necessary
@@ -13,7 +13,7 @@ library(stringi) # character manipulation
 library(scales) # for ggplot2 datetime formatting 
 library(lutz) # time zones from coordinates
 library(plotly) # interactive plots (readLgr.R)
-library(spsurvey) # lake design. originally used 4.1.2 on R3.6.2.  Upgraded to R 4.4, and spSurvey 5.5.1
+library(spsurvey) # lake-scale aggregation
 library(leaflet) # for lake design printables
 library(mapview) # for lake design printables
 library(tmap) # mapping

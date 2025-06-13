@@ -1192,35 +1192,3 @@ write.csv(x = phyto_data,
 write.csv(x = phyto_dictionary, 
           file = "communications/manuscript/data_paper/9_phyto_dictionary.csv",
           row.names = FALSE)
-
-
-
-#  METEOROLOGY-----------
-# # These data have been merged with emission rate point
-# # 4/18/2025 only have wind speed, air temp, and precipitation
-# met_data <- met_chamber %>%
-#   select(-temp_lake_mix_layer_c) %>%
-#   relocate(lake_id, site_id, visit, date_time, precipitation, wind_speed, temp_air_2m)
-# 
-# # Data dictionary
-# met_dictionary <- master_dictionary %>%
-#   filter(variable %in% colnames(met_data))
-# 
-# # Are all values in data dictionary?
-# ifelse (
-#   #TRUE if variable is in dictionary, FALSE if not
-#   colnames(met_data) %in% met_dictionary$variable %>% # TRUE if variable is present 
-#     {!.} %>% # convert TRUE to FALSE, and FALSE to TRUE
-#     sum(.) == 0, # all TRUE add up
-#   "Site data dictionary is complete", # if 0 (all variables are present) 
-#   "Site data dictionary is incomplete") # if not 0 (>=1 variable missing)
-# 
-# # write data
-# write.csv(x = met_data, 
-#           file = "communications/manuscript/data_paper/9_met_data.csv",
-#           row.names = FALSE)
-# 
-# # write dictionary
-# write.csv(x = met_dictionary, 
-#           file = "communications/manuscript/data_paper/9_met_dictionary.csv",
-#           row.names = FALSE)
