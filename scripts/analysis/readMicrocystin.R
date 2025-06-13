@@ -19,11 +19,11 @@ get_microcystin_data <- function(path) {
                        sample_type %in% c("unknown", "duplicate") ~ "shallow", # all unknowns collected near a-w interface
                        TRUE ~ "FLY YOU FOOLS!"), # error code
            # Create visit field
-           visit = case_when(lake_id %in% c("281", "250") &
+           visit = case_when(lake_id %in% c("281", "250") & # only have chemistry for visit 2
                                between(date,
                                        as.Date("2022-08-15"),
                                        as.Date("2022-09-23")) ~ 2,
-                             lake_id %in% c("147", "148") &
+                             lake_id %in% c("147", "148") & 
                                dplyr::between(date,
                                               as.Date("2023-08-01"),
                                               as.Date("2023-08-30")) ~ 2,
@@ -47,17 +47,14 @@ get_microcystin_data <- function(path) {
                                  date == as.Date("2021-07-12") ~ "70_transitional",
                                TRUE ~ as.character(lake_id)),
            
-           # random lake_id errors
+           # random lake_id error
            lake_id = case_when(
-             # 71 incorrectly labeled 76
-             date == as.Date("2021-08-09") & site_id == 2 ~ "71",
              # 276 incorrectly labeled 76
-             date == as.Date("2022-07-22") & site_id == 20 ~ "276",
+             date == as.Date("2022-06-22") & site_id == 20 ~ "276",
              TRUE ~ lake_id),
            
-           # random site_id errors
+           # random site_id error
            site_id = case_when(lake_id == "230" & site_id == 0 ~ 15, #CONFIRMED
-                               lake_id == "44" & site_id == 77 ~ 7, #CONFIRMED
                                TRUE ~ site_id)) %>%
     
     select(lake_id, site_id, sample_type, sample_depth, visit,
@@ -75,9 +72,15 @@ microcystin <- get_microcystin_data(path)
 # none
 microcystin %>% janitor::get_dupes(lake_id, lake_id, site_id, sample_depth, sample_type, visit)
 
+# check for error flag
+microcystin %>% filter(sample_depth == "FLY YOU FOOLS!") # no errors
+
 # inventory
-# No sample received from 204. 81 bottle broken.
-# what about 1000, 102, and 84?
+# 204, no sample received 
+# 188, bottle broken.
+# 149, received on 6/23/2021. Was included in previous data report, but omitted from current. Jeff is looking into it.
+# 84, vial was shattered
+
 chem.samples.foo %>% # df of expected samples
   filter(analyte == "microcystin") %>%
   filter(!(lake_id %in% microcystin$lake_id))
