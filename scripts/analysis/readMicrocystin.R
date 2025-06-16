@@ -77,9 +77,8 @@ microcystin %>% filter(sample_depth == "FLY YOU FOOLS!") # no errors
 
 # inventory
 # 204, no sample received 
-# 188, bottle broken.
-# 149, received on 6/23/2021. Was included in previous data report, but omitted from current. Jeff is looking into it.
-# 84, vial was shattered
+# 188, bottle broken when received
+# 84, vial cracked in freezer and sample lost
 
 chem.samples.foo %>% # df of expected samples
   filter(analyte == "microcystin") %>%
