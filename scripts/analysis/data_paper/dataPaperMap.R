@@ -6,7 +6,7 @@
 # Here we read the .xlsx file and convert to spatial, but could also read from
 # .gpkg or .gdb
 # Read in data
-surgeDsn <- readxl::read_xlsx("../../../surgeDsn/SuRGE_design_20191206_eval_status.xlsx") %>%
+surgeDsn <- readxl::read_xlsx("SuRGE_Sharepoint/surgeDsn/SuRGE_design_20191206_eval_status.xlsx") %>%
   select(-xcoord_1, -ycoord_1) %>% # remove xcoord and ycoord, holdover from Tony's .shp
   janitor::clean_names() %>% # GIS is picky about names
   filter(!(site_id %in% c("CH4-1033"))) %>% # exclude Falls Lake 
@@ -130,11 +130,11 @@ mapsf::mf_theme(
 
 
 mf_export(x = conus,
-          filename = "output/figures/surgeMainSitesByStudy.png",
+          filename = "scripts/analysis/data_paper/figure_1A_surgeMainSitesByStudy.png",
           width = 1200, expandBB = c(.3,.3,0.1,.1))
 
 # CONUS
-mf_inset_on(x = conus, fig = c(.2,.99,.02,.99)) #c(X1,X2,Y1,Y2)
+mf_inset_on(x = conus, fig = c(.25,.99,.02,.99)) #c(X1,X2,Y1,Y2)
 mf_map(conus, var = "WSA9_NAME", type = "typo",
        border = NA, # don't include outline of climate zone
        pal = unique(conus$cols), # duplicate color records per climate zone, must use unique
@@ -197,17 +197,18 @@ mf_inset_off()
 # mf_title("Climate Zones of the U.S.",cex = 2)
 
 # Add ecoregions legend
-mf_inset_on(states, fig = c(0,0.3,0.1,0.8))
+mf_inset_on(states, fig = c(0,0.3,0.05,0.8)) #x1,x2,y1,y2
 
 mf_legend(type = "typo", pos = "left",
-          val = ecoR$WSA9_NAME, pal = ecoR$cols,
+          val = ecoR$WSA9_NAME, pal = ecoR$cols, 
+          size = 0.8, # size of the legend; 2 means two times bigger
           title = "Ecoregions",
-          val_cex = 1.25, title_cex = 2)
+          val_cex = 1.5, title_cex = 2)
 mf_inset_off()
 
 
 # Add study legend for points
-mf_inset_on(states, fig = c(0, 0.3, 0.85, 0.99)) #x1,x2,y1,y2
+mf_inset_on(states, fig = c(0, 0.3, 0.7, 1)) #x1,x2,y1,y2 y1=0.85
 
 mf_legend(type = "symb", 
           pos = "left",
@@ -259,7 +260,7 @@ ggplot() +
                                     height = unit(1, "cm"), 
                                     width = unit(1, "cm")) +
   
-  ggtitle("Brookville Reservoir, IN") +
+  ggtitle("Brookville Lake, IN") +
   
   theme_bw() +
   theme(panel.grid.major = element_blank(), 
@@ -274,6 +275,6 @@ ggplot() +
         plot.title = element_text(hjust = 0.5),
         legend.position.inside = c(0.8, 0.5))
 
-ggsave("output/figures/brookvilleDesign.png", width = 4.02, height = 6.64)
+ggsave("scripts/analysis/data_paper/figure_1b_BrookvilleLake.png", width = 4.02, height = 6.64)
 
 
