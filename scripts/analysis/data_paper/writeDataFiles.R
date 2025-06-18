@@ -314,9 +314,9 @@ master_dictionary <- tribble(~variable, ~definition,
                              "site_wgt_units", "Units for site_wgt",
                              "lat", "Latitude of sampling location in decimal degrees",
                              "long", "Longitude of sampling location in decimal degrees",
-                             "sample_start", "First day of sampling campaign at lake",
-                             "sample_end", "Last day of sampling campaign at lake",
-                             "chla_collection_date", "Date that sample was collected for laboratory-based chlorophyll a measurement",
+                             "sample_start", "First day of sampling campaign at lake (date based on local time zone)",
+                             "sample_end", "Last day of sampling campaign at lake (date based on local time zone)",
+                             "chla_collection_date", "Date that sample was collected for laboratory-based chlorophyll a measurement (date based on local time zone)",
                              
                              # 9. meteorology
                              "date_time", "Date and time (hour) of floating chamber deployment and associated meteoroligcal observations",
