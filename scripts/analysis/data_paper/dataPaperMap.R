@@ -130,7 +130,7 @@ mapsf::mf_theme(
 
 
 mf_export(x = conus,
-          filename = "scripts/analysis/data_paper/Fig1A_surgeMainSitesByStudy.png",
+          filename = "scripts/analysis/data_paper/figure_1A_surgeMainSitesByStudy.png",
           width = 1200, expandBB = c(.3,.3,0.1,.1))
 
 # CONUS
@@ -275,6 +275,6 @@ ggplot() +
         plot.title = element_text(hjust = 0.5),
         legend.position.inside = c(0.8, 0.5))
 
-ggsave("scripts/analysis/data_paper/Fig1B_BrookvilleLake.png", width = 4.02, height = 6.64)
+ggsave("scripts/analysis/data_paper/figure_1b_BrookvilleLake.png", width = 4.02, height = 6.64)
 
 
