@@ -106,13 +106,13 @@ CO2<-unstable_plot_data %>%
   theme_bw()+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 9),
+        axis.title = element_text(size = 9),
         axis.text.x = element_blank(),
         axis.labels.x = element_blank(),
         axis.ticks.x = element_blank(),
         legend.position="top",
-        legend.text = element_text(size =10))+
+        legend.text = element_text(size =9))+
         guides(color=guide_legend(nrow=2,byrow=TRUE))+
   geom_vline(aes(xintercept = as.numeric(as.POSIXct("2021-06-28 17:16:22", tz = "UTC")),
                  color = "deployment"), key_glyph = "path") +
@@ -135,8 +135,8 @@ CH4<-unstable_plot_data %>%
   theme_bw()+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 9),
+        axis.title = element_text(size = 9),
         axis.text.x = element_blank(),
         axis.labels.x = element_blank(),
         axis.ticks.x = element_blank(),
@@ -163,8 +163,8 @@ H2O<-unstable_plot_data %>%
   theme_bw()+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 9),
+        axis.title = element_text(size = 9),
         legend.position="none")+
   geom_vline(aes(xintercept = as.numeric(as.POSIXct("2021-06-28 17:16:22", tz = "UTC")),
                  color = "deployment"), key_glyph = "path") +
@@ -226,12 +226,12 @@ ecoregion = ggplot() +
   theme_bw() +
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
-        axis.text.x = element_text(size = 12, angle = 45, hjust=1),
-        axis.text.y = element_text(size = 12),
-        plot.title = element_text(size = 12, face = "bold"),
-        axis.title = element_text(size = 12),
-        strip.text = element_text(size = 12),
-        legend.text = element_text(size = 12),
+        axis.text.x = element_text(size = 9, angle = 45, hjust=1),
+        axis.text.y = element_text(size = 9),
+        plot.title = element_text(size = 9, face = "bold"),
+        axis.title = element_text(size = 9),
+        strip.text = element_text(size = 9),
+        legend.text = element_text(size = 9),
         legend.position="top")
 
 depth = ggplot() +
@@ -248,12 +248,12 @@ depth = ggplot() +
   theme_bw() +
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
-        axis.text.x = element_text(size = 12, angle = 45, hjust=1),
-        axis.text.y = element_text(size = 12),
-        axis.title = element_text(size = 12),
-        plot.title = element_text(size = 12, face = "bold"),
-        strip.text = element_text(size = 12),
-        legend.text = element_text(size = 12),
+        axis.text.x = element_text(size = 9, angle = 45, hjust=1),
+        axis.text.y = element_text(size = 9),
+        axis.title = element_text(size = 9),
+        plot.title = element_text(size = 9, face = "bold"),
+        strip.text = element_text(size = 9),
+        legend.text = element_text(size = 9),
         legend.position="none")
 
 
@@ -271,12 +271,12 @@ productivity = ggplot() +
   theme_bw() +
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
-        axis.text.x = element_text(size = 12, angle = 45, hjust=1),
-        axis.text.y = element_text(size = 12),
-        axis.title = element_text(size = 12),
-        plot.title = element_text(size = 12, face = "bold"),
-        strip.text = element_text(size = 12),
-        legend.text = element_text(size = 12),
+        axis.text.x = element_text(size = 9, angle = 45, hjust=1),
+        axis.text.y = element_text(size = 9),
+        axis.title = element_text(size = 9),
+        plot.title = element_text(size = 9, face = "bold"),
+        strip.text = element_text(size = 9),
+        legend.text = element_text(size = 9),
         legend.position="none")
 
 
