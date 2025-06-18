@@ -614,6 +614,10 @@ emission_rate_points_data_paper <- left_join(
     co2_total = round(co2_total, 4),
     wind_speed = round(wind_speed, 2))
 
+#Ensure that times are formatted correctly for writing midnight data
+
+emission_rate_points_data_paper$trap_deply_date_time<- format(emission_rate_points_data_paper$trap_deply_date_time,"%Y-%m-%d %H:%M:%S" ) 
+
 # Data dictionary
 emission_rate_points_data_paper_dictionary <- master_dictionary %>%
   filter(variable %in% colnames(emission_rate_points_data_paper))

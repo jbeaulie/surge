@@ -254,7 +254,7 @@ ecoregion = ggplot() +
   geom_hline(yintercept = 0, linetype = 2) +
   facet_wrap(~ gas_name, scales = "free", labeller = label_parsed, ncol = 2) +
   scale_y_continuous(trans = "pseudo_log", breaks = c(-10000, -1000, -100, -10, 0, 10, 100, 1000, 10000))+
-  labs(x = NULL, y = expression(paste("Flux (mg m"^"-2"~"d"^"-1"*")")), title = "C") +
+  labs(x = NULL, y = expression(paste("Flux (mg m"^"-2"~"d"^"-1"*")")), title = "A") +
   scale_fill_discrete(labels = c(expression(CH[4]~diffusion), 
                                  expression(CH[4]~ebullition), 
                                  expression(total~CO[2]~emissions))) +
@@ -270,35 +270,13 @@ ecoregion = ggplot() +
         legend.text = element_text(size = 14),
         legend.position="top")
 
-ecoregion2 = ggplot() +
-  geom_boxplot(data = lake.list.plot %>% filter(name == "ag_eco9_nm"), 
-               aes(x = value, y = rate_daily, fill = type)) +
-  geom_hline(yintercept = 0, linetype = 2) +
-  facet_wrap(~ gas_name, scales = "free", labeller = label_parsed, ncol = 2) +
-  scale_y_continuous(trans = "pseudo_log", breaks = c(-10000, -1000, -100, -10, 0, 10, 100, 1000, 10000))+
-  labs(x = NULL, y = expression(paste("Flux (mg m"^"-2"~"d"^"-1"*")")), title = "C") +
-  scale_fill_discrete(labels = c(expression(CH[4]~diffusion), 
-                                 expression(CH[4]~ebullition), 
-                                 expression(total~CO[2]~emissions))) +
-  scale_fill_manual(values = c("#56B4E9","#009E73","#D55E00"))+
-  theme_bw() +
-  theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
-        axis.line=element_line(colour="black"),legend.title=element_blank(),
-        axis.text.x = element_text(size = 14, angle = 45, hjust=1),
-        axis.text.y = element_text(size = 14),
-        plot.title = element_text(size = 16, face = "bold"),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16),
-        legend.text = element_text(size = 14),
-        legend.position="none")
-
 depth = ggplot() +
   geom_boxplot(data = lake.list.plot %>% filter(name == "depth_cat"), 
                aes(x = value, y = rate_daily, fill = type)) +
   geom_hline(yintercept = 0, linetype = 2) +
   facet_wrap(~ gas_name, scales = "free", labeller = label_parsed, ncol = 2) +
   scale_y_continuous(trans = "pseudo_log", breaks = c(-10000, -1000, -100, -10, 0, 10, 100, 1000, 10000))+
-  labs(x = NULL, y = expression(paste("Flux (mg m"^"-2"~"d"^"-1"*")")), title = "A") +
+  labs(x = NULL, y = expression(paste("Flux (mg m"^"-2"~"d"^"-1"*")")), title = "B") +
   scale_fill_discrete(labels = c(expression(CH[4]~diffusion), 
                                  expression(CH[4]~ebullition), 
                                  expression(total~CO[2]~emissions))) +
@@ -320,7 +298,7 @@ productivity = ggplot() +
   geom_hline(yintercept = 0, linetype = 2) +
   facet_wrap(~ gas_name, scales = "free", labeller = label_parsed, ncol = 2) +
   scale_y_continuous(trans = "pseudo_log", breaks = c(-10000, -1000, -100, -10, 0, 10, 100, 1000, 10000))+
-  labs(x = NULL, y = expression(paste("Flux (mg m"^"-2"~"d"^"-1"*")")), title = "B") +
+  labs(x = NULL, y = expression(paste("Flux (mg m"^"-2"~"d"^"-1"*")")), title = "C") +
   scale_fill_discrete(labels = c(expression(CH[4]~diffusion), 
                                  expression(CH[4]~ebullition), 
                                  expression(total~CO[2]~emissions))) +
@@ -337,9 +315,9 @@ productivity = ggplot() +
 
 
 legend <- get_legend(ecoregion)
-top_row <- plot_grid(depth, productivity)
+bottom_row <- plot_grid(depth, productivity)
 
-strata_fig<-plot_grid(legend, top_row, ecoregion2, ncol=1, rel_heights = c(0.5,1,1.75))
+strata_fig<-plot_grid(ecoregion, bottom_row,  ncol=1, rel_heights = c(1.75,1))
 strata_fig
 
 
