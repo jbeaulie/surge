@@ -411,7 +411,6 @@ site_descriptors_data <-
                analyte == "chlorophyll") %>%
         select(lake_id, site_id, visit, collection_date) %>%
         mutate(
-          site_id = gsub(".*?([0-9]+).*", "\\1", site_id), # clean site_id values
           site_id = case_when(grepl("transitional", lake_id) ~ paste0(site_id, "_transitional"),
                               grepl("riverine", lake_id) ~ paste0(site_id, "_riverine"),
                               TRUE ~ as.character(site_id)),
@@ -427,6 +426,8 @@ site_descriptors_data <-
       # ADD DATE 2016 CHLOROPHYLL SAMPLES WERE COLLECTED
       # transcribed from field sheets
       tribble(~lake_id, ~site_id, ~visit, ~chla_collection_date,
+              1016, 12, 1, as.Date("2016-06-13"),
+              1016, 2, 1, as.Date("2016-06-13"),
               1023, 1, 1, as.Date("2016-07-26"), 
               1023, 30, 1, as.Date("2016-07-26"),
               1025, 31, 1, as.Date("2016-07-13"),
@@ -504,6 +505,13 @@ if (site_descriptors_data %>%
   "problem with dates"
 }
 
+# Does each lake x visit have a chlorophyll collection date?
+# yes
+site_descriptors_data %>%
+  group_by(lake_id, visit) %>%
+  summarize(chla_collection_date = sum(!is.na(chla_collection_date))) %>%
+  filter(chla_collection_date < 1) %>%
+  nrow() == 0
 
 # Data dictionary
 site_descriptors_dictionary <- master_dictionary %>%
