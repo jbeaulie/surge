@@ -378,8 +378,8 @@ site_descriptors_data <-
           # remove transitional, riverine from lake_id
           # retain character class initially, then convert to numeric.
           lake_id = case_when(
-            grepl("69", lake_id) ~ "69",
-            grepl("70", lake_id) ~ "70",
+            grepl("69_", lake_id) ~ "69",
+            grepl("70_", lake_id) ~ "70",
             TRUE ~ lake_id),
           lake_id = gsub(".*?([0-9]+).*", "\\1", lake_id) %>% as.numeric,
           collection_date = as.Date(collection_date, format = "%m.%d.%Y")) %>%
@@ -389,11 +389,29 @@ site_descriptors_data <-
       
       
       # Now bring in trap deployment/retrieval date/time
-      dat %>%
-        select(lake_id, visit, trap_deply_date_time, trap_rtrvl_date_time) %>%
-        mutate(across(contains("date_time"), as.Date)) %>%
+      # SuRGE sites
+      fld_sheet %>% # prefer dates in local time zone from fld_sheet, UTC in dat
+        mutate(
+          # remove transitional, riverine from lake_id
+          # retain character class initially, then convert to numeric.
+          lake_id = case_when(
+            grepl("69_", lake_id) ~ "69",
+            grepl("70_", lake_id) ~ "70",
+            TRUE ~ lake_id),
+          lake_id = gsub(".*?([0-9]+).*", "\\1", lake_id) %>% as.numeric) %>%
+        select(lake_id, visit, trap_deply_date, trap_rtrvl_date) %>%
+        pivot_longer(-c(lake_id, visit), values_to = "collection_date") %>%
+        select(-name),
+      
+      # 2016 site
+      dat_2016 %>%
+        mutate(
+          trap_deply_date = as.Date(trap_deply_date_time, format = "%m/%d/%Y"),
+          trap_rtrvl_date = as.Date(trap_rtrvl_date_time, format = "%m/%d/%Y")) %>%
+        select(lake_id, visit, trap_deply_date, trap_rtrvl_date) %>%
         pivot_longer(-c(lake_id, visit), values_to = "collection_date") %>%
         select(-name)
+      
     ) %>% # close bind_rows
       # calculate first and last sampling date per lake
       group_by(lake_id, visit) %>%
