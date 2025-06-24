@@ -10,12 +10,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(kableExtra)
 library(tidyverse)
 library(plotly)
-library(gt)
+# library(gt)
 # path for local development
 #tvd <- readRDS("scripts/analysis/data_paper/technical_validation_chemistry_data")
 
 # path for knitting
-tvd <- readRDS("technical_validation_chemistry_data")
+tvd <- readRDS("scripts/analysis/data_paper/technical_validation_chemistry_data")
 ```
 
 ## Flags
@@ -160,6 +160,30 @@ Most field blanks had analyte concentrations that exceeded the MDL, but the meas
 
 #### Field Duplicates
 
+```{r flags, echo=FALSE}
 
 
+
+# Analyte,	Concentration Threshold, Mean RPD above threshold,	Mean absolute difference below threshold,	Units 
+# Bind rows and create column with analyte group 
+dupes <- tvd$dupes %>% 
+  list_rbind(names_to = "analyte_group") %>%
+  # remove the "_rpd" from analyte group name
+  mutate(analyte_group = str_remove(analyte_group, "_rpd")) %>% 
+  # join with detection limits data
+  left_join(tvd$detlimits %>% 
+              select(name, analyte_group, mdl, lab, units), 
+            by = c("analyte_group", "name")) %>%
+  group_by(name) %>%
+  summarize(mean_rpd_above_mdl = mean(rpd[rpd >= mdl]), 
+         mean_ad_below_mdl = mean(ad[ad < mdl]) 
+         )
+  
+# Need to join with lake data to determine lab (to get det limits)
+# 
+
+
+kable(dupes)
+
+```
 
