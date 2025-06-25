@@ -56,14 +56,19 @@ dat_all = read.csv("communications/manuscript/data_paper/4_emission_rate_points.
                               gas_name == "ch4" ~ "CH[4]"),
          rate_daily = rate_hourly * 24)
 
+sci.not.labels = c(bquote("-10^7"), bquote("-10^6"), bquote("-10^5"), bquote("-10^4"), 
+                   bquote("-10^3"), bquote("-10^2"), bquote("-10^1"),
+                   "0", bquote("10^1"), bquote("10^2"), bquote("10^3"), 
+                   bquote("10^4"), bquote("10^5"), bquote("10^6"), bquote("10^7"))
+
 
 fig_7<-ggplot() +
   geom_density(data = dat_all, aes(x = rate_daily, y=..scaled.., fill = type, color = type), alpha = 0.3,
                trim = T) +
   geom_vline(xintercept = 0, linetype = 2) +
   facet_wrap(~ gas_name, scale = "free", ncol = 1, labeller = label_parsed) +
-  scale_x_continuous(trans = "pseudo_log", breaks = breaks, expand = c(0.025, 0.025),
-                     labels = scales::comma_format(big.mark = ",")) +
+  scale_x_continuous(trans = "pseudo_log", breaks = sort(breaks), expand = c(0.025, 0.025),
+                     labels = label_parsed(sci.not.labels)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.025))) +
   scale_color_brewer(palette = "Dark2", name = NULL) +
   scale_fill_brewer(palette = "Dark2", name = NULL) +
@@ -78,6 +83,7 @@ fig_7<-ggplot() +
         legend.background = element_rect(color = "black"))+
   xlab(expression(paste("Emissions Rate (mg m"^"-2"~"d"^"-1"*")")))+
   ylab("Density (scaled)")
+
 
 ggsave("scripts/analysis/data_paper/figure_7.jpeg",width=6.5,height=4,
       dpi=300)
