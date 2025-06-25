@@ -44,11 +44,11 @@ mdl_table <- tvd$detlimits %>%
   arrange('analyte group')
 
 # Break out by analyte group for easier in-text coding
-anion_flags <- tvd$flags %>% filter(analyte_group == "anions") 
-nutrient_flags <- tvd$flags %>% filter(analyte_group == "nutrients") 
-oc_flags <- tvd$flags %>% filter(analyte_group == "organic carbon")  
-metal_flags <- tvd$flags %>% filter(analyte_group == "metals") 
-pigment_flags <- tvd$flags %>% filter(analyte_group == "algal indicators") 
+anion_flags <- tvd$flags %>% filter('analyte group' == "anions") 
+nutrient_flags <- tvd$flags %>% filter('analyte group' == "nutrients") 
+oc_flags <- tvd$flags %>% filter('analyte group' == "organic carbon")  
+metal_flags <- tvd$flags %>% filter('analyte group' == "metals") 
+pigment_flags <- tvd$flags %>% filter('analyte group' == "algal indicators") 
 
 # Break out by key analytes for easier in-text coding
 sulfate_flags <- anion_flags %>% filter(analyte == "so4") 
@@ -160,30 +160,25 @@ Most field blanks had analyte concentrations that exceeded the MDL, but the meas
 
 #### Field Duplicates
 
-```{r flags, echo=FALSE}
+```{r dupes, echo=FALSE}
 
 
 
 # Analyte,	Concentration Threshold, Mean RPD above threshold,	Mean absolute difference below threshold,	Units 
 # Bind rows and create column with analyte group 
-dupes <- tvd$dupes %>% 
-  list_rbind(names_to = "analyte_group") %>%
-  # remove the "_rpd" from analyte group name
-  mutate(analyte_group = str_remove(analyte_group, "_rpd")) %>% 
-  # join with detection limits data
-  left_join(tvd$detlimits %>% 
-              select(name, analyte_group, mdl, lab, units), 
-            by = c("analyte_group", "name")) %>%
-  group_by(name) %>%
-  summarize(mean_rpd_above_mdl = mean(rpd[rpd >= mdl]), 
-         mean_ad_below_mdl = mean(ad[ad < mdl]) 
-         )
+
+         
   
 # Need to join with lake data to determine lab (to get det limits)
 # 
+dupes <- ungroup(tvd$dupes) %>% 
+  left_join(tvd$detlimits %>%
+              select(name, analytical_lab = lab, ql), 
+            by = c("name", "analytical_lab")) %>%
+  distinct(name,  ql, mean_rpd_above_ql, mean_ad_below_ql)
 
-
-kable(dupes)
+kable(dupes %>%
+        select(analyte = name, threshold = ql, 'Mean RPD above threshold' = mean_rpd_above_ql, 'Mean absolute difference below threshold' = mean_ad_below_ql))
 
 ```
 

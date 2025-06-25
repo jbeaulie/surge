@@ -149,91 +149,118 @@ chemistry_all_dups <- chemdata %>%
   filter(id %in% duplicate_ids$id) %>% # pull out duplicates and corresponding unknowns
   select(-contains("flag"), -contains("qual"), -contains("units"),
          -sample_type, -id, -no3) %>%
-  pivot_longer(!c(lake_id, site_id, sample_depth, visit))
+  pivot_longer(!c(lake_id, site_id, sample_depth, visit)) %>%
+  left_join(lake.list.all %>% 
+              distinct(lake_id, visit, lab, year = sample_year)) %>%
+  mutate(analytical_lab = 
+           case_when(
+             year == 2020 & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp") ~ "ADA", # all 2020 nutrients sent to ADA
+             lab == "ADA" & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp", "br", "cl", "so4", "f", "toc", "doc") ~ "ADA", # ADA ran their own nutrients, anions, OC
+             name == "microcystin" ~ "NAR", # NAR ran microcystin
+             TRUE ~ "CIN")) %>% # all others ran in CIN
+  
+  # 4. Join with detlimits to bring in detection limits
+  #    naturally joins on name, analytical_lab, year
+  left_join(detlimits %>%
+              select(name, mdl, ql, year, analytical_lab = lab)) 
+
+
+dupes <- chemistry_all_dups %>%
+  group_by(lake_id, site_id, analytical_lab, sample_depth, name, visit) %>%
+  summarize(ad = abs(diff(value)), # difference between dup and unknown
+            mean = mean(value, na.rm = TRUE), # mean of dup and unknown
+            rpd = (ad/mean)*100,
+            mean_rpd_above_ql = mean(rpd[rpd >= ql], na.rm = TRUE) %>% 
+              round(2), 
+            mean_ad_below_ql = mean(ad[ad < ql & ad >= mdl], na.rm = TRUE) %>% 
+              round(2)
+  ) %>%
+  ungroup()
+
 
 ## Nutrients----------------------------------
-nutrient_name <- detlimits %>% 
-  filter(analyte_group == "nutrients") %>%
-  select(name) %>% 
-  pull()
-
-# calculate mean relative percent difference among field replicates
-nutrients_rpd <- chemistry_all_dups %>% 
-  filter(name %in% nutrient_name) %>%
-  group_by(lake_id, site_id, sample_depth, name, visit) %>%
-  mutate(ad = abs(diff(value)), # difference between dup and unknown
-         mean = mean(value, na.rm = TRUE), # mean of dup and unknown
-         rpd = (ad/mean)*100) %>% # rpd
-  distinct() 
-
-
-## Anions----------------------------------
-anion_name <- detlimits %>% 
-  filter(analyte_group == "anions") %>%
-  select(name) %>% 
-  pull()
-
-# calculate mean relative percent difference among field replicates
-anions_rpd <- chemistry_all_dups %>% 
-  filter(name %in% anion_name) %>%
-  group_by(lake_id, site_id, sample_depth, name, visit) %>%
-  mutate(ad = abs(diff(value)), # difference between dup and unknown
-         mean = mean(value), # mean of dup and unknown
-         rpd = (ad/mean)*100) %>% # rpd
-  distinct() 
-
-## Metals----------------------------------
-
-metal_name <- detlimits %>% 
-  filter(analyte_group == "metals") %>%
-  select(name) %>% 
-  pull()
-
-# calculate mean relative percent difference among field replicates
-metals_rpd <- chemistry_all_dups %>% 
-  filter(name %in% metal_name) %>%
-  group_by(lake_id, site_id, sample_depth, name, visit) %>%
-  mutate(ad = abs(diff(value)), # difference between dup and unknown
-         mean = mean(value), # mean of dup and unknown
-         rpd = (ad/mean)*100) %>% # rpd
-  distinct() 
-
-## Organic Carbon----------------------------------
-
-organic_name <- detlimits %>% 
-  filter(analyte_group == "organic") %>%
-  select(name) %>% 
-  pull()
-
-# calculate mean relative percent difference among field replicates
-organic_rpd <- chemistry_all_dups %>% 
-  filter(name %in% organic_name) %>%
-  group_by(lake_id, site_id, sample_depth, name, visit) %>%
-  mutate(ad = abs(diff(value)), # difference between dup and unknown
-         mean = mean(value), # mean of dup and unknown
-         rpd = (ad/mean)*100) %>% # rpd
-  distinct() 
-
-
-## Algal indicators----------------------------------
-
-chlorophyll_rpd <- chemistry_all_dups %>% 
-  filter(name == "chla_lab") %>%
-  group_by(lake_id, site_id, sample_depth, name, visit) %>%
-  mutate(ad = abs(diff(value)), # difference between dup and unknown
-         mean = mean(value), # mean of dup and unknown
-         rpd = (ad/mean)*100) %>% # rpd
-  distinct()
-
-microcystin_rpd <- chemistry_all_dups %>% 
-  filter(name == "microcystin") %>%
-  group_by(lake_id, site_id, sample_depth, name, visit) %>%
-  mutate(ad = abs(diff(value)), # difference between dup and unknown
-         mean = mean(value), # mean of dup and unknown
-         rpd = (ad/mean)*100) %>% # rpd
-  distinct()
-
-dupes <- lst(anions_rpd, nutrients_rpd, chlorophyll_rpd, metals_rpd, organic_rpd)
+# nutrient_name <- detlimits %>% 
+#   filter(analyte_group == "nutrients") %>%
+#   select(name) %>% 
+#   pull()
+# 
+# # calculate mean relative percent difference among field replicates
+# nutrients_rpd <- chemistry_all_dups %>% 
+#   filter(name %in% nutrient_name) %>%
+#   group_by(lake_id, site_id, sample_depth, name, visit) %>%
+#   mutate(ad = abs(diff(value)), # difference between dup and unknown
+#          mean = mean(value, na.rm = TRUE), # mean of dup and unknown
+#          rpd = (ad/mean)*100) %>% # rpd
+#   distinct() 
+# 
+# 
+# ## Anions----------------------------------
+# anion_name <- detlimits %>% 
+#   filter(analyte_group == "anions") %>%
+#   select(name) %>% 
+#   pull()
+# 
+# # calculate mean relative percent difference among field replicates
+# anions_rpd <- chemistry_all_dups %>% 
+#   filter(name %in% anion_name) %>%
+#   group_by(lake_id, site_id, sample_depth, name, visit) %>%
+#   mutate(ad = abs(diff(value)), # difference between dup and unknown
+#          mean = mean(value), # mean of dup and unknown
+#          rpd = (ad/mean)*100) %>% # rpd
+#   distinct() 
+# 
+# ## Metals----------------------------------
+# 
+# metal_name <- detlimits %>% 
+#   filter(analyte_group == "metals") %>%
+#   select(name) %>% 
+#   pull()
+# 
+# # calculate mean relative percent difference among field replicates
+# metals_rpd <- chemistry_all_dups %>% 
+#   filter(name %in% metal_name) %>%
+#   group_by(lake_id, site_id, sample_depth, name, visit) %>%
+#   mutate(ad = abs(diff(value)), # difference between dup and unknown
+#          mean = mean(value), # mean of dup and unknown
+#          rpd = (ad/mean)*100) %>% # rpd
+#   distinct() 
+# 
+# ## Organic Carbon----------------------------------
+# 
+# organic_name <- detlimits %>% 
+#   filter(analyte_group == "organic") %>%
+#   select(name) %>% 
+#   pull()
+# 
+# # calculate mean relative percent difference among field replicates
+# organic_rpd <- chemistry_all_dups %>% 
+#   filter(name %in% organic_name) %>%
+#   group_by(lake_id, site_id, sample_depth, name, visit) %>%
+#   mutate(ad = abs(diff(value)), # difference between dup and unknown
+#          mean = mean(value), # mean of dup and unknown
+#          rpd = (ad/mean)*100) %>% # rpd
+#   distinct() 
+# 
+# 
+# ## Algal indicators----------------------------------
+# 
+# chlorophyll_rpd <- chemistry_all_dups %>% 
+#   filter(name == "chla_lab") %>%
+#   group_by(lake_id, site_id, sample_depth, name, visit) %>%
+#   mutate(ad = abs(diff(value)), # difference between dup and unknown
+#          mean = mean(value), # mean of dup and unknown
+#          rpd = (ad/mean)*100) %>% # rpd
+#   distinct()
+# 
+# microcystin_rpd <- chemistry_all_dups %>% 
+#   filter(name == "microcystin") %>%
+#   group_by(lake_id, site_id, sample_depth, name, visit) %>%
+#   mutate(ad = abs(diff(value)), # difference between dup and unknown
+#          mean = mean(value), # mean of dup and unknown
+#          rpd = (ad/mean)*100) %>% # rpd
+#   distinct()
+# 
+# dupes <- lst(anions_rpd, nutrients_rpd, chlorophyll_rpd, metals_rpd, organic_rpd)
 
 
 # Tables-----------------------------------
