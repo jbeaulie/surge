@@ -167,18 +167,57 @@ Most field blanks had analyte concentrations that exceeded the MDL, but the meas
 # Analyte,	Concentration Threshold, Mean RPD above threshold,	Mean absolute difference below threshold,	Units 
 # Bind rows and create column with analyte group 
 
-         
-  
-# Need to join with lake data to determine lab (to get det limits)
-# 
-dupes <- ungroup(tvd$dupes) %>% 
-  left_join(tvd$detlimits %>%
-              select(name, analytical_lab = lab, ql), 
-            by = c("name", "analytical_lab")) %>%
-  distinct(name,  ql, mean_rpd_above_ql, mean_ad_below_ql)
+# Thresholds: # sulfate 24 mg/l    tn tp & no2_3 250 ug/l  
+# ca mg 2.6 mg/l   op & ammonium 26 ug/l         
 
+dupes <- tvd$dupes %>%
+  group_by(lake_id, site_id, sample_depth, name, visit) %>%
+  # calculate abs difference and rel. % difference for each set
+  summarize(ad = abs(diff(value)), # difference between dup and unknown
+            meanconc = mean(value, na.rm = TRUE), # mean of dup and unknown
+            rpd = (ad/meanconc)*100) %>%
+  ungroup() %>%
+  # Add the thresholds for key analytes
+    mutate(threshold = case_when(
+    name == "so4" ~ 24, 
+    name %in% c("ca", "mg") ~ 2.6, 
+    name %in% c("tn", "tp", "no2_3")  ~ 250, 
+    name %in% c("op", "nh4") ~ 26,
+    .default = NA)
+  ) %>%
+  group_by(name) %>%
+  # Get mean RPD and AD for these analytes, above or below thresholds
+  # compute mean RPD for samples where mean conc > threshold
+  summarize(mean_rpd_above_th = mean(rpd[meanconc >= threshold], na.rm = TRUE) %>% 
+              round(2), 
+              # compute mean AD for samples where mean conc < threshold
+            mean_ad_below_th = mean(ad[meanconc < threshold], na.rm = TRUE) %>% 
+              round(2), 
+            # Mean RPD for all other analytes
+            rpd = mean(rpd, na.rm = TRUE) %>% round(2), 
+            threshold = min(threshold)) %>%
+  ungroup() %>%
+  # Add units   
+  left_join(tvd$detlimits %>% 
+              distinct(name, units), 
+            by = "name")
+
+# Two tables
+
+# First table: analytes w/ thresholds
 kable(dupes %>%
-        select(analyte = name, threshold = ql, 'Mean RPD above threshold' = mean_rpd_above_ql, 'Mean absolute difference below threshold' = mean_ad_below_ql))
-
+        filter(!is.na(threshold)) %>%
+        select(analyte = name, 
+               threshold, 
+               'Mean RPD above threshold' = mean_rpd_above_th, 
+               'Mean absolute difference below threshold' = mean_ad_below_th, 
+               units))
+# Second table: analytes w/out thresholds
+kable(dupes %>%
+        filter(is.na(threshold)) %>%
+        select(analyte = name, 
+               RPD = rpd, 
+               units))
+     
 ```
 

@@ -144,38 +144,12 @@ duplicate_ids <- chemdata %>%
   mutate(id = paste0(lake_id, site_id, sample_depth, visit))
 
 # pull out data from lakes, sites, and depths with duplicates
-chemistry_all_dups <- chemdata %>%
+dupes <- chemdata %>%
   mutate(id = paste0(lake_id, site_id, sample_depth, visit)) %>% # create unique id
   filter(id %in% duplicate_ids$id) %>% # pull out duplicates and corresponding unknowns
   select(-contains("flag"), -contains("qual"), -contains("units"),
          -sample_type, -id, -no3) %>%
-  pivot_longer(!c(lake_id, site_id, sample_depth, visit)) %>%
-  left_join(lake.list.all %>% 
-              distinct(lake_id, visit, lab, year = sample_year)) %>%
-  mutate(analytical_lab = 
-           case_when(
-             year == 2020 & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp") ~ "ADA", # all 2020 nutrients sent to ADA
-             lab == "ADA" & name %in% c("no2_3", "no3", "no2", "nh4", "op", "tn", "tp", "br", "cl", "so4", "f", "toc", "doc") ~ "ADA", # ADA ran their own nutrients, anions, OC
-             name == "microcystin" ~ "NAR", # NAR ran microcystin
-             TRUE ~ "CIN")) %>% # all others ran in CIN
-  
-  # 4. Join with detlimits to bring in detection limits
-  #    naturally joins on name, analytical_lab, year
-  left_join(detlimits %>%
-              select(name, mdl, ql, year, analytical_lab = lab)) 
-
-
-dupes <- chemistry_all_dups %>%
-  group_by(lake_id, site_id, analytical_lab, sample_depth, name, visit) %>%
-  summarize(ad = abs(diff(value)), # difference between dup and unknown
-            mean = mean(value, na.rm = TRUE), # mean of dup and unknown
-            rpd = (ad/mean)*100,
-            mean_rpd_above_ql = mean(rpd[rpd >= ql], na.rm = TRUE) %>% 
-              round(2), 
-            mean_ad_below_ql = mean(ad[ad < ql & ad >= mdl], na.rm = TRUE) %>% 
-              round(2)
-  ) %>%
-  ungroup()
+  pivot_longer(!c(lake_id, site_id, sample_depth, visit))
 
 
 ## Nutrients----------------------------------
