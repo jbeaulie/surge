@@ -171,6 +171,7 @@ Most field blanks had analyte concentrations that exceeded the MDL, but the meas
 # ca mg 2.6 mg/l   op & ammonium 26 ug/l         
 
 dupes <- tvd$dupes %>%
+  filter(!(name == "po4")) %>% # via IC, using 'op' via colorimetry instead
   group_by(lake_id, site_id, sample_depth, name, visit) %>%
   # calculate abs difference and rel. % difference for each set
   summarize(ad = abs(diff(value)), # difference between dup and unknown
@@ -212,12 +213,29 @@ kable(dupes %>%
                'Mean RPD above threshold' = mean_rpd_above_th, 
                'Mean absolute difference below threshold' = mean_ad_below_th, 
                units))
+
+# clipboard for pasting to .docx
+# dupes %>%
+#         filter(!is.na(threshold)) %>%
+#         select(analyte = name, 
+#                threshold, 
+#                'Mean RPD above threshold' = mean_rpd_above_th, 
+#                'Mean absolute difference below threshold' = mean_ad_below_th, 
+#                units) %>%
+#   write.table(file = "clipboard")
+
 # Second table: analytes w/out thresholds
 kable(dupes %>%
         filter(is.na(threshold)) %>%
         select(analyte = name, 
                RPD = rpd, 
                units))
-     
+# # clipboard for pasting to .docx
+# dupes %>%
+#         filter(is.na(threshold)) %>%
+#         select(analyte = name, 
+#                RPD = rpd, 
+#                units)%>%
+#   write.table(file = "clipboard")
 ```
 
