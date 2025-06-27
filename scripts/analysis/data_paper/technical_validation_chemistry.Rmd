@@ -159,7 +159,7 @@ While field blanks were generated using deionized or distilled water, the measur
 Most field blanks had analyte concentrations that exceeded the MDL, but the measured concentration was generally small when compared to the unknowns. Here we focus on samples where the concentration in the unknown exceeded the reporting limit. Sulfate, Ca, and Mg blanks were, on average, equivalent to `r paste0(blanks_so4 %>% round(1), ", ", blanks_ca %>% round(1), ", and ", blanks_mg %>% round(1))`% of the concentrations in the unknown samples. Ammonium, NO~2_3~, and TN concentrations in field blanks were equivalent to `r paste0(blanks_nh4 %>% round(0), ", ", blanks_no2.3 %>% round(0), ", and ", blanks_tn %>% round(0))`% of those in the unknowns. Concentration of phosphorus in field blanks were equivalent to a larger fraction of those in the unknown as compared to other analytes (e.g., TP blanks equivalent to `r blanks_tp`% of unknown samples, OP blanks equivalent to `r blanks_op %>% round(0)`% of unknowns), but concentrations were quite low in both blank (mean TP = `r blank_tp %>% round(1)` ug L-1, mean OP = `r blank_op %>% round(1)` ug L-1) and unknown samples (mean TP = `r unk_tp %>% round(1)` ug L-1, mean OP = `r unk_op %>% round(1)` ug L-1). Measured concentrations of organic carbon blanks were `r blanks_oc %>% round(0)`% of unknown samples.
 
 #### Field Duplicates
-
+Duplicate water chemistry samples were collected during a subset of the site visits to assess variability related to sample handling and analysis. Relative percent difference (RPD) between field duplicates was negatively related to the concentration, such that very small differences between duplicates with low concentrations led to very high RPDs. To avoid overstating variability when absolute differences were small, we established analyte-specific concentration thresholds for select analytes below which we report absolute difference and above which we report RPD (Table S1). For all other analytes we report mean RPD regardless of concentration (Table S2). 
 ```{r dupes, echo=FALSE}
 
 
@@ -238,4 +238,4 @@ kable(dupes %>%
 #                units)%>%
 #   write.table(file = "clipboard")
 ```
-
+Mean RPD ranged from 2 – 70% and 0 – 116% for analytes with and without a concentration threshold, respectively. Mean absolute difference values were generally small relative to the analyte specific threshold values.
