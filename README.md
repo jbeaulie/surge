@@ -4,7 +4,7 @@
 ### Data
 The full suite of SuRGE data and project management documentation (e.g., Quality Assurance Project Plan, SOPs) are maintained in the shared documents library at the private SuRGE SharePoint site (https://usepa.sharepoint.com/sites/SuRGE) and can be made available upon request (contact Jake Beaulieu, beaulieu.jake@epa.gov). The subset of the SuRGE data needed to execute scripts in the `scripts/analysis` folder are located in `inputData` and `SuRGE_Sharepoint`. 
 
-Scripts used to create lake specific survey designs are contained in `scripts/lakeDsn` and use relative file paths to read data from the shared documents library at the private SuRGE SharePoint site.  If you wish to reproduce the survey designs, you must create your local clone within the rProjects folder at SharePoint.  The remainining scripts use absolute file paths based on the values returned from `Sys.getenv("USERPROFILE")`.  These scipts can be run regardless of where the R project is cloned on your computer.
+Scripts used to create lake specific survey designs are contained in `scripts/lakeDsn` and use relative file paths to read data from the shared documents library at the private SuRGE SharePoint site.  If you wish to reproduce the survey designs, you must create your local clone within the rProjects folder at SharePoint.  The remaining scripts use absolute file paths based on the values returned from `Sys.getenv("USERPROFILE")`.  These scipts can be run regardless of where the R project is cloned on your computer.
 
 ## Library Management
 
