@@ -4,11 +4,9 @@
 ### Data
 The full suite of SuRGE data and project management documentation (e.g., Quality Assurance Project Plan, SOPs) are maintained in the shared documents library at the private SuRGE SharePoint site (https://usepa.sharepoint.com/sites/SuRGE) and can be made available upon request (contact Jake Beaulieu, beaulieu.jake@epa.gov). The subset of the SuRGE data needed to execute scripts in the `scripts/analysis` folder are located in `inputData` and `SuRGE_Sharepoint`. 
 
-Scripts used to create lake specific survey designs are contained in `scripts/lakeDsn` and use relative file paths to read data from the shared documents library at the private SuRGE SharePoint site.  If you wish to reproduce the survey designs, you must create your local clone within the rProjects folder at SharePoint.  The remaining scripts use absolute file paths based on the values returned from `Sys.getenv("USERPROFILE")`.  These scipts can be run regardless of where the R project is cloned on your computer.
-
 ## Library Management
 
-This project uses the `renv` library to manage library versions.  After creating a local clone, a message will appear in the console directing users to sync the project library  by running `renv::restore()`.  This will download the packages and versions used in this project as specified in the renv.lock file.  If you need to add libraries to the project, be sure to use `renv::snapshot` to update the lock file.  When collaborators sync their local clone with the master, they can then run `renv::restore()` to have the new library installed on their local project directory.  Please see here (https://rstudio.github.io/renv/index.html) for a primer on `renv` and here (https://rstudio.github.io/renv/articles/collaborating.html) for using `renv` in a collaborative workflow.
+This project uses the `renv` library to manage library versions.  After creating a local clone, a message will appear in the console directing users to sync the project library  by running `renv::restore()`.  This will download the packages and versions used in this project as specified in the renv.lock file.   Please see here (https://rstudio.github.io/renv/index.html) for a primer on `renv` and here (https://rstudio.github.io/renv/articles/collaborating.html) for details.
 
 Please use caution when updating libraries already captured in the lock file.  The code runs succesfully with the suite of packages captured in the current lock file; updating package versions could cause problems with the existing code.  The whole point of `renv` is to  minimize the potential for code breakage due to differences among package versions.
 
@@ -22,10 +20,10 @@ Finally, `renv::restore()` may require Rtools.  Rtools can be found here (https:
 This project uses `conflicted` to manage conflicts between the `dplyr` functions `select()` and `filter()` and functions with the same names, but in different packages (i.e.`MASS::select()`).  The `conflicted` settings will always give preference to the dplyr library when `select()` or `filter()` are called.
 
 ## Running Scripts
-Scripts must be run in the sequence documented in scripts/masterScript.R.  Please see status update at the top of script for current status of the scripts.
+Scripts must be run in the sequence documented in scripts/masterScript.R.
 
 ## Version Control
-This project uses git version control.  git software is independent from the github website and must be installed on each users computer.  Users will be given push/pull rights to the repo and can therefore push directly to the repo without the need to submit a pull request.  To minimize conflicts among separate commits, it is best practice to start each session by pulling from the repo to get the most up to date code.  Similarly, users should commit and push their changes to the repo at the conclusion of each working session.  
+This project uses git version control.  git software is independent from the github website and must be installed on each users computer.  Users may submit pull requests if they wish to contribute to the project.
 
 ## Disclaimer
 The United States Environmental Protection Agency (EPA) GitHub project code is provided on an "as is" basis and the user assumes responsibility for its use. EPA has relinquished control of the information and no longer has responsibility to protect the integrity, confidentiality, or availability of the information. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by EPA. The EPA seal and logo shall not be used in any manner to imply endorsement of any commercial product or activity by EPA or the United States Government.
