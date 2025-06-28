@@ -230,6 +230,12 @@ kable(dupes %>%
         select(analyte = name, 
                RPD = rpd, 
                units))
+
+without_thr <- dupes %>%
+        filter(is.na(threshold))
+
+with_thr <- dupes %>%
+        filter(!is.na(threshold))
 # # clipboard for pasting to .docx
 # dupes %>%
 #         filter(is.na(threshold)) %>%
@@ -238,4 +244,4 @@ kable(dupes %>%
 #                units)%>%
 #   write.table(file = "clipboard")
 ```
-Mean RPD ranged from 2 – 70% and 0 – 116% for analytes with and without a concentration threshold, respectively. Mean absolute difference values were generally small relative to the analyte specific threshold values.
+Mean RPD ranged from `r min(with_thr$mean_rpd_above_th, na.rm = TRUE) %>% round(0)`-`r max(with_thr$mean_rpd_above_th, na.rm = TRUE) %>% round(0)`% and `r min(without_thr$rpd, na.rm = TRUE) %>% round(0)`-`r max(without_thr$rpd, na.rm = TRUE) %>% round(0)`% for analytes with and without a concentration threshold, respectively. Mean absolute difference values were generally small relative to the analyte specific threshold values.
