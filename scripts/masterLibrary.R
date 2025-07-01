@@ -25,7 +25,7 @@ library(gridExtra) # grid.arrange() for multiple panels per page on .pdf
 library(lubridate) #for adjusting time offsets in readLGR
 library(minpack.lm) #for the exponential modeling of diffusive flux
 library(dttr2) # NA_Date_
-library(LAGOSUS)
+#library(LAGOSUS) # See notes at top of scripts/analysis/lagosLakesID.R
 #library(hydrolinks)
 library(corrplot)
 library(StreamCatTools) # read lakeCat
@@ -35,7 +35,9 @@ library(cowplot) # arranging ggplot plots into grid
 library(scatterplot3d) # read_gc 
 library(ggh4x) # ggplot2 hacks
 library(ggallin) # pseudolog10_trans
-library(httr) #this is needed for downloading Lagos trophic status data
+library(httr) # directly called when downloading Lagos trophic status data, 
+              # but see notes at top of scripts/analysis/lagosLakesID.R.
+              # also a dependency of several other packages.
 library(RODBC) #RESSED
 library(dataRetrieval) #NWIS data retrieval for water levels
 library(rLakeAnalyzer) #for center buoyancy and thermocline depth
