@@ -1092,7 +1092,7 @@ lake_scale_data <- list(
                  names_pattern = "(.+)_(.+)"),
   
   # LAGOS trophic status data
-  lagos_ts_agg_link %>%
+  lagos_links %>%
     select(lake_id, visit,
            chl_predicted_sample_month, doc_predicted_sample_month,
            chl_predicted_sample_season, doc_predicted_sample_season)%>%
