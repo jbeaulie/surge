@@ -220,6 +220,8 @@ master_dictionary <- tribble(~variable, ~definition,
                              "co2_ebullition_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_ebullition_lake",
                              "co2_diffusion_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_diffusion_lake",
                              "co2_total_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_total_lake",
+                             
+                             # stratification (lake)
                              "buoyf", "buoyancy frequency at index site",
                              "buoyf_units", "units for buoyf",
                              "thermdep2","depth of the thermocline, listed as NA if there was no density gradient >= 0.1 kg m-3 m-1",
@@ -1133,7 +1135,7 @@ lake_scale_data <- list(
                  names_pattern = "(.+)_(.+)"),
   
   # LAGOS trophic status data
-  lagos_links %>%
+  lagos_link %>%
     select(lake_id, visit,
            chl_predicted_sample_month, doc_predicted_sample_month,
            chl_predicted_sample_season, doc_predicted_sample_season)%>%
