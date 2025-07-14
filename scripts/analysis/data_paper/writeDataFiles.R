@@ -220,6 +220,10 @@ master_dictionary <- tribble(~variable, ~definition,
                              "co2_ebullition_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_ebullition_lake",
                              "co2_diffusion_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_diffusion_lake",
                              "co2_total_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_total_lake",
+                             "buoyf", "buoyancy frequency at index site",
+                             "buoyf_units", "units for buoyf",
+                             "thermdep2","depth of the thermocline, listed as NA if there was no density gradient >= 0.1 kg m-3 m-1",
+                             "thermdep2_units","units for thermdep2",
                              
                              
                              # remote sensing (lake)
@@ -314,9 +318,9 @@ master_dictionary <- tribble(~variable, ~definition,
                              "site_wgt_units", "Units for site_wgt",
                              "lat", "Latitude of sampling location in decimal degrees",
                              "long", "Longitude of sampling location in decimal degrees",
-                             "sample_start", "First day of sampling campaign at lake",
-                             "sample_end", "Last day of sampling campaign at lake",
-                             "chla_collection_date", "Date that sample was collected for laboratory-based chlorophyll a measurement",
+                             "sample_start", "First day of sampling campaign at lake (date based on local time zone)",
+                             "sample_end", "Last day of sampling campaign at lake (date based on local time zone)",
+                             "chla_collection_date", "Date that sample was collected for laboratory-based chlorophyll a measurement (date based on local time zone)",
                              
                              # 9. meteorology
                              "date_time", "Date and time (hour) of floating chamber deployment and associated meteoroligcal observations",
@@ -378,8 +382,8 @@ site_descriptors_data <-
           # remove transitional, riverine from lake_id
           # retain character class initially, then convert to numeric.
           lake_id = case_when(
-            grepl("69", lake_id) ~ "69",
-            grepl("70", lake_id) ~ "70",
+            grepl("69_", lake_id) ~ "69",
+            grepl("70_", lake_id) ~ "70",
             TRUE ~ lake_id),
           lake_id = gsub(".*?([0-9]+).*", "\\1", lake_id) %>% as.numeric,
           collection_date = as.Date(collection_date, format = "%m.%d.%Y")) %>%
@@ -389,11 +393,29 @@ site_descriptors_data <-
       
       
       # Now bring in trap deployment/retrieval date/time
-      dat %>%
-        select(lake_id, visit, trap_deply_date_time, trap_rtrvl_date_time) %>%
-        mutate(across(contains("date_time"), as.Date)) %>%
+      # SuRGE sites
+      fld_sheet %>% # prefer dates in local time zone from fld_sheet, UTC in dat
+        mutate(
+          # remove transitional, riverine from lake_id
+          # retain character class initially, then convert to numeric.
+          lake_id = case_when(
+            grepl("69_", lake_id) ~ "69",
+            grepl("70_", lake_id) ~ "70",
+            TRUE ~ lake_id),
+          lake_id = gsub(".*?([0-9]+).*", "\\1", lake_id) %>% as.numeric) %>%
+        select(lake_id, visit, trap_deply_date, trap_rtrvl_date) %>%
+        pivot_longer(-c(lake_id, visit), values_to = "collection_date") %>%
+        select(-name),
+      
+      # 2016 site
+      dat_2016 %>%
+        mutate(
+          trap_deply_date = as.Date(trap_deply_date_time, format = "%m/%d/%Y"),
+          trap_rtrvl_date = as.Date(trap_rtrvl_date_time, format = "%m/%d/%Y")) %>%
+        select(lake_id, visit, trap_deply_date, trap_rtrvl_date) %>%
         pivot_longer(-c(lake_id, visit), values_to = "collection_date") %>%
         select(-name)
+      
     ) %>% # close bind_rows
       # calculate first and last sampling date per lake
       group_by(lake_id, visit) %>%
@@ -411,7 +433,6 @@ site_descriptors_data <-
                analyte == "chlorophyll") %>%
         select(lake_id, site_id, visit, collection_date) %>%
         mutate(
-          site_id = gsub(".*?([0-9]+).*", "\\1", site_id), # clean site_id values
           site_id = case_when(grepl("transitional", lake_id) ~ paste0(site_id, "_transitional"),
                               grepl("riverine", lake_id) ~ paste0(site_id, "_riverine"),
                               TRUE ~ as.character(site_id)),
@@ -427,6 +448,8 @@ site_descriptors_data <-
       # ADD DATE 2016 CHLOROPHYLL SAMPLES WERE COLLECTED
       # transcribed from field sheets
       tribble(~lake_id, ~site_id, ~visit, ~chla_collection_date,
+              1016, 12, 1, as.Date("2016-06-13"),
+              1016, 2, 1, as.Date("2016-06-13"),
               1023, 1, 1, as.Date("2016-07-26"), 
               1023, 30, 1, as.Date("2016-07-26"),
               1025, 31, 1, as.Date("2016-07-13"),
@@ -504,6 +527,13 @@ if (site_descriptors_data %>%
   "problem with dates"
 }
 
+# Does each lake x visit have a chlorophyll collection date?
+# yes
+site_descriptors_data %>%
+  group_by(lake_id, visit) %>%
+  summarize(chla_collection_date = sum(!is.na(chla_collection_date))) %>%
+  filter(chla_collection_date < 1) %>%
+  nrow() == 0
 
 # Data dictionary
 site_descriptors_dictionary <- master_dictionary %>%
@@ -614,6 +644,10 @@ emission_rate_points_data_paper <- left_join(
     co2_total = round(co2_total, 4),
     wind_speed = round(wind_speed, 2))
 
+#Ensure that times are formatted correctly for writing midnight data
+
+emission_rate_points_data_paper$trap_deply_date_time<- format(emission_rate_points_data_paper$trap_deply_date_time,"%Y-%m-%d %H:%M:%S" ) 
+
 # Data dictionary
 emission_rate_points_data_paper_dictionary <- master_dictionary %>%
   filter(variable %in% colnames(emission_rate_points_data_paper))
@@ -643,7 +677,7 @@ write.csv(
 
 # 5. EMISSION RATES LAKE------
 
-emissions_lake_data_paper <- emissions_agg %>%
+emissions_lake_data_paper <- left_join(emissions_agg %>%
   rename_with(.cols = contains("units_lake"), ~ gsub("units_lake", "lake_units", .x)) %>%
   mutate(ch4_diffusion_lake = ch4_diffusion_lake * 24,
          ch4_diffusion_lake_units = "mg CH4 m-2 d-1",
@@ -656,7 +690,14 @@ emissions_lake_data_paper <- emissions_agg %>%
          co2_ebullition_lake = co2_ebullition_lake * 24,
          co2_ebullition_lake_units = "mg CO2 m-2 d-1",
          co2_total_lake = co2_total_lake * 24,
-         co2_total_lake_units = "mg CO2 m-2 d-1") 
+         co2_total_lake_units = "mg CO2 m-2 d-1"),
+  strat_link%>%
+    mutate(lake_id = case_when(grepl("69", lake_id) ~ "69",
+                               grepl("70", lake_id) ~ "70",
+                               TRUE ~ lake_id),
+           lake_id = gsub(".*?([0-9]+).*", "\\1", lake_id) %>% as.numeric,
+           buoyf_units="s-2",
+           thermdep2_units="meters"))
 
 
 # Data dictionary
