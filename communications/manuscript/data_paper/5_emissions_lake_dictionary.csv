@@ -38,4 +38,6 @@
 "co2_diffusion_ucb95pct_lake","upper bound 95 percent confidence interval for co2_diffusion_lake"
 "co2_total_ucb95pct_lake","upper bound 95 percent confidence interval for co2_total_lake"
 "buoyf","buoyancy frequency at index site"
+"buoyf_units","units for buoyf"
 "thermdep2","depth of the thermocline, listed as NA if there was no density gradient >= 0.1 kg m-3 m-1"
+"thermdep2_units","units for thermdep2"
