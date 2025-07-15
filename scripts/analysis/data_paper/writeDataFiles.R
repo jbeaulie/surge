@@ -381,7 +381,7 @@ site_descriptors_data <-
       # occasionally multiple samples collected over a few days (999, 2018 lake)
       read_excel(paste0(userPath, "/data/algalIndicators/pigments/surgeFilteredVolumes.xlsx")) %>%
         janitor::clean_names() %>%
-        filter(sample_type == "UNK", analyte == "chlorophyll") %>%
+        filter(sample_type == "UNK", grepl("chlorophyll", analyte, ignore.case = TRUE)) %>%
         #filter(lake_id == 1000) %>%
         mutate(
           # remove transitional, riverine from lake_id
@@ -435,7 +435,7 @@ site_descriptors_data <-
       read_excel(paste0(userPath, "/data/algalIndicators/pigments/surgeFilteredVolumes.xlsx")) %>%
         janitor::clean_names() %>%
         filter(sample_type == "UNK",
-               analyte == "chlorophyll") %>%
+               grepl("chlorophyll", analyte, ignore.case = TRUE)) %>%
         select(lake_id, site_id, visit, collection_date) %>%
         mutate(
           site_id = case_when(grepl("transitional", lake_id) ~ paste0(site_id, "_transitional"),
