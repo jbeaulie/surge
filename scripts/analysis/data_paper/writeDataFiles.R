@@ -170,6 +170,11 @@ master_dictionary <- tribble(~variable, ~definition,
                              "trap_rtrvl_date_time", "date and time of bubble trap retrieval in UTC",
                              "trap_rtrvl_date_time_units", "timezone for trap_rtrvl_date_time",
                              
+                             # k600 (file 4, emissions-point)
+                             "k_co2_600", "CO2 air-water gas exchange rate normalized to a Schmidt number of 600",
+                             "k_co2_600_units", "Units of k_co2_600",
+                             "k_ch4_600", "CH4 air-water gas exchange rate normalized to a Schmidt number of 600",
+                             "k_ch4_600_units", "Units of k_ch4_600",
 
                              # emissions(lake)
                              "ch4_ebullition_lake","lakewide areal methane ebullition flux estimated using survey site weights",
@@ -623,9 +628,27 @@ emission_rate_points_data_paper <- left_join(
   chm_dep
 ) %>% # close left join
   # join precip and wind speed during hour of chamber deployment
-  left_join(# 4/18/2025 only have wind speed, air temp, and precipitation
+  left_join( # 4/18/2025 only have wind speed, air temp, and precipitation
     met_chamber %>%
-      select(lake_id, site_id, visit, contains("precipitation"), contains("wind_speed"))) %>%
+      select(lake_id, site_id, visit, contains("precipitation"), contains("wind_speed"))
+    ) %>% # close left join
+  # join k600
+  left_join(
+    dissolved_gas_k %>%
+      select(lake_id, site_id, visit, contains("_600")) %>%
+      mutate(
+        # riverine and transitional zones. Move habitat from lake to site_id
+        site_id = case_when(grepl("transitional", lake_id) ~ paste0(site_id, "_transitional"),
+                            grepl("riverine", lake_id) ~ paste0(site_id, "_riverine"),
+                            grepl("lacustrine", lake_id) ~ paste0(site_id, "_lacustrine"),
+                            TRUE ~ as.character(site_id)),
+        # remove transitional, riverine, lacustrine from lake_id
+        # retain character class initially, then convert to numeric.
+        lake_id = case_when(lake_id %in% c("69_riverine", "69_transitional", "69_lacustrine") ~ "69",
+                            lake_id %in% c("70_riverine", "70_transitional", "70_lacustrine") ~ "70",
+                            TRUE ~ lake_id),
+        lake_id = as.numeric(lake_id))
+    ) %>% # close left join
   # remove "best" from diffusion variable
   rename_with(.cols = contains("best"), ~sub(pattern = "_best", replacement = "", x = .)) %>%
   # enforce decimal points
@@ -642,7 +665,9 @@ emission_rate_points_data_paper <- left_join(
     co2_ebullition = round(co2_ebullition, 4),
     # smallest non-zero abs(co2 total) is 0.0001876054
     co2_total = round(co2_total, 4),
-    wind_speed = round(wind_speed, 2))
+    wind_speed = round(wind_speed, 2),
+    k_ch4_600 = round(k_ch4_600, 3),
+    k_co2_600 = round(k_co2_600, 3))
 
 #Ensure that times are formatted correctly for writing midnight data
 
