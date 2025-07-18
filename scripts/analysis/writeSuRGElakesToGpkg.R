@@ -121,14 +121,14 @@ surge_lakes <- get_surge(paths)
 # In st_cast.sf(., "POLYGON") :
 #   repeating attributes for all sub-geometries for which they may not be constant
 
-## 2016 AND FALLS LAKE POLYGONS------------------------
+## 2016 LAKE POLYGONS------------------------
 
 # 1. file paths where the 2016 lake polygons are stored.  
 paths <- paste0(userPath,  "lakeDsn/", "2016_survey")
 
 get_2016 <- function(paths){
   
-  # 1. READ IN FILE NAMES FOR 2016 RESERVOIR SURVEY AND FALLS LAKE POLYGONS
+  # 1. READ IN FILE NAMES FOR 2016 RESERVOIR SURVEY
   #d <- 
   fs::dir_ls(path = paths, 
              regexp = '..shp', # file names containing this pattern
@@ -137,7 +137,7 @@ get_2016 <- function(paths){
     .[!(grepl("xml|lock|basin", .))] %>% # omit .shp, .xml, .lock, and basin shapefiles
     # I couldn't dissolve intra-reservoir boundaries for these lakes in R. dissolved in Pro. Ignore original .shp
     # and read in dissolved polygons. Specified lake name below.
-    .[!(grepl("fallsLakeSitesEqArea|fallsLakeEqArea.shp|miltonEqArea.shp|senecavilleEqArea.shp|caesarCreekEqArea.shp", .))] %>%
+    .[!(grepl("fallsLakeSitesEqArea|fallsLakeEqArea.shp|fallsLakeEqAreaDissolve.shp|miltonEqArea.shp|senecavilleEqArea.shp|caesarCreekEqArea.shp", .))] %>%
     .[!grepl("brookville_bb.shp", .)] %>% # omit brookeville bounding box used for data paper figure
     #.[15] %>% # subset for code development
     #imap: .x is object piped into imap, .y is object index (name of list element)
@@ -332,57 +332,12 @@ dat_2016_sf <- dat_2016 %>%
 dim(dat_2016_sf) #498
 
 
-## Falls lake-----------
-# data maintained at: "C:\Users\JBEAULIE\OneDrive - Environmental Protection Agency (EPA)\gitRepository\fallsLakeCH4"
-# 1. create sf object for sites 991 and 992 that were sampled one. These sites
-#    are not included in official survey design.
-# 2. merge above with official survey design sf object
-# 3. merge sf object above with deployment and retrieval times
-
-# sf object of sites
-dat_falls_lake_sf <- rbind(
-  # sf object for sites 991 and 992. these were sampled once but not in survey design file (?)
-  tribble(
-    ~lat, ~lon, ~site_id,
-    36.07039, -78.79043, 991,
-    36.07016, -78.78858, 992) %>%
-    st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
-    st_set_geometry("geom") %>%  # ensure consistent geometry column names across all sf objects
-    st_transform(3857), # web meractor, consistent with surge_lakes
-  
-  # read in and merge .shp containing survey design
-  st_read(paste0(userPath,  "lakeDsn/2016_survey/fallsLake/FallsLakeSitesEqArea.shp")) %>%
-    st_transform(., 3857) %>% # web mercator, consistent with surge_lakes
-    st_set_geometry("geom") %>%  # ensure consistent geometry column names across all sf objects
-    select(siteID) %>%
-    rename(site_id = siteID) %>%
-    mutate(site_id = substr(site_id, 4,5) %>% as.numeric)
-) %>%
-  # merge with deployment and retrieval date_time from fallsLakeCH4 RStudio project (readFieldSheets.R)
-  # times were defined based on local time zone, then converted to UTC in fallsLakeCH4 RStudio project (readFieldSheets.R)
-  right_join(
-    readRDS(paste0(userPath, "data/RTP/CH4_1033_Falls_Lake/falls_lake_fld_sheet.rds")) %>%
-      select(lake_id, site_id, visit, site_depth, contains("date_time"))
-  ) %>%
-  st_make_valid() %>%
-  mutate(site_id = as.character(site_id),
-         lake_id = as.numeric(lake_id))
-
 
 # CHECK SITE WEIGHTS--------
-# site weights for SuRGE and 2016 are in dat. Need to merge with site weights
-# from Falls Lake
-site_wgt <- bind_rows(
-  # Falls Lake weights
-  st_read(paste0(userPath,  "lakeDsn/2016_survey/fallsLake/FallsLakeSitesEqArea.shp")) %>%
-  st_drop_geometry() %>%
-  select(siteID, wgt) %>%
-  rename(site_id = siteID,
-         site_wgt = wgt) %>%
-  mutate(site_id = substr(site_id, 4,5),
-         lake_id = 1033),
+# site weights for SuRGE and 2016 are in dat. 
+site_wgt <- 
   # SuRGE + 2016 weights
-  dat %>% select(lake_id, site_id, site_wgt))
+  dat %>% select(lake_id, site_id, site_wgt)
 
 
 unique(dat$lake_id)
@@ -415,14 +370,14 @@ dim(lakes_2016) #33
 ## POINTS----
 # merge 2016, SuRGE, and Falls Lake data
 # general geopackage for collaborators: add to all_lakes.gpkg
-bind_rows(list(dat_2016_sf, dat_surge_sf, dat_falls_lake_sf)) %>% # merge points
+bind_rows(list(dat_2016_sf, dat_surge_sf)) %>% # merge points
   left_join(dat %>% select(lake_id, site_id, visit, site_wgt)) %>% # add site weights
   st_write(., file.path(userPath, "/lakeDsn", paste0("all_lakes_", Sys.Date(), ".gpkg")), # write to .gpkg
            layer = "points",
            append = FALSE)
 
 # geopackage for data paper
-bind_rows(list(dat_2016_sf, dat_surge_sf, dat_falls_lake_sf)) %>% # merge points
+bind_rows(list(dat_2016_sf, dat_surge_sf)) %>% # merge points
   left_join(dat %>% select(lake_id, site_id, visit)) %>%  
   st_write(., file.path(
     "communications/manuscript/data_paper/", 
@@ -430,4 +385,4 @@ bind_rows(list(dat_2016_sf, dat_surge_sf, dat_falls_lake_sf)) %>% # merge points
     layer = "sample_points",
     append = FALSE)
 
-bind_rows(list(dat_2016_sf, dat_surge_sf, dat_falls_lake_sf)) %>% dim #2816 observations
+bind_rows(list(dat_2016_sf, dat_surge_sf)) %>% dim #2816 observations
