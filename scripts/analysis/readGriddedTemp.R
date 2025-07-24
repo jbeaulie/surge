@@ -135,3 +135,31 @@ met_temp <- met_temp %>%
   rename(lake_id = value) %>%
   pivot_wider(names_from = variable_name, values_from = mean_jan:std_dec) %>%
   janitor::clean_names()
+
+# GATHER ELEVATION DATA FOR BAROMETRIC PRESSURE CORRECTIONS
+
+lagos_elev<-read.csv(file = (paste0(userPath, "data/siteDescriptors/lake_information.csv")))
+
+elevation_lagos<- lagos_elev %>%
+  filter(lagoslakeid %in% locus_link_aggregated$lagoslakeid) %>%
+  select (lagoslakeid,lake_elevation_m,lake_nhdid) 
+  # filter(!is.na(lagoslakeid)) %>%
+  # mutate(lagoslakeid=as.numeric(lagoslakeid))
+
+el<-left_join(elevation_lagos, locus_link_aggregated)
+
+els<-left_join(lagos_links,el)%>%
+  select(lake_id, lake_elevation_m)
+
+
+elevation<-lake.list.all %>%
+  select(lake_id,elevation) %>%
+  mutate(lake_id= as.numeric(case_when(lake_id %in% c("69_riverine", "69_transitional", "69_lacustrine") ~ "69",
+                                      lake_id %in% c("70_riverine", "70_transitional", "70_lacustrine") ~ "70",
+                                      TRUE ~ lake_id)))%>%
+  left_join(els, by="lake_id")%>%
+  mutate(lake_surface_elevation_m=ifelse(!is.na(lake_elevation_m),lake_elevation_m,ifelse(lake_id=="1000",96.2,elevation)))%>%
+  group_by(lake_id) %>%
+  summarise(lake_elevation_m=lake_surface_elevation_m[1])
+#Still missing elevations for lake_ids 1009, 1010  
+  
