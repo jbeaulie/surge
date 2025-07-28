@@ -158,8 +158,14 @@ elevation<-lake.list.all %>%
                                       lake_id %in% c("70_riverine", "70_transitional", "70_lacustrine") ~ "70",
                                       TRUE ~ lake_id)))%>%
   left_join(els, by="lake_id")%>%
-  mutate(lake_surface_elevation_m=ifelse(!is.na(lake_elevation_m),lake_elevation_m,ifelse(lake_id=="1000",96.2,elevation)))%>%
+  #elevations are in meters above sea level. Elevations for lakes 1009 and 1010 are in NGVD29 datum 
+  mutate(lake_surface_elevation_m=ifelse(!is.na(lake_elevation_m),lake_elevation_m,
+                                         ifelse(lake_id=="1000",96.2,
+                                            ifelse(lake_id=="1009",313.3 ,
+                                                  ifelse(lake_id=="1010", 223.1, elevation)))))%>%
   group_by(lake_id) %>%
-  summarise(lake_elevation_m=lake_surface_elevation_m[1])
-#Still missing elevations for lake_ids 1009, 1010  
+  summarise(lake_elevation=lake_surface_elevation_m[1])%>%
+  mutate(lake_elevation_units="meters above sea level")
+#Write csv for jeremy
+write.csv(elevation,file="output/SuRGE_elevations.csv")
   
