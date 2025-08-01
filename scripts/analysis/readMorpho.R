@@ -11,6 +11,6 @@ morpho <- read.csv(paste0(userPath, "data/siteDescriptors/morphometry/surge_morp
   # calculate additional metrics. Casas-Ruiz et al 2021
   mutate(
     circularity = (4 * pi * surface_area) / shoreline_length^2,
-    dynamic_ratio = shoreline_length / mean_depth,
+    dynamic_ratio = shoreline_length / mean_depth
     #littoral_fraction = 1 - ((1 - (3/max_depth))^((max_depth/mean_depth) - 1)) # Jeff provides this metric
-    ) 
+    )
