@@ -14,8 +14,11 @@ morpho <- read.csv(paste0(userPath, "data/siteDescriptors/morphometry/surge_morp
     dynamic_ratio = shoreline_length / mean_depth
     #littoral_fraction = 1 - ((1 - (3/max_depth))^((max_depth/mean_depth) - 1)) # Jeff provides this metric
 <<<<<<< HEAD
+<<<<<<< HEAD
     )
 =======
+=======
+>>>>>>> parent of 95a0b78 (Fixed issue causing zeros in morpho data to be converted to NA. Rewrote all files.)
     ) %>%
   # replace NaN, Inf with NA
   mutate(across(where(is.numeric), ~na_if(., is.infinite(.))))
@@ -48,4 +51,7 @@ morpho %>%
          dynamic_ratio) %>%
   cor(use = "pairwise.complete.obs") %>% 
   corrplot(method = "number") 
+<<<<<<< HEAD
+>>>>>>> parent of 95a0b78 (Fixed issue causing zeros in morpho data to be converted to NA. Rewrote all files.)
+=======
 >>>>>>> parent of 95a0b78 (Fixed issue causing zeros in morpho data to be converted to NA. Rewrote all files.)
