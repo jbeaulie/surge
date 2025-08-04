@@ -1,18 +1,21 @@
 ## Read in NWI attributes for SuRGE Lakes
 ## Script last updated on 7/25/2024
 
+
 #Read in NWI data that Mark Mitchell sent at lake scale
 #going down to class after checking that class is consistently reported across lakes
 nwi_SuRGE<- read_xlsx(paste0(userPath, "data/siteDescriptors/nwi/SURGE_AllAttributes_NWI_20240124.xlsx"),
-                           sheet = "AllAttribute",na="NA")%>%
-  janitor::clean_names()%>%
+                      sheet = "AllAttribute",na="NA")%>%
+  janitor::clean_names() %>%
   dplyr::rename(lake_id = site_id) %>%
+  filter(!(lake_id %in% c("eqAreaharsha", "eqAreaxxx"))) %>% # demo data not needed
   mutate(lake_id = str_extract(lake_id, "(\\d+$)") %>% # extract numeric part of lake_id
            as.numeric()) %>% # convert lake_id to numeric
+  filter(!(lake_id %in% c(9, 15, 56, 183, 185, 194, 212, 213, 244, 285, 318, 325))) %>% # not sampled
   select(lake_id,lacustrine,palustrine,riverine,intermittent,limnetic,littoral,lower_perennial,unknown_perennial,
          upper_perennial,aquatic_bed_x,emergent_x,forested_x,rocky_shore,streambed,scrub_shrub_x,streambed,
          unconsolidated_bottom_x, unconsolidated_shore_x,aquatic_bed_y,emergent_y,
-          forested_y,scrub_shrub_y,unconsolidated_bottom_y,unconsolidated_shore_y,broad_leaved_deciduous_y)
+         forested_y,scrub_shrub_y,unconsolidated_bottom_y,unconsolidated_shore_y,broad_leaved_deciduous_y) 
 
 nwi_2016<- read_xlsx(paste0(userPath, "data/siteDescriptors/nwi/2016_survey_AllAttributes_NWI_20240124.xlsx"),
                      sheet = "2016Sites_AllAttribute",na="NA")%>%
