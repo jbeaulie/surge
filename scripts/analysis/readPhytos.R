@@ -19,6 +19,9 @@ phyto_data <- read_excel(paste0(userPath,
                            lake_id == 281 ~ 2, # samples from visit 1 lost
                            TRUE ~ 1), # visit 1 for all others
          density_units = "cells_ml") %>%
+  # filter out data from lakes that were not sampled. See email from
+  # avery on 8/5/2025 and SuRGE repo issue # 183
+  filter(!(lake_id %in% c(59, 252))) %>% 
   # Add site_id field by joining with index_site
   left_join(index_site %>% 
               select(-index_site) %>%
@@ -29,8 +32,11 @@ phyto_data <- read_excel(paste0(userPath,
 
 
 # Are all phyto_data lake_id values in lake.list?
-phyto_data %>% filter(!(lake_id %in% lake.list$lake_id)) # yes!
+sampled_lakes <- lake.list %>% filter(eval_status_code == "S") %>% 
+  pull(lake_id) 
 
+phyto_data %>% filter(!(lake_id %in% sampled_lakes)) # yes 
+                          
 # are all sampled lakes in phyto data?
 # No, asked Avery 4/22/2025
 lake.list.all %>% 

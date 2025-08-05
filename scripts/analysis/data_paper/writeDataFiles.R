@@ -1228,6 +1228,9 @@ phyto_data <- read_excel(paste0(userPath,
                            lake_id == 281 ~ 2, # samples from visit 1 lost
                            TRUE ~ 1), # visit 1 for all others
          density_units = "cells_ml") %>%
+  # filter out data from lakes that were not sampled. See email from
+  # avery on 8/5/2025 and SuRGE repo issue # 183
+  filter(!(lake_id %in% c(59, 252))) %>% 
   # Add site_id field by joining with index_site
   left_join(index_site %>% 
               select(-index_site) %>%
