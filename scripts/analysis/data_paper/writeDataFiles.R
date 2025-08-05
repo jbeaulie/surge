@@ -1210,11 +1210,12 @@ write.csv(x = lake_scale_dictionary,
 
 
 # 9. PHYTOPLANKTON-------------------
-phyto_data <-  read_excel(paste0(userPath,
-                                 "data/algalIndicators/SuRGE Taxonomy 2021-23 v5.xlsx"), 
-                          sheet = "SuRGE Taxonomy- 2021-23") %>%
+phyto_data <- read_excel(paste0(userPath,
+                                "data/algalIndicators/SuRGE Taxonomy 2021-23 v5.xlsx"), 
+                         sheet = "SuRGE Taxonomy- 2021-23") %>%
   janitor::clean_names() %>%
   select(site_id, year_col, algal_group, phylum,class, order, family, genus, density) %>%
+  slice(-1) %>% # remove first row, which is empty
   # distinct(site_id) # no lacustrine...
   rename(lake_id = site_id) %>%
   mutate(lake_id = str_extract(lake_id, "(\\d+$)") %>% # extract numeric part of lake_id
@@ -1227,9 +1228,13 @@ phyto_data <-  read_excel(paste0(userPath,
                            lake_id == 281 ~ 2, # samples from visit 1 lost
                            TRUE ~ 1), # visit 1 for all others
          density_units = "cells_ml") %>%
+  # Add site_id field by joining with index_site
+  left_join(index_site %>% 
+              select(-index_site) %>%
+              filter(!grepl(c("69_|70_"), lake_id)) %>% # remove 69 and 70 lakes (not in phyto_data)
+              mutate(lake_id = as.numeric(lake_id))) %>% 
   select(-year_col) %>%
-  relocate(lake_id, visit) %>%
-  filter(!is.na(lake_id))
+  relocate(lake_id, site_id, visit)
 
 
 # Data dictionary
