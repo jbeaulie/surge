@@ -44,4 +44,26 @@ depth_estimates <- map(bathy_2016, # list of bathymetry files
 # replace missing depth_values in dat_2016 with estimated depths
 dat_2016 <- rows_update(dat_2016,
                         depth_estimates,
-                        by = c("lake_id", "site_id", "visit"))
+                        by = c("lake_id", "site_id", "visit")) %>%
+  # A few random  missing depths
+  rows_update(
+    tribble(~lake_id, ~site_id, ~visit, ~site_depth,
+            # Harsha: July/August 2017 observations at EUS3, co-located with site 6
+            1031, 6, 1, mean(17, 13, 13, 13, 13, 13, 12, 13) * 0.3048, # ft -> m 
+            # Harsha: estimated from visual inspection of bathymetry
+            1031, 32, 1, 40 * 0.3048, # ft -> m
+            # estimated from visual inspection of bathymetry
+            1028, 5, 1, 6.5,
+            # MJ Kirwan: estimated from visual inspection of bathymetry
+            1024, 3, 1, 2,
+            # kiser: estimated from visual inspection of bathymetry
+            1016, 1, 1, 1.1,
+            # cowan: estimated from visual inspection of bathymetry
+            1012, 38, 1, 1.1,
+            1012, 41, 1, 1.1,
+            # cave run: estimated from visual inspection of bathymetry
+            1010, 4, 1, 18,
+            # caeser Cr: estimated from visual inspection of bathymetry
+            1008, 5, 1, 15 * 0.3048), # ft -> m
+    by = c("lake_id", "site_id", "visit")
+  )
