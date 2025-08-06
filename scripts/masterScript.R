@@ -44,16 +44,16 @@ source("scripts/analysis/readNWI.R") # NWI attributes from Mark Mitchell
 source("scripts/analysis/readIpccClimateZones.R") # surge_climate
 source("scripts/analysis/readLakeCat.R")# read in LakeCat 
 #source("scripts/analysis/readSedimentation.R") # read in reservoir sedimentation data (requires lagosLakesID.R)
+source("scripts/analysis/readDepthProfile.R") # read SuRGE, 2016, and Falls Lake depth profile
+source("scripts/analysis/getIndexSite.R") # extract index site location from depth_profiles_all
 source("scripts/analysis/readPhytos.R") # read in data from Avery Tatters
 source("scripts/analysis/readNWIS.R") # read water level data for subset of reservoirs
-source("scripts/analysis/readDepthProfile.R") # read SuRGE, 2016, and Falls Lake depth profile
 source("scripts/analysis/missingSonde2016.R") # Interpolate based on profiles
 source("scripts/analysis/readGriddedTemp.R") # ERA5 derived estimates of air, shallow, and deep temperature
 #source("scripts/analysis/crosswalk.R") # Jeff's script to for link to external datasets (e.g. lagos, nla)
 
 # Calculate derived quantities
 source("scripts/analysis/calculateStratification.R") # stratification indices
-source("scripts/analysis/getIndexSite.R") # extract index site location from depth_profiles_all
 source("scripts/analysis/calculateDissolvedGas.R") # dissolved_gas
 
 # Aggregate and review chemistry
@@ -102,8 +102,8 @@ source("scripts/analysis/annualizeEmissions.R")
 #source("scripts/analysis/aggregateNutrientLabDupExample.R") # example code for aggregating lab dups.  Can delete.
 
 # Project shapefiles
-source("scripts/writeSuRGElakesToGpkg.R")
-source("scripts/writeSuRGElakesForGres.R")
+source("scripts/analysis/writeSuRGElakesToGpkg.R")
+#source("scripts/analysis/writeSuRGElakesForGres.R")
 
 
 # Analysis
