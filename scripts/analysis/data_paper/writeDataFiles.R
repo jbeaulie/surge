@@ -225,8 +225,6 @@ master_dictionary <- tribble(~variable, ~definition,
                              "co2_ebullition_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_ebullition_lake",
                              "co2_diffusion_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_diffusion_lake",
                              "co2_total_ucb95pct_lake", "upper bound 95 percent confidence interval for co2_total_lake",
-                             
-                             # stratification (lake)
                              "buoyf", "buoyancy frequency at index site",
                              "buoyf_units", "units for buoyf",
                              "thermdep2","depth of the thermocline, listed as NA if there was no density gradient >= 0.1 kg m-3 m-1",
@@ -857,10 +855,8 @@ site_data <-
     
     
     # SuRGE CHEMISTRY DATA
-    chemistry_all %>%
-      filter(sample_type != "blank") %>% # omit blanks
-      select(-sample_type,
-             -contains("phycocyanin_lab")) %>%
+    chemistry %>%
+      select(-contains("phycocyanin_lab")) %>%
       # move transitional, lacustrine, riverine from lake_id to site_id
       mutate( 
         site_id = case_when(grepl("lacustrine", lake_id) ~ paste0(site_id, "_lacustrine"),
@@ -876,31 +872,7 @@ site_data <-
       # some units are missing, even when an analyte value is presented.
       # lake_id == 17, analyte == cl for example
       # fill all units
-      fill(contains("units"), .direction = "updown") %>%
-      group_by(lake_id, site_id, visit, sample_depth) %>%
-      summarize(across(!matches(c("flags|units")), mean),
-                # This takes nearly 20 seconds to run!
-                # Check if any flags are present across grouped analytes;
-                # If every analyte has a flag, keep it. Otherwise, NA.
-                across(contains("flag"),
-                       ~ case_when(
-                         # Check for all combinations of flags
-                         all(str_detect(., "ND H S")) ~ "ND H S",
-                         all(str_detect(., "L H S")) ~ "L H S",
-                         all(str_detect(., "ND.*H")) ~ "ND H",
-                         all(str_detect(., "L.*H|H.*L")) ~ "L H",
-                         all(str_detect(., "ND.*S")) ~ "ND S",
-                         all(str_detect(., "L.*S")) ~ "L S",
-                         all(str_detect(., "H.*S")) ~ "H S",
-                         all(str_detect(., "ND")) ~ "ND",
-                         all(str_detect(., "L")) ~ "L",
-                         all(str_detect(., "H")) ~ "H",
-                         all(str_detect(., "S")) ~ "S",
-                         # All other combinations should result in NA
-                         TRUE ~ NA_character_)), 
-                # Retain units columns; look for any non-NA value
-                across(contains("unit"), 
-                       ~ min(., na.rm = TRUE))) %>%
+       fill(contains("units"), .direction = "updown") %>%
       # every column name must end with _flags, _units, or _value. This will
       # be used to pivot_longer
       rename_with(~ifelse(
@@ -1265,3 +1237,35 @@ write.csv(x = phyto_data,
 write.csv(x = phyto_dictionary, 
           file = "communications/manuscript/data_paper/9_phyto_dictionary.csv",
           row.names = FALSE)
+
+
+
+#  METEOROLOGY-----------
+# # These data have been merged with emission rate point
+# # 4/18/2025 only have wind speed, air temp, and precipitation
+# met_data <- met_chamber %>%
+#   select(-temp_lake_mix_layer_c) %>%
+#   relocate(lake_id, site_id, visit, date_time, precipitation, wind_speed, temp_air_2m)
+# 
+# # Data dictionary
+# met_dictionary <- master_dictionary %>%
+#   filter(variable %in% colnames(met_data))
+# 
+# # Are all values in data dictionary?
+# ifelse (
+#   #TRUE if variable is in dictionary, FALSE if not
+#   colnames(met_data) %in% met_dictionary$variable %>% # TRUE if variable is present 
+#     {!.} %>% # convert TRUE to FALSE, and FALSE to TRUE
+#     sum(.) == 0, # all TRUE add up
+#   "Site data dictionary is complete", # if 0 (all variables are present) 
+#   "Site data dictionary is incomplete") # if not 0 (>=1 variable missing)
+# 
+# # write data
+# write.csv(x = met_data, 
+#           file = "communications/manuscript/data_paper/9_met_data.csv",
+#           row.names = FALSE)
+# 
+# # write dictionary
+# write.csv(x = met_dictionary, 
+#           file = "communications/manuscript/data_paper/9_met_dictionary.csv",
+#           row.names = FALSE)
