@@ -855,10 +855,8 @@ site_data <-
     
     
     # SuRGE CHEMISTRY DATA
-    chemistry_all %>%
-      filter(sample_type != "blank") %>% # omit blanks
-      select(-sample_type,
-             -contains("phycocyanin_lab")) %>%
+    chemistry %>%
+      select(-contains("phycocyanin_lab")) %>%
       # move transitional, lacustrine, riverine from lake_id to site_id
       mutate( 
         site_id = case_when(grepl("lacustrine", lake_id) ~ paste0(site_id, "_lacustrine"),
@@ -874,31 +872,7 @@ site_data <-
       # some units are missing, even when an analyte value is presented.
       # lake_id == 17, analyte == cl for example
       # fill all units
-      fill(contains("units"), .direction = "updown") %>%
-      group_by(lake_id, site_id, visit, sample_depth) %>%
-      summarize(across(!matches(c("flags|units")), mean),
-                # This takes nearly 20 seconds to run!
-                # Check if any flags are present across grouped analytes;
-                # If every analyte has a flag, keep it. Otherwise, NA.
-                across(contains("flag"),
-                       ~ case_when(
-                         # Check for all combinations of flags
-                         all(str_detect(., "ND H S")) ~ "ND H S",
-                         all(str_detect(., "L H S")) ~ "L H S",
-                         all(str_detect(., "ND.*H")) ~ "ND H",
-                         all(str_detect(., "L.*H|H.*L")) ~ "L H",
-                         all(str_detect(., "ND.*S")) ~ "ND S",
-                         all(str_detect(., "L.*S")) ~ "L S",
-                         all(str_detect(., "H.*S")) ~ "H S",
-                         all(str_detect(., "ND")) ~ "ND",
-                         all(str_detect(., "L")) ~ "L",
-                         all(str_detect(., "H")) ~ "H",
-                         all(str_detect(., "S")) ~ "S",
-                         # All other combinations should result in NA
-                         TRUE ~ NA_character_)), 
-                # Retain units columns; look for any non-NA value
-                across(contains("unit"), 
-                       ~ min(., na.rm = TRUE))) %>%
+       fill(contains("units"), .direction = "updown") %>%
       # every column name must end with _flags, _units, or _value. This will
       # be used to pivot_longer
       rename_with(~ifelse(
