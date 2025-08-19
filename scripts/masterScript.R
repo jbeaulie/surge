@@ -107,7 +107,7 @@ source("scripts/analysis/writeSuRGElakesToGpkg.R")
 
 
 # Analysis
-source("scripts/analysis/inspectMeasurementValues.R")
+#source("scripts/analysis/inspectMeasurementValues.R")
 #source("scripts/analysis/reviewMetTemp.R") # ERA5 bias corrections
 
 # Manuscripts
