@@ -12,30 +12,101 @@ di<-data.frame(dat$ch4_diffusion_best,"diffusion")
 colnames(di)<-c("rate","type")
 eb<-data.frame(dat$ch4_ebullition,"ebullition")
 colnames(eb)<-c("rate","type")
-
-dieb<-bind_rows(di,eb)
+tot<-data.frame(dat$ch4_total,"total")
+colnames(tot)<-c("rate","type")
+dieb<-bind_rows(di,eb,tot)
 
 options(scipen = 999)
 densplot<-dieb%>%
   mutate(rt=rate*24)%>%
+  mutate(rtc=rt*(12.01/16.043))%>%
   ggplot(aes(x=rt,color=type,fill=type))+
   geom_density(alpha=0.1)+
-  scale_color_brewer(palette="Dark2",)+
-  scale_fill_brewer(palette="Dark2")+
+  scale_color_manual(values = c("#56B4E9","#009E73","#D55E00"))+
+  scale_fill_manual(values = c("#56B4E9","#009E73","#D55E00"))+
+  # scale_color_brewer(palette="Dark2",)+
+  # scale_fill_brewer(palette="Dark2")+
   theme_bw()+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         axis.line=element_line(colour="black"),legend.title=element_blank(),
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
-        legend.position=c(0.8,0.7))+
-  scale_x_log10()+
-  xlab(expression(paste("Methane Flux (mg CH"[4]*" m"^"-2"*"d"^"-1"*")")))+
+        # axis.text.x = element_blank(),
+        # axis.labels.x = element_blank(),
+        # axis.ticks.x = element_blank(),
+        legend.position="top")+
+  scale_x_log10(limits=c(0.001,10000))+
+  xlab(expression(paste("Methane (mg CH"[4]*" m"^"-2"*"d"^"-1"*")")))+
   ylab("Density")
 densplot
+
+#ggsave("densityplot.jpg",width=6,height=2.25,units="in",dpi=300,path="~/National_Reservoir_GHG_Survey/AGU_Poster")
+
+dic<-data.frame(dat$co2_diffusion_best,"diffusion")
+colnames(dic)<-c("rate","type")
+#dic$rate<-dic$rate+519
+ebc<-data.frame(dat$co2_ebullition,"ebullition")
+colnames(ebc)<-c("rate","type")
+totc<-data.frame(dat$co2_total,"total")
+colnames(totc)<-c("rate","type")
+
+diebc<-bind_rows(dic,ebc,totc)
+nbreaks <- 7
+breaks <-c(-10^(nbreaks:1),10^(nbreaks:1))
+
+densplotco2<-diebc%>%
+  mutate(rt=rate*24)%>%
+  mutate(rtc=rt*(12.01/44.009))%>%
+  ggplot(aes(x=rt,color=type,fill=type))+
+  geom_density(alpha=0.1)+
+  scale_color_manual(values = c("#56B4E9","#009E73","#D55E00"))+
+  scale_fill_manual(values = c("#56B4E9","#009E73","#D55E00"))+
+  #facet_wrap(~type,scales="free",ncol=1)+
+  # scale_color_brewer(palette="Dark2",)+
+  # scale_fill_brewer(palette="Dark2")+
+  theme_bw()+
+  theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+        axis.line=element_line(colour="black"),legend.title=element_blank(),
+        axis.text = element_text(size = 14,angle = 90),
+        axis.title = element_text(size = 16),
+        legend.position="none")+
+  #scale_x_log10()+
+  scale_x_continuous(trans = pseudo_log_trans(sigma = 10^(-nbreaks), base = 10),breaks=breaks)+
+  #scale_x_continuous(trans = pseudo_log_trans(sigma = 1, base = 10))+
+  xlab(expression(paste("Carbon Dioxide (mg CO"[2]*" m"^"-2"*"d"^"-1"*")")))+
+  ylab("Density")
+densplotco2
+
+densplotco2b<-totc%>%
+  mutate(rt=rate*24)%>%
+  mutate(rtc=rt*(12.01/44.009))%>%
+  ggplot(aes(x=rt,color=type,fill=type))+
+  geom_density(alpha=0.1)+
+  scale_color_manual(values = "#D55E00")+
+  scale_fill_manual(values = "#D55E00")+
+  #facet_wrap(~type,scales="free",ncol=1)+
+  # scale_color_brewer(palette="Dark2",)+
+  # scale_fill_brewer(palette="Dark2")+
+  geom_vline(xintercept=0)+
+  theme_bw()+
+  theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+        axis.line=element_line(colour="black"),legend.title=element_blank(),
+        axis.text = element_text(size = 14,angle = 90),
+        axis.title = element_text(size = 16),
+        legend.position="none")+
+  xlab(expression(paste("Carbon Dioxide (mg CO"[2]*" m"^"-2"*"d"^"-1"*")")))+
+  ylab("Density")
+densplotco2b
+
+# look at function pseudolog to extend axis into negative log space
+# add another color for total flux
+dens<-plot_grid(densplot,densplotco2b,ncol=1,align="v",labels=c("A","B"),rel_heights = c(1,1))
+dens
+
 library(RColorBrewer)
 myPal <- brewer.pal(2,"Dark2")
 
-ggsave("densityplot.jpg",width=6,height=2.25,units="in",dpi=300,path="~/National_Reservoir_GHG_Survey/AGU_Poster")
+
 
 #Make a density plot that shows the percent emission as diffusion
 
@@ -59,11 +130,14 @@ densplotper<-percentdiffusive%>%
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
         legend.position=c(0.8,0.7))+
-  xlab("Percent Ebullition")+
+  xlab("Percent Methane Ebullition")+
   ylab("Density")
 densplotper
 
 ggsave("percent_ebullition.jpg",width=6,height=2.25,dpi=300,units="in",path="~/National_Reservoir_GHG_Survey/AGU_Poster")
+
+library(cowplot)
+
 
 #List of predictors examined:
 
