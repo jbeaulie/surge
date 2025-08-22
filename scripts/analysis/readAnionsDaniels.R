@@ -7,14 +7,14 @@
 # 1. Function to read daniels anion data---------------
 path <- paste0(userPath,
                "data/chemistry/anions_ada_daniels/",
-               "Daniels_Anions_2021_2_import.xls")
+               "Daniels_Anions_2021_2_import.xlsx")
 
-sheet <- "2021_SURGE_anions"
+sheet <- "long_format"
 
 get_daniels <- function(path, sheet){
   top_table <- read_excel(path = path, sheet = sheet, na = "n.a.") %>%
     janitor::clean_names() %>%
-    select(-matches(("no2|no3|po4|full|dilution"))) %>% 
+    #select(-matches(("no2|no3|po4|full|dilution"))) %>% 
     # these analytes are taken from Lachat
     mutate(sample_depth = case_when(
       grepl("blank", sample_id, ignore.case = TRUE) ~ "blank",
@@ -36,53 +36,62 @@ get_daniels <- function(path, sheet){
       str_detect(sample_id, "RIV") ~ paste0(lake_id,"_riverine"),
       lake_id == "69" ~ "69_riverine",
       TRUE ~ lake_id)) %>%
-    # create the analyte_flag column
-    mutate(f_flag = case_when(is.na(f_mg_l) ~ "ND", 
-                              TRUE ~ "")) %>% 
-    mutate(cl_flag = case_when(is.na(cl_mg_l) ~ "ND", 
-                               TRUE ~ "")) %>% 
-    mutate(br_flag = case_when(is.na(br_mg_l) ~ "ND", 
-                               TRUE ~ "")) %>% 
-    mutate(so4_flag = case_when(is.na(so4_mg_l) ~ "ND", 
-                                TRUE ~ "")) %>% 
-    # sub mdl for NA
-    mutate(f_mg_l = case_when(is.na(f_mg_l) ~ 0.005, TRUE ~ f_mg_l),
-           cl_mg_l = case_when(is.na(cl_mg_l) ~ 0.03, TRUE ~ cl_mg_l),
-           br_mg_l = case_when(is.na(br_mg_l) ~ 0.02, TRUE ~ br_mg_l),
-           so4_mg_l = case_when(is.na(so4_mg_l) ~ 0.025, TRUE ~ so4_mg_l)) %>%
-    mutate(f_bql = case_when(f_mg_l > 0.005 & f_mg_l < 0.439 ~ "L", 
-                             TRUE ~ ""),
-           cl_bql = case_when(cl_mg_l > 0.03 & cl_mg_l < 0.4597 ~ "L",
-                              TRUE ~ ""),
-           br_bql = case_when(br_mg_l > 0.02 & br_mg_l < 0.4638 ~ "L",
-                               TRUE ~ ""),
-           so4_bql = case_when(so4_mg_l > 0.025 & so4_mg_l < 0.423 ~ "L", 
-                              TRUE ~ ""))
+    mutate(
+      units = paste(
+        word(analyte, 2, sep = "_"), 
+        word(analyte, 3, sep = "_"),
+        sep = "_"
+        ), # close paste
+      analyte = word(analyte, 1, sep = "_") 
+      ) %>% # close mutate
+    select(-sample_id, -injection_date_time, -dilution) %>%
+    add_column(visit = 1) # these are all first visits
+    # pivot_wider(names_from = analyte, values_from = value) %>%
+    # # create the analyte_flag column
+    # mutate(f_flag = case_when(is.na(f_mg_l) ~ "ND", 
+    #                           TRUE ~ "")) %>% 
+    # mutate(cl_flag = case_when(is.na(cl_mg_l) ~ "ND", 
+    #                            TRUE ~ "")) %>% 
+    # mutate(br_flag = case_when(is.na(br_mg_l) ~ "ND", 
+    #                            TRUE ~ "")) %>% 
+    # mutate(so4_flag = case_when(is.na(so4_mg_l) ~ "ND", 
+    #                             TRUE ~ "")) %>% 
+    # # sub mdl for NA
+    # mutate(f_mg_l = case_when(is.na(f_mg_l) ~ 0.005, TRUE ~ f_mg_l),
+    #        cl_mg_l = case_when(is.na(cl_mg_l) ~ 0.03, TRUE ~ cl_mg_l),
+    #        br_mg_l = case_when(is.na(br_mg_l) ~ 0.02, TRUE ~ br_mg_l),
+    #        so4_mg_l = case_when(is.na(so4_mg_l) ~ 0.025, TRUE ~ so4_mg_l)) %>%
+    # mutate(f_bql = case_when(f_mg_l > 0.005 & f_mg_l < 0.439 ~ "L", 
+    #                          TRUE ~ ""),
+    #        cl_bql = case_when(cl_mg_l > 0.03 & cl_mg_l < 0.4597 ~ "L",
+    #                           TRUE ~ ""),
+    #        br_bql = case_when(br_mg_l > 0.02 & br_mg_l < 0.4638 ~ "L",
+    #                            TRUE ~ ""),
+    #        so4_bql = case_when(so4_mg_l > 0.025 & so4_mg_l < 0.423 ~ "L", 
+    #                           TRUE ~ ""))
   
-  # 2. Extract units and analyte names
-  analytes.units <- top_table %>% 
-    select(contains("_l")) %>% 
-    colnames(.) %>%
-    tibble(analyte = str_extract(., pattern = "[^_]+"),
-           #https://statisticsglobe.com/extract-substring-before-or-after-pattern-in-r
-           unit = sub(".*?_", "", .)) %>% #? ensures first occurrence of _ is indexed
-    select(-.) %>%
-    #pivot_longer(analyte) %>%
-    pivot_wider(names_from = analyte, values_from = unit) %>%
-    rename_with(.cols = everything(), ~paste0(., "_units"))
-  
-  # 3. merge data with units
-  top_table <- top_table %>%
-    # rename columns to analyte name, remove units
-    rename_with(., 
-                .cols = contains("_l"), # rename columns with this pattern
-                ~sub("_.*", "", .x) # extract before first occurrence of _
-    ) %>% 
-    cbind(., analytes.units) %>% # add units to data.
-    mutate(site_id = as.numeric(site_id)) %>% # make site id numeric
-    select(-sample_id, -injection_date_time) %>%
-    as_tibble() 
-  top_table
+  # # 2. Extract units and analyte names
+  # analytes.units <- top_table %>% 
+  #   mutate(analyte = str_extract(., pattern = "[^_]+"),
+  #          #https://statisticsglobe.com/extract-substring-before-or-after-pattern-in-r
+  #          unit = sub(".*?_", "", .)) %>% #? ensures first occurrence of _ is indexed
+  #   select(-.) %>%
+  #   #pivot_longer(analyte) %>%
+  #   pivot_wider(names_from = analyte, values_from = unit) %>%
+  #   rename_with(.cols = everything(), ~paste0(., "_units"))
+  # 
+  # # 3. merge data with units
+  # top_table <- top_table %>%
+  #   # rename columns to analyte name, remove units
+  #   rename_with(., 
+  #               .cols = contains("_l"), # rename columns with this pattern
+  #               ~sub("_.*", "", .x) # extract before first occurrence of _
+  #   ) %>% 
+  #   cbind(., analytes.units) %>% # add units to data.
+  #   mutate(site_id = as.numeric(site_id)) %>% # make site id numeric
+  #   select(-sample_id, -injection_date_time, -dilution) %>%
+  #   as_tibble() 
+  # top_table
 }
 
 # 2. Use function to read data-------------
@@ -99,21 +108,26 @@ sample_date <- fld_sheet %>%
   summarize(sample_col_date = min(trap_deply_date))
 
 # join date with d.anions
-dim(d.anions) # 152 rows
+dim(d.anions) # 348 rows
 d.anions <- left_join(d.anions, sample_date) 
-dim(d.anions) # 152 rows
+dim(d.anions) # 348 rows
 
 
 # calculate holding time violation (-qual)
 d.anions <- d.anions %>%
-  add_column(f_qual = "",
-             cl_qual = "",
-             br_qual = "",
-             so4_qual = "") %>%
-  mutate(across(contains("qual"), 
-                ~ if_else((d_anion_analysis_date - sample_col_date) > 28, 
-                          "H", ""))) %>%  # TRUE = hold time violation)
+  mutate(qual = if_else((d_anion_analysis_date - sample_col_date) > 28,
+                          "H", "")) %>%  # TRUE = hold time violation)
   select(-contains("date"))
+
+# d.anions <- d.anions %>%
+#   add_column(f_qual = "",
+#              cl_qual = "",
+#              br_qual = "",
+#              so4_qual = "") %>%
+#   mutate(across(contains("qual"), 
+#                 ~ if_else((d_anion_analysis_date - sample_col_date) > 28, 
+#                           "H", ""))) %>%  # TRUE = hold time violation)
+#   select(-contains("date"))
 
 
 # 4. Merge lake_id, site_id, sample_depth, sample_type  
@@ -121,42 +135,88 @@ d.anions <- d.anions %>%
 
 dup_agg <- function(data) {
   
-  d <- data %>% # pivot longer and split all dupes into separate groups
-    pivot_longer(cols = c(f, cl, br, so4), names_to = "analyte") %>%
-    # make "d" object into a list of tibbles by group
-    group_split(lake_id, site_id, sample_depth, sample_type, analyte) %>%
-    # map across every group (i.e., tibble)
-    map(~ .x %>% select(analyte, site_id, sample_depth, 
-                        sample_type, lake_id, 
-                        value, starts_with(paste0(.x$analyte))) %>%
-          # if all rows are identical, keep only one row
-          distinct() %>%
-          # if the _qual column is blank (i.e., no hold violation), 
-          # keep only that row. str_sort() finds the lowest _qual value, 
-          # which is passed to filter(). "" (blank) is lower than "H".
-          filter(if_all(ends_with("qual"), ~ . == str_sort(.)[1])) %>%
-          # Do the same with the ND flag; i.e., if there are both ND flags 
-          # and no-flag observations, keep only the no-flag rows. 
-          filter(if_all(ends_with("flag"), ~ . == str_sort(.)[1])) %>%
-          # group any remaining rows and find mean of analyte measurement
-          group_by(across(!value)) %>% # group by all except value
-          summarize(value = mean(value, na.rm = TRUE)) %>%
-          ungroup() %>%
-          unite("flags", # unite all of the flag columns
-                ends_with(c("flag", "qual", "bql")), sep = " ") %>%
-          rename(units = ends_with("units")))
-        
-  e <- d %>% reduce(full_join) %>%
-    pivot_wider(names_from = analyte,  # pivot to wide
-                values_from = c(value, units, flags),
+  d <- data %>%
+    group_by(lake_id, site_id, visit, sample_depth, sample_type, analyte) %>%
+    summarize(value = mean(value, na.rm = TRUE),
+              # if either rep 
+              qual = paste(unique(qual[qual != ""]), collapse = " "),
+              units = unique(units)) %>%
+    ungroup() %>%
+    pivot_wider(names_from = analyte, 
+                values_from = c(value, qual, units),
                 names_glue = "{analyte}_{.value}") %>%
-    rename_with(~str_remove(., "_value"), 
-                .cols = contains("value")) %>%
-    mutate(across(ends_with("flags"), # make empty _flags = NA
-                  ~ if_else(str_detect(., "\\w"), ., NA_character_) %>%
-                    str_squish())) # remove any extra white spaces
+    mutate(across(contains("value"), ~ if_else(is.nan(.), NA, .))) %>%
+  # create the analyte_flag column
+  mutate(f_flag = case_when(is.na(f_value) ~ "ND",
+                            TRUE ~ "")) %>%
+  mutate(cl_flag = case_when(is.na(cl_value) ~ "ND",
+                             TRUE ~ "")) %>%
+  mutate(br_flag = case_when(is.na(br_value) ~ "ND",
+                             TRUE ~ "")) %>%
+  mutate(so4_flag = case_when(is.na(so4_value) ~ "ND",
+                              TRUE ~ "")) %>%
+  # sub mdl for NA
+  mutate(f_value = case_when(is.na(f_value) ~ 0.005, TRUE ~ f_value),
+         cl_value = case_when(is.na(cl_value) ~ 0.03, TRUE ~ cl_value),
+         br_value = case_when(is.na(br_value) ~ 0.02, TRUE ~ br_value),
+         so4_value = case_when(is.na(so4_value) ~ 0.025, TRUE ~ so4_value)) %>%
+  mutate(f_bql = case_when(f_value > 0.005 & f_value < 0.439 ~ "L",
+                           TRUE ~ ""),
+         cl_bql = case_when(cl_value > 0.03 & cl_value < 0.4597 ~ "L",
+                            TRUE ~ ""),
+         br_bql = case_when(br_value > 0.02 & br_value < 0.4638 ~ "L",
+                             TRUE ~ ""),
+         so4_bql = case_when(so4_value > 0.025 & so4_value < 0.423 ~ "L",
+                            TRUE ~ ""))  %>%
+    unite("f_flags", f_flag, f_qual, f_bql, sep = " ") %>%
+    unite("cl_flags", cl_flag, cl_qual, cl_bql, sep = " ") %>%
+    unite("br_flags", br_flag, br_qual, br_bql, sep = " ") %>%
+    unite("so4_flags", so4_flag, so4_qual, so4_bql, sep = " ") %>%
+    select(-contains("qual"), -contains("bql")) %>%
+    # remove _value from column names
+      rename_with(~str_remove(., "_value"),
+                  .cols = contains("value")) %>%
+      mutate(across(ends_with("flags"), # make empty _flags = NA
+                    ~ if_else(str_detect(., "\\w"), ., NA_character_) %>%
+                      str_squish())) # remove any extra white spaces
+  # 
+  # 
+  # d <- data %>% # pivot longer and split all dupes into separate groups
+  #   pivot_longer(cols = c(f, cl, br, so4), names_to = "analyte") %>%
+  #   # make "d" object into a list of tibbles by group
+  #   group_split(lake_id, site_id, sample_depth, sample_type, analyte) %>%
+  #   # map across every group (i.e., tibble)
+  #   map(~ .x %>% select(analyte, site_id, sample_depth, 
+  #                       sample_type, lake_id, 
+  #                       value, starts_with(paste0(.x$analyte))) %>%
+  #         # if all rows are identical, keep only one row
+  #         distinct() %>%
+  #         # if the _qual column is blank (i.e., no hold violation), 
+  #         # keep only that row. str_sort() finds the lowest _qual value, 
+  #         # which is passed to filter(). "" (blank) is lower than "H".
+  #         filter(if_all(ends_with("qual"), ~ . == str_sort(.)[1])) %>%
+  #         # Do the same with the ND flag; i.e., if there are both ND flags 
+  #         # and no-flag observations, keep only the no-flag rows. 
+  #         filter(if_all(ends_with("flag"), ~ . == str_sort(.)[1])) %>%
+  #         # group any remaining rows and find mean of analyte measurement
+  #         group_by(across(!value)) %>% # group by all except value
+  #         summarize(value = mean(value, na.rm = TRUE)) %>%
+  #         ungroup() %>%
+  #         unite("flags", # unite all of the flag columns
+  #               ends_with(c("flag", "qual", "bql")), sep = " ") %>%
+  #         rename(units = ends_with("units")))
+  #       
+  # e <- d %>% reduce(full_join) %>%
+  #   pivot_wider(names_from = analyte,  # pivot to wide
+  #               values_from = c(value, units, flags),
+  #               names_glue = "{analyte}_{.value}") %>%
+  #   rename_with(~str_remove(., "_value"), 
+  #               .cols = contains("value")) %>%
+  #   mutate(across(ends_with("flags"), # make empty _flags = NA
+  #                 ~ if_else(str_detect(., "\\w"), ., NA_character_) %>%
+  #                   str_squish())) # remove any extra white spaces
     
-  return(e)
+  return(d)
   
         # %>%
         #   rename("{.$analyte}_flags" := flags)) # glue:: syntax renaming
@@ -212,7 +272,7 @@ dup_agg <- function(data) {
 
 }
 
-options(dplyr.summarise.inform = FALSE) # summarize() causes lots of console spam
+# options(dplyr.summarise.inform = FALSE) # summarize() causes lots of console spam
 
 d.anions.aggregated <- dup_agg(d.anions) 
 

@@ -4,22 +4,22 @@
 
 # inspect object to merge
 ## each df contains 10 - 333 observations [4/16/2025]
-list(ada.anions, d.anions, ada.nutrients, chemCinNutrients, chem18, 
+list(ada.anions, d.anions.aggregated, ada.nutrients, chemCinNutrients, chem18, 
      ada.oc, toc.masi, tteb.all, chl18, pigments, microcystin, dissolved_gas) %>% 
   map_dfc(., nrow)
 
 # are the unique IDs formatted identically across the dfs?
 ## All have lake_id, site_id, sample_depth, sample_type
-list(ada.anions, d.anions, ada.nutrients, chemCinNutrients, chem18, 
+list(ada.anions, d.anions.aggregated, ada.nutrients, chemCinNutrients, chem18, 
      ada.oc, toc.masi, tteb.all, chl18, pigments, microcystin, dissolved_gas) %>% 
   map(., function(x) select(
     x, lake_id, site_id, sample_depth, sample_type) %>% 
       str(.))
 
 ## which ones have a visit field?
-### ada.anions, ada.nutrients, ada.oc, chemCinNutrients, tteb.all, pigments, 
-### microcystin dissolved_gas
-list(ada.anions, d.anions, ada.nutrients, chemCinNutrients, chem18, 
+### ada.anions, d.anions.aggregatedada.nutrients, ada.oc, chemCinNutrients, 
+### tteb.all, pigments, microcystin dissolved_gas
+list(ada.anions, d.anions.aggregated, ada.nutrients, chemCinNutrients, chem18, 
      ada.oc, toc.masi, tteb.all, chl18, pigments, microcystin, dissolved_gas) %>% 
   map_lgl(., function(x) x %>% {"visit" %in% names(.)})
 
@@ -65,9 +65,7 @@ janitor::get_dupes(
 # no dupes
 
 anions <- ada.anions %>%
-  full_join(d.anions.aggregated) %>%
-  mutate(visit = (ifelse( # visit = 1 if visit column is otherwise blank/NA.  needed for daniels anions
-    is.na(visit), 1, visit)))
+  full_join(d.anions.aggregated)
 # # check for unexpected behavior
 nrow(ada.anions) + nrow(d.anions.aggregated) == nrow(anions) # TRUE, good!
 janitor::get_dupes(
