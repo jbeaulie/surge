@@ -79,7 +79,7 @@ get_awberc_data <- function(path, data, sheet) {
     #                        "2022_ESF-EFWS_NutrientData_Updated06262023_AKB.xlsx"), #
     #                 sheet = "2022 Data", skip = 1) %>%
     janitor::clean_names() %>% # clean up names for rename and select, below
-    janitor::remove_empty(which = c("rows", "cols")) %>% # remove empty rows
+    janitor::remove_empty(which = c("rows")) %>% # remove empty rows
     rename(rdate = collection_date_cdate, #rename fields
            ddate = analyte_detection_date_ddate,
            finalConc = peak_concentration_corrected_for_dilution_factor,
@@ -308,7 +308,11 @@ chem23 <- get_awberc_data(cin.awberc.path,
                           "2023_ESF-EFWS_NutrientData_Updated05012024_AKB_JB.xlsx", # path to local copy with fixes. Update when Andrea releases next update.
                           "2023 Data") 
 
-chemCinNutrients <- bind_rows(chem21, chem22, chem23) %>%
+chem24 <- get_awberc_data(cin.awberc.path, 
+                          "2024_ESF-EFWS_NutrientData_Updated03062025_AKB_JB.xlsx", # path to local copy with fixes. Update when Andrea releases next update.
+                          "2024 Data") 
+
+chemCinNutrients <- bind_rows(chem21, chem22, chem23, chem24) %>%
   dup_agg() %>% # final object, cast to wide with dups aggregated
   flag_agg()
 
