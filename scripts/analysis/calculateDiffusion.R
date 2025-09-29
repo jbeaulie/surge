@@ -15,12 +15,15 @@
 #add a Flag field for any co2notes that contain the phrase "unstable start"
 adjData$co2Flag<-ifelse(grepl("unstable start",adjData$co2Notes), "U",NA)
 
+#add a Flag field for any ch4notes that contain the phrase "bubble"
+adjData$ch4Flag<-ifelse(grepl("bubble", adjData$ch4Notes),"B",NA)
+
 good.data <- adjData %>% filter(co2Flag == "U" | co2Status == "done" | ch4Status == "done") %>%
-  select(lake_id, site_id, contains("status"),co2Flag)
+  select(lake_id, site_id, contains("status"),co2Flag, ch4Flag)
 
 # filter down to lake and sites with good data
 gga_4 <- gga_3 %>% filter(paste0(lake_id, site_id) %in% paste0(good.data$lake_id, good.data$site_id)) %>%
-  left_join(., good.data %>% select(lake_id, site_id, ch4Status, co2Status,co2Flag))
+  left_join(., good.data %>% select(lake_id, site_id, ch4Status, co2Status, co2Flag, ch4Flag))
 
 # substitute NA for profiles that are "in progress"
 gga_4 <- gga_4 %>% mutate(CO2.case = ifelse(co2Status == "done", "a", 
@@ -49,7 +52,7 @@ foo <- gga_4 %>%
       # Calculate elapsed time (seconds).  lm behaves strangely when used with POSIXct data.
       mutate(elapTime = RDateTime - RDateTime[1]) %>% # Calculate elapsed time (seconds).
       rename(chmVol.L = chm_vol_l) %>%
-      select(lake_id, site_id, visit, CH4._ppm, elapTime, GasT_C, chmVol.L,H2O._ppm,co2Flag)  # Pull out data of interest
+      select(lake_id, site_id, visit, CH4._ppm, elapTime, GasT_C, chmVol.L,H2O._ppm,co2Flag,ch4Flag)  # Pull out data of interest
     
     co2.data <- filter(x,  # extract data
                        RDateTime >= co2DeplyDtTm, # based on diff start time
@@ -57,7 +60,7 @@ foo <- gga_4 %>%
       # Calculate elapsed time (seconds).  lm behaves strangely when used with POSIXct data.
       mutate(elapTime = RDateTime - RDateTime[1]) %>% # Calculate elapsed time (seconds).
       rename(chmVol.L = chm_vol_l) %>%
-      select(lake_id, site_id, visit, CO2._ppm, elapTime, GasT_C, chmVol.L,H2O._ppm,co2Flag)  # Pull out data of interest
+      select(lake_id, site_id, visit, CO2._ppm, elapTime, GasT_C, chmVol.L,H2O._ppm,co2Flag,ch4Flag)  # Pull out data of interest
     
     return(list("ch4" = ch4.data, "co2" = co2.data)) # returns a nested list
     print(i)
@@ -186,6 +189,7 @@ for(i in 1:length(data.gga.ch4.list)){
       co2.ex.drate.i.umol.s * (44/1000) * (60*60)  #mg CO2 m-2 h-1
   
   co2Flag<-data.gga.co2.list[[i]]$co2Flag[1]
+  ch4Flag<-data.gga.ch4.list[[i]]$ch4Flag[1]
   nco2<-length(data.gga.co2.list[[i]]$CO2._ppm)
   nch4<-length(data.gga.ch4.list[[i]]$CH4._ppm)
   dh2o<-max(data.gga.ch4.list[[i]]$H2O._ppm)-min(data.gga.ch4.list[[i]]$H2O._ppm)
@@ -197,7 +201,7 @@ for(i in 1:length(data.gga.ch4.list)){
                   ch4.lm.slope, ch4.lm.drate.mg.h, 
                   ch4.lm.aic, ch4.lm.r2, ch4.lm.se, ch4.lm.pval,
                   ch4.ex.aic, ch4.ex.se, ch4.ex.r2, ch4.ex.slope, 
-                  ch4.ex.drate.mg.h, ch4.ex.k, 
+                  ch4.ex.drate.mg.h, ch4.ex.k, ch4Flag,
                   co2.lm.slope, co2.lm.drate.mg.h, 
                   co2.lm.aic, co2.lm.r2, co2.lm.se, co2.lm.pval,
                   co2.ex.aic, co2.ex.se, co2.ex.r2, co2.ex.slope, 
@@ -207,7 +211,7 @@ for(i in 1:length(data.gga.ch4.list)){
                    "ch4.lm.slope", "ch4.lm.drate.mg.h", 
                    "ch4.lm.aic", "ch4.lm.r2", "ch4.lm.se", "ch4.lm.pval",
                    "ch4.ex.aic", "ch4.ex.se", "ch4.ex.r2", "ch4.ex.slope", 
-                   "ch4.ex.drate.mg.h", "ch4.ex.k", 
+                   "ch4.ex.drate.mg.h", "ch4.ex.k", "ch4Flag",
                    "co2.lm.slope", "co2.lm.drate.mg.h", 
                    "co2.lm.aic", "co2.lm.r2", "co2.lm.se", "co2.lm.pval",
                    "co2.ex.aic", "co2.ex.se", "co2.ex.r2", "co2.ex.slope", 
@@ -324,7 +328,11 @@ OUT2 <- mutate(OUTb,
               ch4.se.overlap = case_when (ch4.best.model == "linear" ~ abs(ch4.lm.slope)-ch4.lm.se,
                                           TRUE ~ abs(ch4.ex.k) - ch4.ex.se),
               co2.se.overlap = case_when (co2.best.model == "linear" ~ abs(co2.lm.slope)-co2.lm.se,
-                                          TRUE ~ abs(co2.ex.k) - co2.ex.se))
+                                          TRUE ~ abs(co2.ex.k) - co2.ex.se),
+              ch4.r2 = case_when (ch4.best.model == "linear" ~ ch4.lm.r2,
+                                  TRUE ~ ch4.ex.r2),
+              co2.r2 = case_when (co2.best.model == "linear" ~ co2.lm.r2,
+                                  TRUE ~ co2.ex.r2))
 
 summary(OUT2)
 
@@ -353,22 +361,22 @@ plot(with(OUT2,ifelse(co2.best.model == "linear",
 plot(with(OUT2,ifelse(ch4.best.model == "linear", 
                      ch4.lm.r2, ch4.ex.r2)))  # CH4:  some low ones to investigate
 
-# If r2 of best model < 0.9 or when the standard error of the slope overlaps zero, then set to 0
+#In response to a reviewer, we will now provide a rate when  r2 of best model < 0.9 
+#We will also provide the r2 values so users can choose on their own
+#Consistent with previous approach, when the standard error of the slope overlaps zero, then set to 0
 OUT2 <- mutate(OUT2, 
               co2_drate_mg_h_best = case_when(
                 # (co2.lm.aic < co2.ex.aic | is.na(co2.ex.aic)) & co2.lm.r2 < 0.9 ~ NA_real_,
                 # (co2.ex.aic < co2.lm.aic) & co2.ex.r2 < 0.9 ~ NA_real_,
                 # this retains low r2 model fits, but assigns a rate of 0
-                (co2.lm.aic < co2.ex.aic | is.na(co2.ex.aic)) & co2.lm.r2 <0.9 | co2.se.overlap<0  ~ 0,
-                (co2.ex.aic < co2.lm.aic) & co2.ex.r2 < 0.9 ~ 0,
+                co2.se.overlap<0  ~ 0,
                 TRUE ~ co2_drate_mg_h_best),
         
               ch4_drate_mg_h_best = case_when(
                 # (ch4.lm.aic < ch4.ex.aic | is.na(ch4.ex.aic)) & ch4.lm.r2 < 0.9 ~ NA_real_,
                 # (ch4.ex.aic < ch4.lm.aic) & ch4.ex.r2 < 0.9 ~ NA_real_,
                 # this retains low r2 model fits, but assigns a rate of 0
-                (ch4.lm.aic < ch4.ex.aic | is.na(ch4.ex.aic)) & ch4.lm.r2 < 0.9 | ch4.se.overlap<0 ~ 0,
-                (ch4.ex.aic < ch4.lm.aic) & ch4.ex.r2 < 0.9 ~ 0,
+                ch4.se.overlap<0 ~ 0,
                 TRUE ~ ch4_drate_mg_h_best))
 
 #If floating chamber is set to NA then deployment length should also be NA
