@@ -14,6 +14,15 @@ lake.list.all %>%
   distinct(lake_id, site_type) %>%
   filter(site_type == "PROB")
 
+# number of sites per lake
+dat %>%
+  group_by(lake_id, visit) %>%
+  summarize(n=n(),
+            size = unique(surface_area/1000000),
+            density = n / size) %>%
+  arrange(size) %>%
+  print(n=Inf)
+
 
 # 2. SUMMARIZE EMISSIONS--------------
 
@@ -327,5 +336,44 @@ site_data %>%
             s_flag_percent = (sum(s_flag, na.rm = TRUE) / n()) * 100,
             h_flag_n = sum(h_flag, na.rm = TRUE),
             h_flag_percent = (sum(h_flag, na.rm = TRUE) / n()) * 100)
+
+# 6. TABLE S3-------------
+# 2021 - 2023 sites
+dat %>% 
+  filter(sample_year %in% 2021:2023) %>%
+  distinct(lake_id) %>%
+  summarize(n=n())
+
+# 2021 - 2023 ADA sites
+dat %>% 
+  filter(
+    sample_year %in% 2021:2023,
+    lab == "ADA") %>%
+  distinct(lake_id) %>%
+  summarize(n=n())
+
+# 2021 - 2023 not ADA sites
+dat %>% 
+  filter(
+    sample_year %in% 2021:2023,
+    lab != "ADA") %>%
+  distinct(lake_id) %>%
+  summarize(n=n())
+
+# No ADA sites
+dat %>% 
+  filter(
+    lab != "ADA"
+    ) %>%
+  distinct(lake_id) %>%
+  summarize(n=n())
+
+# 2018 and earlier
+dat %>% 
+  filter(
+    sample_year <= 2018
+  ) %>%
+  distinct(lake_id) %>%
+  summarize(n=n())
 
 
