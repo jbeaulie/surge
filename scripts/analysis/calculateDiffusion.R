@@ -344,9 +344,9 @@ test<-OUT2 %>%
             sd_CO2=sd(!is.na(co2_drate_mg_h_best)),sd_CH4=sd(!is.na(ch4_drate_mg_h_best)))
 
 #Fraction of usable ch4 data
-(1829-(length(filter(OUT2,is.na(ch4_drate_mg_h_best)))))/1829
+(1836-(length(filter(OUT2,is.na(ch4_drate_mg_h_best)))))/1836
 #Fraction of usable co2 data
-(1829-(length(filter(OUT2,is.na(co2_drate_mg_h_best)))))/1829
+(1836-(length(filter(OUT2,is.na(co2_drate_mg_h_best)))))/1836
 
 #Maximum methane diffusion rate whose standard error overlaps zero
 #none
@@ -366,15 +366,15 @@ plot(with(OUT2,ifelse(ch4.best.model == "linear",
 #Consistent with previous approach, when the standard error of the slope overlaps zero, then set to 0
 OUT2 <- mutate(OUT2, 
               co2_drate_mg_h_best = case_when(
-                # (co2.lm.aic < co2.ex.aic | is.na(co2.ex.aic)) & co2.lm.r2 < 0.9 ~ NA_real_,
-                # (co2.ex.aic < co2.lm.aic) & co2.ex.r2 < 0.9 ~ NA_real_,
+                (co2.lm.aic < co2.ex.aic | is.na(co2.ex.aic)) & co2.lm.r2 < 0.9 ~ NA_real_,
+                (co2.ex.aic < co2.lm.aic) & co2.ex.r2 < 0.9 ~ NA_real_,
                 # this retains low r2 model fits, but assigns a rate of 0
                 co2.se.overlap<0  ~ 0,
                 TRUE ~ co2_drate_mg_h_best),
         
               ch4_drate_mg_h_best = case_when(
-                # (ch4.lm.aic < ch4.ex.aic | is.na(ch4.ex.aic)) & ch4.lm.r2 < 0.9 ~ NA_real_,
-                # (ch4.ex.aic < ch4.lm.aic) & ch4.ex.r2 < 0.9 ~ NA_real_,
+                (ch4.lm.aic < ch4.ex.aic | is.na(ch4.ex.aic)) & ch4.lm.r2 < 0.9 ~ NA_real_,
+                (ch4.ex.aic < ch4.lm.aic) & ch4.ex.r2 < 0.9 ~ NA_real_,
                 # this retains low r2 model fits, but assigns a rate of 0
                 ch4.se.overlap<0 ~ 0,
                 TRUE ~ ch4_drate_mg_h_best))

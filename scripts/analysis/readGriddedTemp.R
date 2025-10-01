@@ -140,15 +140,15 @@ met_temp <- met_temp %>%
 
 # st_read(paste0("/vsizip/", userPath, "lakeDsn/2016_survey/brookville/bro
 lagos_elev<- readr::read_csv(paste0(userPath, 
-                         "data/siteDescriptors/lake_information.csv.gz"))
+                         "data/siteDescriptors/lake_information.csv"))
 
 elevation_lagos<- lagos_elev %>%
-  filter(lagoslakeid %in% locus_link_aggregated$lagoslakeid) %>%
+  filter(lagoslakeid %in% lagos_links$lagoslakeid) %>%
   select (lagoslakeid,lake_elevation_m,lake_nhdid) 
   # filter(!is.na(lagoslakeid)) %>%
   # mutate(lagoslakeid=as.numeric(lagoslakeid))
 
-el<-left_join(elevation_lagos, locus_link_aggregated)
+el<-left_join(elevation_lagos, lagos_links)
 
 els<-left_join(lagos_links,el)%>%
   select(lake_id, lake_elevation_m)
