@@ -959,19 +959,19 @@ site_data <-
     TRUE ~ value),
     mdl = case_when(
       # nitrogen analytes reported in ug_n_l
-      name %in% c("nh4", "no2", "no2_3", "no3", "tn") ~ round(value, 1),
+      name %in% c("nh4", "no2", "no2_3", "no3", "tn") ~ round(mdl, 1),
       # TP and colorimetric base p in ug_p_l
-      name %in% c("op", "tp") ~ round(value, 1),
+      name %in% c("op", "tp") ~ round(mdl, 1),
       # 5 decimals reported for tteb data
-      name %in% metals ~ round(value, 5), # metals is from chemSampleList.R
+      name %in% metals ~ round(mdl, 5), # metals is from chemSampleList.R
       # anions in mg_l. decimals based on MDL. See Wiki, 
       # Anions: analytical methods, detection limits, and holding times/CIN-TTEB Table
-      name %in% c("br", "f") ~ round(value, 3), 
-      name %in% c("cl", "so4") ~ round(value, 2), 
+      name %in% c("br", "f") ~ round(mdl, 3), 
+      name %in% c("cl", "so4") ~ round(mdl, 2), 
       # based on NLA convention
-      name %in% c("doc", "toc") ~ round(value, 2),
+      name %in% c("doc", "toc") ~ round(mdl, 2),
       # based on NLA convention
-      name == "chla_lab" ~ round(value, 2),
+      name == "chla_lab" ~ round(mdl, 2),
       # error flag
       TRUE ~ mdl))
 
