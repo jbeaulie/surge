@@ -86,6 +86,7 @@ dat_2016 <- dat_2016 %>%
                                       ch4_deployment_length < 30 ~ NA_real_,
                                       is.na(ch4_deployment_length) ~ NA_real_,
                                       TRUE ~ 999999999), # error flag
+    ch4flag = "NA",
     
     # CO2 next
     co2_drate_mg_h_best = case_when(co2_deployment_length >= 30 ~ co2_drate_mg_h_best,

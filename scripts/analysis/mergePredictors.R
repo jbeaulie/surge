@@ -289,7 +289,8 @@ emissions_agg <- dat %>%
   # All NAs break cont_analysis. No CH4 diffusion or from lake 253, set to 0
   # then filter results at end
   mutate(ch4_diffusion_best = replace(ch4_diffusion_best, lake_id == 253, 0),
-         ch4_total = replace(ch4_total, lake_id == 253, 0),
+         #ch4_diffusion_best = ifelse(ch4_r2<0.9,NA,ch4_diffusion_best), #need to discuss this with Jake
+         ch4_total = replace(ch4_total, lake_id == 253, 0),  
          # add subsection identifiers back into lake_id
          lake_id = as.character(lake_id),
          lake_id = case_when(grepl("lacustrine", site_id) ~ paste0(lake_id, "_lacustrine"),

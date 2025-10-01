@@ -387,6 +387,19 @@ OUT2 <- mutate(OUT2,
 OUT2 <- janitor::clean_names(OUT2) %>%
   mutate(visit = as.numeric(visit))
 
+#Calculate how many sites had missing diffusion due to bubbling 
+
+test<-filter(OUT2,ch4flag=="B")
+test<-test %>%
+  group_by(lake_id,visit)%>%
+  summarise(siten=length(site_id))
+
+#how many sites had a slope overlapping zero?
+test<-filter(OUT2, co2_se_overlap<0)
+test<-filter(OUT2, ch4_se_overlap<0)
+test<-filter(OUT2, ch4_r2<0.9)
+test<-filter(OUT2, co2_r2<0.9)
+
 # Inspect r2 after scrubbing r2<0.9
 # revised code retains observations with r2<0.9 but assigns them a value of 0
 plot(with(OUT2[!is.na(OUT2$co2_drate_mg_h_best),], 
