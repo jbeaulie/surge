@@ -138,7 +138,7 @@ master_dictionary <- tribble(~variable, ~definition,
                              "depth_cat", "Depth category used for the SuRGE survey design",
                              "chla_cat", "Chlorophyll a category used for the SuRGE survery design",
                              "study", "Survey effort the reservoir was included in. See data paper Figure 1.",
-                             "lab", "the lab that conducted the reservoir survey as a three letter code",
+                             "lab", "the lab that conducted the reservoir survey as a three to four letter code",
                              
                              #elevation
                              "lake_elevation", "elevation of the lake surface used for correcting ERA-5 barometric pressure data",

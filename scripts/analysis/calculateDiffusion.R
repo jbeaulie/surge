@@ -41,7 +41,7 @@ tic()
 
 #foo is a list containing the results
 foo <- gga_4 %>%
-  left_join(fld_sheet %>% select(lake_id, site_id, visit, chm_vol_l)) %>% # bring in chamber volume
+  full_join(fld_sheet %>% select(lake_id, site_id, visit, chm_vol_l)) %>% # bring in chamber volume
   group_split(lake_id, site_id, visit) %>% # dump each group into list element
   #.[1:10] %>% #work with subset
   map(function(x) {
@@ -73,236 +73,216 @@ data.gga.co2.list <- foo[grep("co", names(foo))] # put all CO2 data into new lis
 toc()
 
 #Now calculate fluxes on input list
+#Try running separate out objects for CH4 and CO2
+  
+  OUTCH4=NULL
+  
+  # Run the model
+  #OUT =  foreach(i = 1:length(data.gga.ch4.list))%dopar% {   
+  for(i in 1:length(data.gga.ch4.list)){  
+    site_id <- data.gga.ch4.list[[i]]$site_id[1]
+    lake_id <- data.gga.ch4.list[[i]]$lake_id[1]
+    visit <- data.gga.ch4.list[[i]]$visit[1]
+    
+    # Are there data available to run the model?
+    ch4.indicator <- length(data.gga.ch4.list[[i]]$CH4._ppm) == 0 | all(is.na(data.gga.ch4.list[[i]]$CH4._ppm))
+    
+    # Data needed for emission rate calcs.  Same #'s for CO2 and CH4.  Arbitrarily pulled from CO2.
+    temp.i <- mean(data.gga.ch4.list[[i]]$GasT_C, na.rm = TRUE)  # GGA measured temp
+    volume.i <- unique(data.gga.ch4.list[[i]][!is.na(data.gga.ch4.list[[i]]$chmVol.L), "chmVol.L"]) 
+    
+    # lm
+    lm.ch4.i <- try(lm(data.gga.ch4.list[[i]]$CH4._ppm ~ data.gga.ch4.list[[i]]$elapTime), silent = TRUE)  # suppress warning if fails
+    
+    # lm slopes
+    slope.ch4.i <- if(ch4.indicator) NA else (as.numeric(coef(lm.ch4.i)[2]))  # lm slope: ppm s-1
+    ch4.lm.slope <- slope.ch4.i
+    
+    # lm p-values
+    fstat.ch4 <- if(ch4.indicator) rep(NA,3) else summary(lm.ch4.i)$fstatistic
+    ch4.lm.pval  <- pf(fstat.ch4[1], fstat.ch4[2], fstat.ch4[3], lower.tail = FALSE)
+    
+    # lm r2 values
+    ch4.lm.r2  <- if(ch4.indicator) NA else summary(lm.ch4.i)["r.squared"]
+    
+    # lm AIC values
+    ch4.lm.aic <- if(ch4.indicator) NA else AIC(lm.ch4.i)
+    
+    #lm Standard Error of slope
+    ch4.lm.se <- if(ch4.indicator) NA else sqrt(diag(vcov(lm.ch4.i)))[2]
+    
+    # Exponential Model
+    cmax.ch4 <- data.gga.ch4.list[[i]]$CH4._ppm[max(which(!is.na(data.gga.ch4.list[[i]]$CH4._ppm)))]  # cmax = final CH4
+    c.initial.ch4 <- data.gga.ch4.list[[i]]$CH4._ppm[min(which(!is.na(data.gga.ch4.list[[i]]$CH4._ppm)))]  # initial CH4
+    exp.ch4.i <-try(nlsLM(CH4._ppm~cmax-(cmax-b)*exp(-k*as.numeric(elapTime)),
+                          data = data.gga.ch4.list[[i]], start=list(cmax=cmax.ch4, b=cmax.ch4-c.initial.ch4, k=.03)),
+                    silent = TRUE)
+    
+    # Ex r2
+    rss.ch4.i <- if(class(exp.ch4.i) == "try-error") NA else sum(residuals(exp.ch4.i)^2)
+    tss.ch4.i <- if(class(exp.ch4.i) == "try-error") NA else
+      sum((data.gga.ch4.list[[i]]$CH4._ppm - mean(data.gga.ch4.list[[i]]$CH4._ppm, na.rm=TRUE))^2, na.rm=TRUE)
+    ch4.ex.r2 = 1 - rss.ch4.i/tss.ch4.i
+    
+    # Ex AIC
+    ch4.ex.aic = if(class(exp.ch4.i) == "try-error") NA else AIC(exp.ch4.i)
+    
+    #Ex standard error of k
+    ch4.ex.se = if(class(exp.ch4.i) == "try-error") NA else sqrt(diag(vcov(exp.ch4.i)))[3]
+  
+    # Ex slope
+    coef.exp.ch4.i <- if(class(exp.ch4.i) == "try-error") NA else coef(exp.ch4.i)
+    ch4.ex.slope = if(class(exp.ch4.i) == "try-error") NA else
+      coef.exp.ch4.i["k"]*(coef.exp.ch4.i["cmax"]-coef.exp.ch4.i["b"])  # ppm s-1
+    
+    #Ex k
+    ch4.ex.k = if(class(exp.ch4.i) == "try-error") NA else
+      coef.exp.ch4.i["k"]
+    
+    # Emission rate.  Assumes atmospheric pressure of 1 atm.
+    # Converting from parts per million to umole cross out.  No conversion factor necessary. Dome area = 0.2 m2
+    ch4.lm.drate.i.umol.s <- ((volume.i * 1 * slope.ch4.i) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CH4 s-1
+    ch4.lm.drate.mg.h = if (is.na(ch4.lm.drate.i.umol.s[1,]))  # throws error if no data
+      NA else
+        ch4.lm.drate.i.umol.s * (16/1000) * (60*60)  # mg CH4 m-2 h-1
+    
+    ch4.ex.drate.i.umol.s <- ((volume.i * 1 * ch4.ex.slope) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CH4 s-1
+    ch4.ex.drate.mg.h = if (is.na(ch4.lm.drate.i.umol.s[1,])) # throws error if no data
+      NA else
+        ch4.ex.drate.i.umol.s * (16/1000) * (60*60)  # mg CH4 m-2 h-1
+    
+    nch4<-length(data.gga.ch4.list[[i]]$CH4._ppm)
+    dh2o<-max(data.gga.ch4.list[[i]]$H2O._ppm)-min(data.gga.ch4.list[[i]]$H2O._ppm)
+    mh2o<-mean(data.gga.ch4.list[[i]]$H2O._ppm)
+    ch4_deployment_length<-ifelse(as.numeric(max(data.gga.ch4.list[[i]]$elapTime))=="-Inf",NA, as.numeric(max(data.gga.ch4.list[[i]]$elapTime)))
+    
+    out<-data.frame(site_id, lake_id, visit, 
+                    ch4.lm.slope, ch4.lm.drate.mg.h, 
+                    ch4.lm.aic, ch4.lm.r2, ch4.lm.se, ch4.lm.pval,
+                    ch4.ex.aic, ch4.ex.se, ch4.ex.r2, ch4.ex.slope, 
+                    ch4.ex.drate.mg.h, ch4.ex.k, 
+                    nch4,ch4_deployment_length, row.names = i)
+    colnames(out)<-c("site_id", "lake_id", "visit", 
+                     "ch4.lm.slope", "ch4.lm.drate.mg.h", 
+                     "ch4.lm.aic", "ch4.lm.r2", "ch4.lm.se", "ch4.lm.pval",
+                     "ch4.ex.aic", "ch4.ex.se", "ch4.ex.r2", "ch4.ex.slope", 
+                     "ch4.ex.drate.mg.h", "ch4.ex.k", 
+                     "nch4","ch4_deployment_length")
+    
+    OUTCH4[[i]] = out }
 
-OUT=NULL
+  OUTCO2=NULL
+  
+  # Run the model
+  #OUT =  foreach(i = 1:length(data.gga.ch4.list))%dopar% {   
+  for(i in 1:length(data.gga.co2.list)){  
+    site_id <- data.gga.co2.list[[i]]$site_id[1]
+    lake_id <- data.gga.co2.list[[i]]$lake_id[1]
+    visit <- data.gga.co2.list[[i]]$visit[1]
+    
+    # Are there data available to run the model?
+    co2.indicator <- length(data.gga.co2.list[[i]]$CO2._ppm) == 0 | all(is.na(data.gga.co2.list[[i]]$CO2._ppm))
+    
+    # Data needed for emission rate calcs.  
+    temp.i <- if (co2.indicator) mean(data.gga.ch4.list[[i]]$GasT_C, na.rm = TRUE) else (mean(data.gga.co2.list[[i]]$GasT_C, na.rm = TRUE))  # GGA measured temp
+    volume.i <- unique(data.gga.co2.list[[i]][!is.na(data.gga.co2.list[[i]]$chmVol.L), "chmVol.L"]) 
+    
+    # lm
+    lm.co2.i <- try(lm(data.gga.co2.list[[i]]$CO2._ppm ~ data.gga.co2.list[[i]]$elapTime), silent = TRUE)  # linear regression
+    
+    # lm slopes
+    slope.co2.i <- if(co2.indicator) NA else (as.numeric(coef(lm.co2.i)[2]))   # lm slope: ppm s-1
+    co2.lm.slope<- slope.co2.i
+    
+    # lm p-values
+    fstat.co2 <- if(co2.indicator) rep(NA,3) else summary(lm.co2.i)$fstatistic
+    co2.lm.pval  <- pf(fstat.co2[1], fstat.co2[2], fstat.co2[3], lower.tail = FALSE)
+    
+    # lm r2 values
+    co2.lm.r2  <- if(co2.indicator) NA else summary(lm.co2.i)["r.squared"]
+    
+    # lm AIC values
+    co2.lm.aic <- if(co2.indicator) NA else AIC(lm.co2.i)
+    
+    #lm Standard Error of slope
+    co2.lm.se <- if(co2.indicator) NA else sqrt(diag(vcov(lm.co2.i)))[2]
+    
+    # Exponential Model
+    
+    cmax.co2 <- data.gga.co2.list[[i]]$CO2._ppm[max(which(!is.na(data.gga.co2.list[[i]]$CO2._ppm)))]  # cmax = final CO2
+    c.initial.co2 <- data.gga.co2.list[[i]]$CO2._ppm[min(which(!is.na(data.gga.co2.list[[i]]$CO2._ppm)))]  # initial CO2
+    exp.co2.i <-try(nlsLM(CO2._ppm~cmax-(cmax-b)*exp(-k*as.numeric(elapTime)),
+                          data = data.gga.co2.list[[i]], start=list(cmax=cmax.co2, b=cmax.co2-c.initial.co2, k=0.004)),
+                    silent=TRUE)
+    
+    rss.co2.i <- if(class(exp.co2.i) == "try-error") NA else sum(residuals(exp.co2.i)^2)
+    tss.co2.i <- if(class(exp.co2.i) == "try-error") NA else
+      sum((data.gga.co2.list[[i]]$CO2._ppm - mean(data.gga.co2.list[[i]]$CO2._ppm, na.rm=TRUE))^2, na.rm=TRUE)
+    co2.ex.r2 = 1 - rss.co2.i/tss.co2.i
+    
+    # Ex AIC
+    co2.ex.aic = if(class(exp.co2.i) == "try-error") NA else AIC(exp.co2.i)
+    
+    #Ex standard error of k
+    co2.ex.se = if(class(exp.co2.i) == "try-error") NA else sqrt(diag(vcov(exp.co2.i)))[3]
+    
+    # Ex slope
+    coef.exp.co2.i <- if(class(exp.co2.i) == "try-error") NA else coef(exp.co2.i)
+    co2.ex.slope = if(class(exp.co2.i) == "try-error") NA else
+      coef.exp.co2.i["k"]*(coef.exp.co2.i["cmax"]-coef.exp.co2.i["b"])  # ppm s-1
+    
+    #Ex k
+    co2.ex.k = if(class(exp.co2.i) == "try-error") NA else
+      coef.exp.co2.i["k"]
+    
+    # Emission rate.  Assumes atmospheric pressure of 1 atm.
+    # Converting from parts per million to umole cross out.  No conversion factor necessary. Dome area = 0.2 m2
+    
+    co2.lm.drate.i.umol.s <- ((volume.i * 1 * slope.co2.i) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CO2 s-1
+    co2.lm.drate.mg.h =  if  (is.na(co2.lm.drate.i.umol.s[1,])) # throws error if no data
+      NA else
+        co2.lm.drate.i.umol.s * (44/1000) * (60*60)  #mg CO2 m-2 h-1
+    
+    co2.ex.drate.i.umol.s <- ((volume.i * 1 * co2.ex.slope) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CO2 s-1
+    co2.ex.drate.mg.h =  if (is.na(co2.lm.drate.i.umol.s[1,])) # throws error if no data
+      NA else
+        co2.ex.drate.i.umol.s * (44/1000) * (60*60)  #mg CO2 m-2 h-1
+    
+    co2Flag<-data.gga.co2.list[[i]]$co2Flag[1]
+    nco2<-length(data.gga.co2.list[[i]]$CO2._ppm)
+    dh2o<-max(data.gga.co2.list[[i]]$H2O._ppm)-min(data.gga.co2.list[[i]]$H2O._ppm)
+    mh2o<-mean(data.gga.co2.list[[i]]$H2O._ppm)
+    co2_deployment_length<-ifelse(as.numeric(max(data.gga.co2.list[[i]]$elapTime))=="-Inf",NA, as.numeric(max(data.gga.co2.list[[i]]$elapTime)))
+    
+    out<-data.frame(site_id, lake_id, visit, 
+                    co2.lm.slope, co2.lm.drate.mg.h, 
+                    co2.lm.aic, co2.lm.r2, co2.lm.se, co2.lm.pval,
+                    co2.ex.aic, co2.ex.se, co2.ex.r2, co2.ex.slope, 
+                    co2.ex.k, co2.ex.drate.mg.h,co2Flag,nco2,
+                    co2_deployment_length, temp.i, row.names = i)
+    colnames(out)<-c("site_id", "lake_id", "visit", 
+                     "co2.lm.slope", "co2.lm.drate.mg.h", 
+                     "co2.lm.aic", "co2.lm.r2", "co2.lm.se", "co2.lm.pval",
+                     "co2.ex.aic", "co2.ex.se", "co2.ex.r2", "co2.ex.slope", 
+                     "co2.ex.k", "co2.ex.drate.mg.h","co2Flag","nco2",
+                     "co2_deployment_length", "air_temp")
+    
+    OUTCO2[[i]] = out }
+    
 
-# Run the model
-#OUT =  foreach(i = 1:length(data.gga.ch4.list))%dopar% {   
-for(i in 1:length(data.gga.ch4.list)){  
-  site_id <- data.gga.ch4.list[[i]]$site_id[1]
-  lake_id <- data.gga.ch4.list[[i]]$lake_id[1]
-  visit <- data.gga.ch4.list[[i]]$visit[1]
-  
-  # Are there data available to run the model?
-  co2.indicator <- length(data.gga.co2.list[[i]]$CO2._ppm) == 0 | all(is.na(data.gga.co2.list[[i]]$CO2._ppm))
-  ch4.indicator <- length(data.gga.ch4.list[[i]]$CH4._ppm) == 0 | all(is.na(data.gga.ch4.list[[i]]$CH4._ppm))
-  
-  # Data needed for emission rate calcs.  Same #'s for CO2 and CH4.  Arbitrarily pulled from CO2.
-  temp.i <- if (co2.indicator) mean(data.gga.ch4.list[[i]]$GasT_C, na.rm = TRUE) else (mean(data.gga.co2.list[[i]]$GasT_C, na.rm = TRUE))  # GGA measured temp
-  volume.i <- if (co2.indicator) unique(data.gga.ch4.list[[i]][!is.na(data.gga.ch4.list[[i]]$chmVol.L), "chmVol.L"]) else
-    unique(data.gga.co2.list[[i]][!is.na(data.gga.co2.list[[i]]$chmVol.L), "chmVol.L"])# Dome volume
-  
-  # lm
-  lm.ch4.i <- try(lm(data.gga.ch4.list[[i]]$CH4._ppm ~ data.gga.ch4.list[[i]]$elapTime), silent = TRUE)  # suppress warning if fails
-  lm.co2.i <- try(lm(data.gga.co2.list[[i]]$CO2._ppm ~ data.gga.co2.list[[i]]$elapTime), silent = TRUE)  # linear regression
-  
-  # lm slopes
-  slope.ch4.i <- if(ch4.indicator) NA else (as.numeric(coef(lm.ch4.i)[2]))  # lm slope: ppm s-1
-  slope.co2.i <- if(co2.indicator) NA else (as.numeric(coef(lm.co2.i)[2]))   # lm slope: ppm s-1
-  ch4.lm.slope <- slope.ch4.i
-  co2.lm.slope<- slope.co2.i
-  
-  # lm p-values
-  fstat.ch4 <- if(ch4.indicator) rep(NA,3) else summary(lm.ch4.i)$fstatistic
-  fstat.co2 <- if(co2.indicator) rep(NA,3) else summary(lm.co2.i)$fstatistic
-  ch4.lm.pval  <- pf(fstat.ch4[1], fstat.ch4[2], fstat.ch4[3], lower.tail = FALSE)
-  co2.lm.pval  <- pf(fstat.co2[1], fstat.co2[2], fstat.co2[3], lower.tail = FALSE)
-  
-  # lm r2 values
-  ch4.lm.r2  <- if(ch4.indicator) NA else summary(lm.ch4.i)["r.squared"]
-  co2.lm.r2  <- if(co2.indicator) NA else summary(lm.co2.i)["r.squared"]
-  
-  # lm AIC values
-  ch4.lm.aic <- if(ch4.indicator) NA else AIC(lm.ch4.i)
-  co2.lm.aic <- if(co2.indicator) NA else AIC(lm.co2.i)
-  
-  #lm Standard Error of slope
-  ch4.lm.se <- if(ch4.indicator) NA else sqrt(diag(vcov(lm.ch4.i)))[2]
-  co2.lm.se <- if(co2.indicator) NA else sqrt(diag(vcov(lm.co2.i)))[2]
-  
-  # Exponential Model
-  cmax.ch4 <- data.gga.ch4.list[[i]]$CH4._ppm[max(which(!is.na(data.gga.ch4.list[[i]]$CH4._ppm)))]  # cmax = final CH4
-  c.initial.ch4 <- data.gga.ch4.list[[i]]$CH4._ppm[min(which(!is.na(data.gga.ch4.list[[i]]$CH4._ppm)))]  # initial CH4
-  exp.ch4.i <-try(nlsLM(CH4._ppm~cmax-(cmax-b)*exp(-k*as.numeric(elapTime)),
-                        data = data.gga.ch4.list[[i]], start=list(cmax=cmax.ch4, b=cmax.ch4-c.initial.ch4, k=.03)),
-                  silent = TRUE)
-  
-  cmax.co2 <- data.gga.co2.list[[i]]$CO2._ppm[max(which(!is.na(data.gga.co2.list[[i]]$CO2._ppm)))]  # cmax = final CO2
-  c.initial.co2 <- data.gga.co2.list[[i]]$CO2._ppm[min(which(!is.na(data.gga.co2.list[[i]]$CO2._ppm)))]  # initial CO2
-  exp.co2.i <-try(nlsLM(CO2._ppm~cmax-(cmax-b)*exp(-k*as.numeric(elapTime)),
-                        data = data.gga.co2.list[[i]], start=list(cmax=cmax.co2, b=cmax.co2-c.initial.co2, k=0.004)),
-                  silent=TRUE)
-  # Ex r2
-  rss.ch4.i <- if(class(exp.ch4.i) == "try-error") NA else sum(residuals(exp.ch4.i)^2)
-  tss.ch4.i <- if(class(exp.ch4.i) == "try-error") NA else
-    sum((data.gga.ch4.list[[i]]$CH4._ppm - mean(data.gga.ch4.list[[i]]$CH4._ppm, na.rm=TRUE))^2, na.rm=TRUE)
-  ch4.ex.r2 = 1 - rss.ch4.i/tss.ch4.i
-  
-  rss.co2.i <- if(class(exp.co2.i) == "try-error") NA else sum(residuals(exp.co2.i)^2)
-  tss.co2.i <- if(class(exp.co2.i) == "try-error") NA else
-    sum((data.gga.co2.list[[i]]$CO2._ppm - mean(data.gga.co2.list[[i]]$CO2._ppm, na.rm=TRUE))^2, na.rm=TRUE)
-  co2.ex.r2 = 1 - rss.co2.i/tss.co2.i
-  
-  # Ex AIC
-  ch4.ex.aic = if(class(exp.ch4.i) == "try-error") NA else AIC(exp.ch4.i)
-  co2.ex.aic = if(class(exp.co2.i) == "try-error") NA else AIC(exp.co2.i)
-  
-  #Ex standard error of k
-  ch4.ex.se = if(class(exp.ch4.i) == "try-error") NA else sqrt(diag(vcov(exp.ch4.i)))[3]
-  co2.ex.se = if(class(exp.co2.i) == "try-error") NA else sqrt(diag(vcov(exp.co2.i)))[3]
-  
-  # Ex slope
-  coef.exp.ch4.i <- if(class(exp.ch4.i) == "try-error") NA else coef(exp.ch4.i)
-  ch4.ex.slope = if(class(exp.ch4.i) == "try-error") NA else
-    coef.exp.ch4.i["k"]*(coef.exp.ch4.i["cmax"]-coef.exp.ch4.i["b"])  # ppm s-1
-  
-  coef.exp.co2.i <- if(class(exp.co2.i) == "try-error") NA else coef(exp.co2.i)
-  co2.ex.slope = if(class(exp.co2.i) == "try-error") NA else
-    coef.exp.co2.i["k"]*(coef.exp.co2.i["cmax"]-coef.exp.co2.i["b"])  # ppm s-1
-  
-  #Ex k
-  ch4.ex.k = if(class(exp.ch4.i) == "try-error") NA else
-    coef.exp.ch4.i["k"]
-  co2.ex.k = if(class(exp.co2.i) == "try-error") NA else
-    coef.exp.co2.i["k"]
-  
-  # Emission rate.  Assumes atmospheric pressure of 1 atm.
-  # Converting from parts per million to umole cross out.  No conversion factor necessary. Dome area = 0.2 m2
-  ch4.lm.drate.i.umol.s <- ((volume.i * 1 * slope.ch4.i) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CH4 s-1
-  ch4.lm.drate.mg.h = if (is.na(ch4.lm.drate.i.umol.s[1,]))  # throws error if no data
-    NA else
-      ch4.lm.drate.i.umol.s * (16/1000) * (60*60)  # mg CH4 m-2 h-1
-  
-  co2.lm.drate.i.umol.s <- ((volume.i * 1 * slope.co2.i) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CO2 s-1
-  co2.lm.drate.mg.h =  if  (is.na(co2.lm.drate.i.umol.s[1,])) # throws error if no data
-    NA else
-      co2.lm.drate.i.umol.s * (44/1000) * (60*60)  #mg CO2 m-2 h-1
-  
-  ch4.ex.drate.i.umol.s <- ((volume.i * 1 * ch4.ex.slope) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CH4 s-1
-  ch4.ex.drate.mg.h = if (is.na(ch4.lm.drate.i.umol.s[1,])) # throws error if no data
-    NA else
-      ch4.ex.drate.i.umol.s * (16/1000) * (60*60)  # mg CH4 m-2 h-1
-  
-  co2.ex.drate.i.umol.s <- ((volume.i * 1 * co2.ex.slope) / (0.082057 * (temp.i + 273.15))) / 0.2 #umol CO2 s-1
-  co2.ex.drate.mg.h =  if (is.na(co2.lm.drate.i.umol.s[1,])) # throws error if no data
-    NA else
-      co2.ex.drate.i.umol.s * (44/1000) * (60*60)  #mg CO2 m-2 h-1
-  
-  co2Flag<-data.gga.co2.list[[i]]$co2Flag[1]
-  ch4Flag<-data.gga.ch4.list[[i]]$ch4Flag[1]
-  nco2<-length(data.gga.co2.list[[i]]$CO2._ppm)
-  nch4<-length(data.gga.ch4.list[[i]]$CH4._ppm)
-  dh2o<-max(data.gga.ch4.list[[i]]$H2O._ppm)-min(data.gga.ch4.list[[i]]$H2O._ppm)
-  mh2o<-mean(data.gga.ch4.list[[i]]$H2O._ppm)
-  co2_deployment_length<-ifelse(as.numeric(max(data.gga.co2.list[[i]]$elapTime))=="-Inf",NA, as.numeric(max(data.gga.co2.list[[i]]$elapTime)))
-  ch4_deployment_length<-ifelse(as.numeric(max(data.gga.ch4.list[[i]]$elapTime))=="-Inf",NA, as.numeric(max(data.gga.ch4.list[[i]]$elapTime)))
-  
-  out<-data.frame(site_id, lake_id, visit, 
-                  ch4.lm.slope, ch4.lm.drate.mg.h, 
-                  ch4.lm.aic, ch4.lm.r2, ch4.lm.se, ch4.lm.pval,
-                  ch4.ex.aic, ch4.ex.se, ch4.ex.r2, ch4.ex.slope, 
-                  ch4.ex.drate.mg.h, ch4.ex.k, ch4Flag,
-                  co2.lm.slope, co2.lm.drate.mg.h, 
-                  co2.lm.aic, co2.lm.r2, co2.lm.se, co2.lm.pval,
-                  co2.ex.aic, co2.ex.se, co2.ex.r2, co2.ex.slope, 
-                  co2.ex.k, co2.ex.drate.mg.h,co2Flag,nco2,nch4,dh2o,mh2o, 
-                  co2_deployment_length, ch4_deployment_length, temp.i, row.names = i)
-  colnames(out)<-c("site_id", "lake_id", "visit", 
-                   "ch4.lm.slope", "ch4.lm.drate.mg.h", 
-                   "ch4.lm.aic", "ch4.lm.r2", "ch4.lm.se", "ch4.lm.pval",
-                   "ch4.ex.aic", "ch4.ex.se", "ch4.ex.r2", "ch4.ex.slope", 
-                   "ch4.ex.drate.mg.h", "ch4.ex.k", "ch4Flag",
-                   "co2.lm.slope", "co2.lm.drate.mg.h", 
-                   "co2.lm.aic", "co2.lm.r2", "co2.lm.se", "co2.lm.pval",
-                   "co2.ex.aic", "co2.ex.se", "co2.ex.r2", "co2.ex.slope", 
-                   "co2.ex.k", "co2.ex.drate.mg.h","co2Flag","nco2","nch4",
-                   "dh2o","mh2o","co2_deployment_length","ch4_deployment_length",
-                   "air_temp")
+OUTbch4<-do.call(bind_rows, OUTCH4)%>%
+    filter(!is.na(lake_id))
+OUTbco2<-do.call (bind_rows, OUTCO2)%>%
+  filter(!is.na(lake_id))
 
-  OUT[[i]] = out
-  
-  rm(co2Flag)
-  
-  # Plots
-  # CH4 first
-  # ch4.ex.pred <- try(
-  #   data.frame(
-  #     ch4.pred = predict(
-  #       exp.ch4.i,newdata = data.i.ch4), # pred values from exponential model
-  #     elapTime = data.i.ch4$elapTime),
-  #   silent = TRUE)
-  # 
-  # ch4.title <- paste(OUT[i, "site"], # plot title
-  #                    OUT[i, "lake_id"],
-  #                    OUT[i, "visit"],
-  #                    "ex.r2=",
-  #                    round(OUT[i, "ch4.ex.r2"], 2),
-  #                    "ex.AIC=",
-  #                    round(OUT[i, "ch4.ex.aic"],2),
-  #                    "ex.rate=",
-  #                    round(OUT[i, "ch4.ex.drate.mg.h"], 2),
-  #                    "\n lm.r2=",
-  #                    round(OUT[i, "ch4.lm.r2"],2),
-  #                    "lm.AIC=",
-  #                    round(OUT[i, "ch4.lm.aic"],2),
-  #                    "lm.rate=",
-  #                    round(OUT[i, "ch4.lm.drate.mg.h"], 2),
-  #                    sep=" ")
-  # 
-  # p.ch4 <- ggplot(data.i.ch4, aes(as.numeric(elapTime), CH4._ppm)) +
-  #   geom_point() +
-  #   xlab("Seconds") +
-  #   ggtitle(ch4.title) +
-  #   stat_smooth(method = "lm", se=FALSE)
-  # if (class(exp.ch4.i) == "try-error") p.ch4 else  # if exp model worked, add exp line
-  #   p.ch4 <- p.ch4 + geom_line(data=ch4.ex.pred, aes(as.numeric(elapTime), ch4.pred), color = "red")
-  # print(p.ch4)
-  # 
-  # 
-  # # CO2 models
-  # co2.ex.pred <- try(
-  #   data.frame(co2.pred = predict(
-  #     exp.co2.i, newdata = data.i.co2),  # pred data from exp model
-  #     elapTime = data.i.co2$elapTime),
-  #   silent = TRUE)
-  # 
-  # co2.title <- paste(OUT[i, "site"], # plot title
-  #                    OUT[i, "lake_id"],
-  #                    OUT[i, "visit"],
-  #                    "ex.r2=",
-  #                    round(OUT[i, "co2.ex.r2"], 2),
-  #                    "ex.AIC=",
-  #                    round(OUT[i, "co2.ex.aic"],2),
-  #                    "ex.rate=",
-  #                    round(OUT[i, "co2.ex.drate.mg.h"], 2),
-  #                    "\n lm.r2=",
-  #                    round(OUT[i, "co2.lm.r2"],2),
-  #                    "lm.AIC=",
-  #                    round(OUT[i, "co2.lm.aic"],2),
-  #                    "lm.rate=",
-  #                    round(OUT[i, "co2.lm.drate.mg.h"], 2),
-  #                    sep=" ")
-  # 
-  # p.co2 <- ggplot(data.i.co2, aes(as.numeric(elapTime), CO2._ppm)) +
-  #   geom_point() +
-  #   xlab("Seconds") +
-  #   ggtitle(co2.title) +
-  #   stat_smooth(method = "lm", se=FALSE)
-  # if (class(exp.co2.i) == "try-error") p.co2 else  # if exp model worked, add exp line
-  #   p.co2 <- p.co2 + geom_line(data=co2.ex.pred,
-  #                              aes(as.numeric(elapTime), co2.pred),
-  #                              color = "red")
-  # print(p.co2)
-  # }
-  
-}
+OUTb<-full_join(OUTbch4,OUTbco2)
 
-#pdf("output/figures/curveFits.pdf")
-#--------------------------------------
+#Now add in the "ch4Flag" from the adjData object so it carries all "B" flags (not just the ones where data was ultimately usable)
+adjDataC<-adjData %>%
+  select(lake_id,site_id,visit,ch4Flag)
 
-OUTb<-do.call(bind_rows, OUT)
+OUTb<-left_join(OUTb,adjDataC)
 
-#A lot faster to run now
 #save(OUTb, file="output/diffusiveOUT.RData")
 #load("output/diffusiveOUT.RData") # load if not run above
 
@@ -314,20 +294,24 @@ OUTb<-do.call(bind_rows, OUT)
 # Include is.na(ex.aic) to accommodate this.
 
 OUT2 <- mutate(OUTb,
-               co2.best.model= case_when(co2Flag=="U"~"linear",
+               co2.best.model= case_when(is.na(co2.ex.drate.mg.h) & is.na(co2.lm.drate.mg.h) ~ NA,
+                                         co2Flag=="U"~"linear",
                                          co2.lm.aic <= co2.ex.aic ~ "linear",
-                                         is.na(co2.ex.k) ~ "linear",
+                                         is.na(co2.ex.aic) ~ "linear",
                                                TRUE ~ "exponential"),
               co2_drate_mg_h_best = case_when(co2.best.model == "linear" ~ co2.lm.drate.mg.h,
                                               TRUE ~ co2.ex.drate.mg.h),
-              ch4.best.model = case_when(ch4.lm.aic <= ch4.ex.aic ~ "linear",
+              ch4.best.model = case_when(is.na(ch4.ex.drate.mg.h) & is.na(ch4.lm.drate.mg.h)~NA,
+                                         ch4.lm.aic <= ch4.ex.aic ~ "linear",
                                          is.na(ch4.ex.aic) ~ "linear",
                                          TRUE ~ "exponential"),
               ch4_drate_mg_h_best = case_when(ch4.best.model == "linear"~ch4.lm.drate.mg.h,
                                               TRUE ~ ch4.ex.drate.mg.h),
-              ch4.se.overlap = case_when (ch4.best.model == "linear" ~ abs(ch4.lm.slope)-ch4.lm.se,
+              ch4.se.overlap = case_when (is.na(ch4.best.model) ~ NA,
+                                          ch4.best.model == "linear" ~ abs(ch4.lm.slope)-ch4.lm.se,
                                           TRUE ~ abs(ch4.ex.k) - ch4.ex.se),
-              co2.se.overlap = case_when (co2.best.model == "linear" ~ abs(co2.lm.slope)-co2.lm.se,
+              co2.se.overlap = case_when (is.na(co2.best.model)~ NA,
+                                          co2.best.model == "linear" ~ abs(co2.lm.slope)-co2.lm.se,
                                           TRUE ~ abs(co2.ex.k) - co2.ex.se),
               ch4.r2 = case_when (ch4.best.model == "linear" ~ ch4.lm.r2,
                                   TRUE ~ ch4.ex.r2),
@@ -343,16 +327,13 @@ test<-OUT2 %>%
   summarise(a=length(!is.na(co2_drate_mg_h_best)),b=length(!is.na(ch4_drate_mg_h_best)),
             sd_CO2=sd(!is.na(co2_drate_mg_h_best)),sd_CH4=sd(!is.na(ch4_drate_mg_h_best)))
 
-#Fraction of usable ch4 data
-(1836-(length(filter(OUT2,is.na(ch4_drate_mg_h_best)))))/1836
-#Fraction of usable co2 data
-(1836-(length(filter(OUT2,is.na(co2_drate_mg_h_best)))))/1836
+
 
 #Maximum methane diffusion rate whose standard error overlaps zero
 #none
 a<-filter(OUT2,ch4.se.overlap<0)
 
-#there were 3 carbon dioxide rates whose standard errors overlap zero
+#there were 6 carbon dioxide rates whose standard errors overlap zero
 b<-filter(OUT2,co2.se.overlap<0)
 
 # Inspect r2.
@@ -361,27 +342,22 @@ plot(with(OUT2,ifelse(co2.best.model == "linear",
 plot(with(OUT2,ifelse(ch4.best.model == "linear", 
                      ch4.lm.r2, ch4.ex.r2)))  # CH4:  some low ones to investigate
 
-#In response to a reviewer, we will now provide a rate when  r2 of best model < 0.9 
-#We will also provide the r2 values so users can choose on their own
+#In response to a reviewer, we will now set values to N when r2 of best model < 0.9 
+#We will also provide the r2 values 
 #Consistent with previous approach, when the standard error of the slope overlaps zero, then set to 0
 OUT2 <- mutate(OUT2, 
               co2_drate_mg_h_best = case_when(
+                co2.se.overlap<0  ~ 0,
                 (co2.lm.aic < co2.ex.aic | is.na(co2.ex.aic)) & co2.lm.r2 < 0.9 ~ NA_real_,
                 (co2.ex.aic < co2.lm.aic) & co2.ex.r2 < 0.9 ~ NA_real_,
-                # this retains low r2 model fits, but assigns a rate of 0
-                co2.se.overlap<0  ~ 0,
                 TRUE ~ co2_drate_mg_h_best),
         
               ch4_drate_mg_h_best = case_when(
+                ch4.se.overlap<0 ~ 0,
                 (ch4.lm.aic < ch4.ex.aic | is.na(ch4.ex.aic)) & ch4.lm.r2 < 0.9 ~ NA_real_,
                 (ch4.ex.aic < ch4.lm.aic) & ch4.ex.r2 < 0.9 ~ NA_real_,
-                # this retains low r2 model fits, but assigns a rate of 0
-                ch4.se.overlap<0 ~ 0,
                 TRUE ~ ch4_drate_mg_h_best))
 
-#If floating chamber is set to NA then deployment length should also be NA
-# OUT2$ch4_deployment_length<-ifelse(is.na(OUT2$ch4_best_model),NA,OUT2$ch4_deployment_length)
-# OUT2$co2_deployment_length<-ifelse(is.na(OUT2$co2_best_model),NA,OUT2$co2_deployment_length)
 
 # Run through janitor to enforce SuRGE name conventions
 OUT2 <- janitor::clean_names(OUT2) %>%
@@ -389,14 +365,15 @@ OUT2 <- janitor::clean_names(OUT2) %>%
 
 #Calculate how many sites had missing diffusion due to bubbling 
 
-test<-filter(OUT2,ch4flag=="B")
-test<-test %>%
+test<-filter(OUT2,ch4flag=="B") #246
+test<-filter(test, is.na(ch4_drate_mg_h_best)) #118
+test<-test %>% #lake 17 had 7 sites excluded due to bubbles
   group_by(lake_id,visit)%>%
   summarise(siten=length(site_id))
 
 #how many sites had a slope overlapping zero?
-test<-filter(OUT2, co2_se_overlap<0)
-test<-filter(OUT2, ch4_se_overlap<0)
+test<-filter(OUT2, co2_se_overlap<0) #6
+test<-filter(OUT2, ch4_se_overlap<0) #0
 test<-filter(OUT2, ch4_r2<0.9)
 test<-filter(OUT2, co2_r2<0.9)
 
