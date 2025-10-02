@@ -139,19 +139,25 @@ met_temp <- met_temp %>%
 # GATHER ELEVATION DATA FOR BAROMETRIC PRESSURE CORRECTIONS
 
 # st_read(paste0("/vsizip/", userPath, "lakeDsn/2016_survey/brookville/bro
-lagos_elev<- readr::read_csv(paste0(userPath, 
-                         "data/siteDescriptors/lake_information.csv"))
-
-elevation_lagos<- lagos_elev %>%
-  filter(lagoslakeid %in% lagos_links$lagoslakeid) %>%
-  select (lagoslakeid,lake_elevation_m,lake_nhdid) 
-  # filter(!is.na(lagoslakeid)) %>%
-  # mutate(lagoslakeid=as.numeric(lagoslakeid))
-
-el<-left_join(elevation_lagos, lagos_links)
-
-els<-left_join(lagos_links,el)%>%
-  select(lake_id, lake_elevation_m)
+# lagos_elev<- readr::read_csv(paste0(userPath, 
+#                          "data/siteDescriptors/lake_information.csv"))
+# 
+# elevation_lagos<- lagos_elev %>%
+#   filter(lagoslakeid %in% lagos_links$lagoslakeid) %>%
+#   select (lagoslakeid,lake_elevation_m,lake_nhdid) 
+#   # filter(!is.na(lagoslakeid)) %>%
+#   # mutate(lagoslakeid=as.numeric(lagoslakeid))
+# 
+# el<-left_join(elevation_lagos, lagos_links)
+# 
+# els<-left_join(lagos_links,el)%>%
+#   select(lake_id, lake_elevation_m)%>%
+#   distinct()%>%
+#   #elevations are in meters above sea level. Elevations for lakes 1009 and 1010 are in NGVD29 datum 
+#   mutate(lake_elevation_m=ifelse(!is.na(lake_elevation_m),lake_elevation_m,
+#                                          ifelse(lake_id=="1000",96.2,
+#                                                 ifelse(lake_id=="1009",313.3 ,
+#                                                        ifelse(lake_id=="1010", 223.1, elevation)))))
 
 
 elevation<-lake.list.all %>%
@@ -166,8 +172,7 @@ elevation<-lake.list.all %>%
                                             ifelse(lake_id=="1009",313.3 ,
                                                   ifelse(lake_id=="1010", 223.1, elevation)))))%>%
   group_by(lake_id) %>%
-  summarise(lake_elevation=lake_surface_elevation_m[1])%>%
-  mutate(lake_elevation_units="meters above sea level")
+  summarise(lake_elevation=lake_surface_elevation_m[1])
 #Write csv for jeremy
 write.csv(elevation,file="output/SuRGE_elevations.csv")
   

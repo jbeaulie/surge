@@ -138,6 +138,11 @@ master_dictionary <- tribble(~variable, ~definition,
                              "depth_cat", "Depth category used for the SuRGE survey design",
                              "chla_cat", "Chlorophyll a category used for the SuRGE survery design",
                              "study", "Survey effort the reservoir was included in. See data paper Figure 1.",
+                             "lab", "the lab that conducted the reservoir survey as a three letter code",
+                             
+                             #elevation
+                             "lake_elevation", "elevation of the lake surface used for correcting ERA-5 barometric pressure data",
+                             "lake_elevation_units", "units for lake_elevation",
                              
                              # emissions (point)
                              "air_temp", "temperature of the air at the time the floating chamber was deployed",
@@ -1117,7 +1122,7 @@ lake_scale_data <- list(
   bind_rows(lake.list, lake.list.2016) %>%
     filter(eval_status_code == "S",
            visit == 1) %>% 
-    select(lake_id, wgt, ag_eco9, ag_eco9_nm, depth_cat, chla_cat) %>%
+    select(lake_id, wgt, ag_eco9, ag_eco9_nm, depth_cat, chla_cat, lab) %>%
     mutate(wgt_units = "dimensionless",
            study = case_when(lake_id %in% 1:998 ~ "SuRGE",
                              lake_id %in% 1001:1032 ~ "2016 Regional Survey",
@@ -1157,7 +1162,14 @@ lake_scale_data <- list(
     mutate(name = paste0(name, "_visit", visit)) %>%
     select(-visit) %>%
     # enforce digits, otherwise many digits are shown when converted to character below
-    mutate(value = format(round(value, 2), nsmall = 2))
+    mutate(value = format(round(value, 2), nsmall = 2)),
+  
+  
+  #Elevation 
+  elevation %>%
+    mutate(lake_elevation=format(round(lake_elevation, 1), nsmall = 1))%>%
+    pivot_longer(!lake_id)%>%
+    mutate (units = "meters above sea level")
   
 ) %>% # close list
   map(., ~.x %>% mutate(value = as.character(value))) %>% # character to enable all to collapse into one column
