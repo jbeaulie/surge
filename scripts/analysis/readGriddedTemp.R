@@ -138,41 +138,32 @@ met_temp <- met_temp %>%
 
 # GATHER ELEVATION DATA FOR BAROMETRIC PRESSURE CORRECTIONS
 
-# st_read(paste0("/vsizip/", userPath, "lakeDsn/2016_survey/brookville/bro
-# lagos_elev<- readr::read_csv(paste0(userPath, 
-#                          "data/siteDescriptors/lake_information.csv"))
-# 
-# elevation_lagos<- lagos_elev %>%
-#   filter(lagoslakeid %in% lagos_links$lagoslakeid) %>%
-#   select (lagoslakeid,lake_elevation_m,lake_nhdid) 
-#   # filter(!is.na(lagoslakeid)) %>%
-#   # mutate(lagoslakeid=as.numeric(lagoslakeid))
-# 
-# el<-left_join(elevation_lagos, lagos_links)
-# 
-# els<-left_join(lagos_links,el)%>%
-#   select(lake_id, lake_elevation_m)%>%
-#   distinct()%>%
-#   #elevations are in meters above sea level. Elevations for lakes 1009 and 1010 are in NGVD29 datum 
-#   mutate(lake_elevation_m=ifelse(!is.na(lake_elevation_m),lake_elevation_m,
-#                                          ifelse(lake_id=="1000",96.2,
-#                                                 ifelse(lake_id=="1009",313.3 ,
-#                                                        ifelse(lake_id=="1010", 223.1, elevation)))))
+lagos_elev<- readr::read_csv(paste0(userPath,
+                         "data/siteDescriptors/lake_information.csv"))
 
+elevation_lagos<- lagos_elev %>%
+  filter(lagoslakeid %in% lagos_links$lagoslakeid) %>%
+  select (lagoslakeid,lake_elevation_m,lake_nhdid)
+
+el<-left_join(elevation_lagos, lagos_links)%>%
+  select(lake_id,lake_elevation_m)%>%
+  distinct()
 
 elevation<-lake.list.all %>%
   select(lake_id,elevation) %>%
   mutate(lake_id= as.numeric(case_when(lake_id %in% c("69_riverine", "69_transitional", "69_lacustrine") ~ "69",
                                       lake_id %in% c("70_riverine", "70_transitional", "70_lacustrine") ~ "70",
                                       TRUE ~ lake_id)))%>%
-  left_join(els, by="lake_id")%>%
+  left_join(el)%>%
   #elevations are in meters above sea level. Elevations for lakes 1009 and 1010 are in NGVD29 datum 
-  mutate(lake_surface_elevation_m=ifelse(!is.na(lake_elevation_m),lake_elevation_m,
-                                         ifelse(lake_id=="1000",96.2,
+  mutate(lake_elevation=ifelse(!is.na(lake_elevation_m), lake_elevation_m,
+                               ifelse(lake_id=="1000",96.2,
                                             ifelse(lake_id=="1009",313.3 ,
-                                                  ifelse(lake_id=="1010", 223.1, elevation)))))%>%
+                                                  ifelse(lake_id=="1010", 223.1, 
+                                                         elevation)))))%>%
   group_by(lake_id) %>%
-  summarise(lake_elevation=lake_surface_elevation_m[1])
+  summarise(lake_elevation=lake_elevation[1])
+
 #Write csv for jeremy
 write.csv(elevation,file="output/SuRGE_elevations.csv")
   
