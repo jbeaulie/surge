@@ -162,7 +162,8 @@ elevation<-lake.list.all %>%
                                                   ifelse(lake_id=="1010", 223.1, 
                                                          elevation)))))%>%
   group_by(lake_id) %>%
-  summarise(lake_elevation=lake_elevation[1])
+  summarise(lake_elevation=lake_elevation[1])%>%
+  filter(lake_id != 1033) # omit Falls Lake
 
 #Write csv for jeremy
 write.csv(elevation,file="output/SuRGE_elevations.csv")
