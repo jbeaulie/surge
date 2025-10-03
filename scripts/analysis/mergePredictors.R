@@ -286,11 +286,15 @@ save(dat, file = paste0("output/dat_", Sys.Date(), ".RData"))
 
 ## 1.1 aggregate emission rates across all lakes including transitional/riverine/lacustrine-----
 emissions_agg <- dat %>%
-  # All NAs break cont_analysis. No CH4 diffusion or from lake 253, set to 0
+  # All NAs break cont_analysis. 
+  # No CH4 diffusion or from lake 253, set to 0
+  # No CO2 diffusion or total from lake 240, visit 1, set to 0
   # then filter results at end
   mutate(ch4_diffusion_best = replace(ch4_diffusion_best, lake_id == 253, 0),
          #ch4_diffusion_best = ifelse(ch4_r2<0.9,NA,ch4_diffusion_best), #need to discuss this with Jake
          ch4_total = replace(ch4_total, lake_id == 253, 0),  
+         co2_diffusion_best = replace(co2_diffusion_best, lake_id == 240 & visit == 1, 0),
+         co2_total = replace(co2_total, lake_id == 240 & visit == 1, 0),
          # add subsection identifiers back into lake_id
          lake_id = as.character(lake_id),
          lake_id = case_when(grepl("lacustrine", site_id) ~ paste0(lake_id, "_lacustrine"),
@@ -326,7 +330,7 @@ emissions_agg <- dat %>%
                                   grepl("co2", indicator) ~ "mg_co2_m2_h",
                                   TRUE ~"Fly you fools")) %>%
          # Remove rows where emission = 0. This occurs when data were unavailable
-         # and set to 0 so cont_analysis wouldn't break (e.g. 253, see above)
+         # and set to 0 so cont_analysis wouldn't break (e.g. 253, 240, see above)
          filter(estimate != 0) %>% 
          select(-type, -subpopulation, -n_resp) %>%
          relocate(lake_id, visit) %>%
