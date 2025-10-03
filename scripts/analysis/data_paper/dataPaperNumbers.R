@@ -180,7 +180,7 @@ bind_rows(
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank()) 
 
-ggsave(filename = "scripts/analysis/data_paper/figure_4_k600.tiff", width = 3, height = 2, units = "in")
+ggsave(filename = "scripts/analysis/data_paper/figure_4_k600.png", width = 3, height = 2, units = "in")
 
 # 3.3 k600_ch4 vs k600_co2
 t.test(dissolved_gas_k$k_ch4_600, dissolved_gas_k$k_co2_600, paired = TRUE) # p = 0.12
