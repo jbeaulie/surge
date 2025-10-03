@@ -138,8 +138,13 @@ met_temp <- met_temp %>%
 
 # GATHER ELEVATION DATA FOR BAROMETRIC PRESSURE CORRECTIONS
 
-lagos_elev<- readr::read_csv(paste0(userPath,
-                         "data/siteDescriptors/lake_information.csv"))
+con <- gzfile(paste0(userPath,
+                     "data/siteDescriptors/lake_information.csv"), "rt")  # "rt" for reading text
+lagos_elev <- read.csv(con)            
+close(con)  
+
+# lagos_elev<- readr::read_csv(paste0(userPath,
+#                          "data/siteDescriptors/lake_information.csv"))
 
 elevation_lagos<- lagos_elev %>%
   filter(lagoslakeid %in% lagos_links$lagoslakeid) %>%
