@@ -139,7 +139,7 @@ met_temp <- met_temp %>%
 # GATHER ELEVATION DATA FOR BAROMETRIC PRESSURE CORRECTIONS
 
 con <- gzfile(paste0(userPath,
-                     "data/siteDescriptors/lake_information.csv"), "rt")  # "rt" for reading text
+                     "data/siteDescriptors/lake_information.csv.gz"), "rt")  # "rt" for reading text
 lagos_elev <- read.csv(con)            
 close(con)  
 
