@@ -160,7 +160,8 @@ depth_profile_2016 <- read_csv(paste0(userPath, "data/CIN/2016_survey/depthProfi
            TRUE ~ "FLY UOU FOOLS"), # 
          .names = "{col}_units"),
          visit = 1,
-         site_id = as.numeric(gsub(".*?([0-9]+).*", "\\1", site_id))) %>%
+         site_id = as.numeric(gsub(".*?([0-9]+).*", "\\1", site_id)),
+         sample_date = as.Date(sample_date, format = "%m/%d/%Y")) %>%
   # bring in SuRGE lake_id
   left_join(lake.list.2016 %>% select(lake_id, eval_status_code_comment), 
             by = c("lake_name" = "eval_status_code_comment")) %>%
