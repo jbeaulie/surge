@@ -2,26 +2,24 @@
 
 # READ DATA------------
 # decadal means
-met_temp <- read_csv(paste0(userPath, "data/siteDescriptors/RTP_gridded_data/Temp/Lake_ERA5LAND_TEMP_R0.csv")) %>%
+met_temp <- read_csv(paste0(userPath, "data/siteDescriptors/RTP_gridded_data/Lake_ERA5LAND_TEMP_R0.csv")) %>%
   janitor::clean_names()
 
 # on hour of chamber deployment
 met_chamber <- read_csv(file.path(userPath,"/data/siteDescriptors/",
                                   "RTP_gridded_data/Sites/Chamber/",
-                                  "Precip_Temp_Wind/",
-                                  "Sites_Chamber_Precip_Temp_Wind.csv")) %>%
+                                  "Chamber_Precip_Temp_Wind.csv")) %>%
   janitor::clean_names() %>%
-  select(-wind_u_ms_1, -wind_v_ms_1) %>% # don't need wind components
+  select(-wind_u_ms, -wind_v_ms) %>% # don't need wind components
   mutate(precipitation_units = "m",
          wind_speed_units = "m s-1",
-         temp_air_2m = temp_air_2m_k - 273.15,
+         temp_air_2m = temperature_2m_k - 273.15,
          temp_air_2m_units = "C",
-         temp_lake_mix_layer_c = temp_lake_mix_layer_k - 273.15,
          date_time_units = "UTC") %>%
   rename(precipitation = precipitation_m,
-         wind_speed = wind_speed_ms_1,
+         wind_speed = wind_speed_ms,
          date_time = std_time) %>%
-  select(-temp_lake_mix_layer_k, -temp_air_2m_k)
+  select(-temperature_2m_k)
 
 # DECADAL DATA PREVIEW-------
 # French Creek example
@@ -81,6 +79,7 @@ met_temp %>%
 
 
 # CHAMBER DATA PREVIEW
+### NEW DATA FILES DON'T HAVE ERA5 TEMP [10/15/2025]
 era5_bias_dat <- inner_join(met_chamber, 
                             fld_sheet %>%
                               select(lake_id, site_id, visit, temp_s) %>%
