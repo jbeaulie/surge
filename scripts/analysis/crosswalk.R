@@ -99,8 +99,19 @@ nla17 <- read_csv(here("inputData/nla2017/nla_2017_profile-data.csv")) |>
   sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
 surge_nla17 <- st_join(surge_reservoirs, nla17)
 st_geometry(surge_nla17) <- NULL
-surge_nla17 <- unique(surge_nla17) |>
-  select(-lake_name)
+manual_add_issue_162 <- tibble(lake_id = c(1,76,77,209,239,247,323),
+                               nla17_site_id =
+                                 c("NLA17_AL-10003",
+                                   "NLA17_MT-10007",
+                                   "NLA17_MT-10013",
+                                   "NLA17_KY-10023",
+                                   "NLA17_OR-10006",
+                                   "NLA17_NM-10049",
+                                   "NLA17_ID-10175"))
+surge_nla17 <- select(surge_nla17, -lake_name) |>
+  bind_rows(manual_add_issue_162) |>
+  unique()
+
 
 # Column 19, 54, and 21 have some characters in them.  If important for
 # crosswalk, clean up.
