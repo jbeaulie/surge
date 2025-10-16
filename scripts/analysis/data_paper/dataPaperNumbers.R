@@ -29,18 +29,18 @@ dat %>%
 mes<-dat %>%
   filter(!is.na(ch4_diffusion_best))%>%
   mutate(ch4diff=ch4_diffusion_best*24)
-#2188 individual methane measurements
+#2104 individual methane measurements
 mez<-mes %>%
   filter(ch4_diffusion_best==0)
-#80 are zero values
+#none are zero values
 
 cas<-dat %>%
   filter(!is.na(co2_diffusion_best))%>%
   mutate(co2diff=co2_diffusion_best*24)
-#2141 individual measurements
+#1824 individual measurements
 caz<-cas %>%
   filter(co2_diffusion_best==0)
-#317 are zero values
+# are zero values
 
 meb<-dat %>%
   filter(!is.na(ch4_ebullition))
@@ -50,19 +50,19 @@ ceb<-dat %>%
 
 mt<-dat %>%
   filter(!is.na(ch4_total))
-#2111 measurements of total methane flux
+#2030 measurements of total methane flux
 ct<-dat %>%
   filter(!is.na(co2_total))
-#2066 measurements of total carbon dioxide flux
+#1864 measurements of total carbon dioxide flux
 
 #Proportion of diffusive emissions that were zero:
 zm<-dat%>%
   filter(ch4_diffusion_best==0)
-80/2188
+0
 
 zc<-dat%>%
   filter(co2_diffusion_best==0)
-317/2141
+6/1824
 
 #Smallest detectable diffusive fluxes
 ms<-mes %>%
@@ -79,6 +79,7 @@ summary(dat$ch4_deployment_length)
 
 #unstable starts
 nrow(filter(dat, co2flag=="U"))
+1067/1824
 
 # 3. K600 TECHNICAL VALIDATION--------------
 # 3.1 CO2 direction and gas under/supersaturation
@@ -179,7 +180,7 @@ bind_rows(
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank()) 
 
-ggsave(filename = "scripts/analysis/data_paper/figure_4_k600.tiff", width = 3, height = 2, units = "in")
+ggsave(filename = "scripts/analysis/data_paper/figure_4_k600.png", width = 3, height = 2, units = "in")
 
 # 3.3 k600_ch4 vs k600_co2
 t.test(dissolved_gas_k$k_ch4_600, dissolved_gas_k$k_co2_600, paired = TRUE) # p = 0.12

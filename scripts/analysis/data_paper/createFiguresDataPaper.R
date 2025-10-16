@@ -56,36 +56,43 @@ dat_all = read.csv("communications/manuscript/data_paper/4_emission_rate_points.
                               gas_name == "ch4" ~ "CH[4]"),
          rate_daily = rate_hourly * 24)
 
-sci.not.labels = c(bquote("-10^7"), bquote("-10^6"), bquote("-10^5"), bquote("-10^4"), 
-                   bquote("-10^3"), bquote("-10^2"), bquote("-10^1"),
-                   "0", bquote("10^1"), bquote("10^2"), bquote("10^3"), 
-                   bquote("10^4"), bquote("10^5"), bquote("10^6"), bquote("10^7"))
+# sci.not.labels = c(expression(-10^7), bquote("-10^6"), bquote("-10^5"), bquote("-10^4"), 
+#                    bquote("-10^3"), bquote("-10^2"), bquote("-10^1"),
+#                    "0", bquote("10^1"), bquote("10^2"), bquote("10^3"), 
+#                    bquote("10^4"), bquote("10^5"), bquote("10^6"), bquote("10^7"))
+# 
 
 
-fig_7<-ggplot() +
-  geom_density(data = dat_all, aes(x = rate_daily, y=..scaled.., fill = type, color = type), alpha = 0.3,
+sci.not.labels = c(expression(-10^7), expression(-10^6), expression(-10^5), expression(-10^4), 
+                   expression(-10^3), expression(-10^2), expression(-10^1),
+                   "0", expression(10^1), expression(10^2), expression(10^3), 
+                   expression(10^4), expression(10^5), expression(10^6), expression(10^7))
+
+
+fig_7 <- ggplot() +
+  geom_density(data = dat_all, aes(x = rate_daily, y=..scaled.., fill = gas_name, color = gas_name), alpha = 0.3,
                trim = T) +
   geom_vline(xintercept = 0, linetype = 2) +
-  facet_wrap(~ gas_name, scale = "free", ncol = 1, labeller = label_parsed) +
-  scale_x_continuous(trans = "pseudo_log", breaks = sort(breaks), expand = c(0.025, 0.025),
-                     labels = label_parsed(sci.not.labels)) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.025))) +
-  scale_color_brewer(palette = "Dark2", name = NULL) +
-  scale_fill_brewer(palette = "Dark2", name = NULL) +
+  facet_wrap(~ type, ncol = 1, labeller = label_parsed) +
+  scale_x_continuous(trans = "pseudo_log", breaks = sort(breaks), expand = c(0, 0),
+                     labels = sci.not.labels) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_color_brewer(palette = "Dark2", name = NULL, labels = c(bquote(CH[4]), bquote(CO[2]))) +
+  scale_fill_brewer(palette = "Dark2", name = NULL, labels = c(bquote(CH[4]), bquote(CO[2]))) +
   theme_bw()+
-  theme(axis.text.x = element_text(size = 9, color = "black"), #angle = 90, hjust = 1, vjust = 0.5),
+  theme(axis.text.x = element_text(size = 9, color = "black", vjust = 0), #angle = 90, hjust = 1, vjust = 0.5),
         axis.text.y = element_text(size = 9, color = "black"),
         axis.title = element_text(size = 9, color = "black"),
         legend.text = element_text(size = 9, color = "black"),
         legend.title = element_text(size = 9, color = "black"),
         strip.text = element_text(size = 9, color = "black"),
-        legend.position = c(0.91, 0.9),
+        legend.position = c(0.08, 0.51),
         legend.background = element_rect(color = "black"))+
   xlab(expression(paste("Emissions Rate (mg m"^"-2"~"d"^"-1"*")")))+
   ylab("Density (scaled)")
 
 
-ggsave("scripts/analysis/data_paper/figure_7.jpeg",width=6.5,height=4,
+ggsave(fig_7, filename = "scripts/analysis/data_paper/figure_7.jpeg",width=6,height=4,
       dpi=300)
 
 ### Unstable start plot

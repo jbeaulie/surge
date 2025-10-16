@@ -2,26 +2,24 @@
 
 # READ DATA------------
 # decadal means
-met_temp <- read_csv(paste0(userPath, "data/siteDescriptors/RTP_gridded_data/Temp/Lake_ERA5LAND_TEMP_R0.csv")) %>%
+met_temp <- read_csv(paste0(userPath, "data/siteDescriptors/RTP_gridded_data/Lake_ERA5LAND_TEMP_R0.csv")) %>%
   janitor::clean_names()
 
 # on hour of chamber deployment
 met_chamber <- read_csv(file.path(userPath,"/data/siteDescriptors/",
                                   "RTP_gridded_data/Sites/Chamber/",
-                                  "Precip_Temp_Wind/",
-                                  "Sites_Chamber_Precip_Temp_Wind.csv")) %>%
+                                  "Chamber_Precip_Temp_Wind.csv")) %>%
   janitor::clean_names() %>%
-  select(-wind_u_ms_1, -wind_v_ms_1) %>% # don't need wind components
+  select(-wind_u_ms, -wind_v_ms) %>% # don't need wind components
   mutate(precipitation_units = "m",
          wind_speed_units = "m s-1",
-         temp_air_2m = temp_air_2m_k - 273.15,
+         temp_air_2m = temperature_2m_k - 273.15,
          temp_air_2m_units = "C",
-         temp_lake_mix_layer_c = temp_lake_mix_layer_k - 273.15,
          date_time_units = "UTC") %>%
   rename(precipitation = precipitation_m,
-         wind_speed = wind_speed_ms_1,
+         wind_speed = wind_speed_ms,
          date_time = std_time) %>%
-  select(-temp_lake_mix_layer_k, -temp_air_2m_k)
+  select(-temperature_2m_k)
 
 # DECADAL DATA PREVIEW-------
 # French Creek example
@@ -81,6 +79,7 @@ met_temp %>%
 
 
 # CHAMBER DATA PREVIEW
+### NEW DATA FILES DON'T HAVE ERA5 TEMP [10/15/2025]
 era5_bias_dat <- inner_join(met_chamber, 
                             fld_sheet %>%
                               select(lake_id, site_id, visit, temp_s) %>%
@@ -138,36 +137,38 @@ met_temp <- met_temp %>%
 
 # GATHER ELEVATION DATA FOR BAROMETRIC PRESSURE CORRECTIONS
 
-# st_read(paste0("/vsizip/", userPath, "lakeDsn/2016_survey/brookville/bro
-lagos_elev<- readr::read_csv(paste0(userPath, 
-                         "data/siteDescriptors/lake_information.csv.gz"))
+con <- gzfile(paste0(userPath,
+                     "data/siteDescriptors/lake_information.csv.gz"), "rt")  # "rt" for reading text
+lagos_elev <- read.csv(con)            
+close(con)  
+
+# lagos_elev<- readr::read_csv(paste0(userPath,
+#                          "data/siteDescriptors/lake_information.csv"))
 
 elevation_lagos<- lagos_elev %>%
-  filter(lagoslakeid %in% locus_link_aggregated$lagoslakeid) %>%
-  select (lagoslakeid,lake_elevation_m,lake_nhdid) 
-  # filter(!is.na(lagoslakeid)) %>%
-  # mutate(lagoslakeid=as.numeric(lagoslakeid))
+  filter(lagoslakeid %in% lagos_links$lagoslakeid) %>%
+  select (lagoslakeid,lake_elevation_m,lake_nhdid)
 
-el<-left_join(elevation_lagos, locus_link_aggregated)
-
-els<-left_join(lagos_links,el)%>%
-  select(lake_id, lake_elevation_m)
-
+el<-left_join(elevation_lagos, lagos_links)%>%
+  select(lake_id,lake_elevation_m)%>%
+  distinct()
 
 elevation<-lake.list.all %>%
   select(lake_id,elevation) %>%
   mutate(lake_id= as.numeric(case_when(lake_id %in% c("69_riverine", "69_transitional", "69_lacustrine") ~ "69",
                                       lake_id %in% c("70_riverine", "70_transitional", "70_lacustrine") ~ "70",
                                       TRUE ~ lake_id)))%>%
-  left_join(els, by="lake_id")%>%
+  left_join(el)%>%
   #elevations are in meters above sea level. Elevations for lakes 1009 and 1010 are in NGVD29 datum 
-  mutate(lake_surface_elevation_m=ifelse(!is.na(lake_elevation_m),lake_elevation_m,
-                                         ifelse(lake_id=="1000",96.2,
+  mutate(lake_elevation=ifelse(!is.na(lake_elevation_m), lake_elevation_m,
+                               ifelse(lake_id=="1000",96.2,
                                             ifelse(lake_id=="1009",313.3 ,
-                                                  ifelse(lake_id=="1010", 223.1, elevation)))))%>%
+                                                  ifelse(lake_id=="1010", 223.1, 
+                                                         elevation)))))%>%
   group_by(lake_id) %>%
-  summarise(lake_elevation=lake_surface_elevation_m[1])%>%
-  mutate(lake_elevation_units="meters above sea level")
+  summarise(lake_elevation=lake_elevation[1])%>%
+  filter(lake_id != 1033) # omit Falls Lake
+
 #Write csv for jeremy
 write.csv(elevation,file="output/SuRGE_elevations.csv")
   

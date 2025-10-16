@@ -4,24 +4,6 @@ load(paste0(userPath, "data/CIN/2016_survey/eqAreaData.RData")) # loads eqAreaDa
 load(paste0(userPath, "data/CIN/2016_survey/deplyTimes.RData")) # loads chamber deployment/retrieval times (deplyTimes)
 air_temp_2016 <- read_csv(paste0(userPath, "data/CIN/2016_survey/air_temp.csv"))
 
-# recode diffusive emission rate data from NA to 0 if r2 < 0.9 to be consistent 
-# with SuRGE conventions
-
-eqAreaData <- eqAreaData %>%
-  mutate(
-    co2.drate.mg.h.best = case_when(
-      # if co2 diff is NA, but either a lm or ex was run, assume r2 of both models <0.9 and assign flux a 0.
-      is.na(co2.drate.mg.h.best) & (!is.na(co2.lm.r2) | !is.na(co2.ex.r2)) ~ 0,
-      TRUE ~ co2.drate.mg.h.best),
-    # recalculate total
-    co2.trate.mg.h = co2.drate.mg.h.best + co2.erate.mg.h,
-    ch4.drate.mg.h.best = case_when(
-      # if ch4 diff is NA, but either a lm or ex was run, assume r2 of both models <0.9 and assign flux a 0.      
-      is.na(ch4.drate.mg.h.best) & (!is.na(ch4.lm.r2) | !is.na(co2.lm.r2)) ~ 0,
-      TRUE ~ ch4.drate.mg.h.best),
-    # recalculate total
-    ch4.trate.mg.h = ch4.drate.mg.h.best + ch4.erate.mg.h
-  )
 
 # calculate duration of chamber deployment for CO2 and CH4
 deplyTimes <- deplyTimes %>%
@@ -86,6 +68,10 @@ dat_2016 <- dat_2016 %>%
                                       ch4_deployment_length < 30 ~ NA_real_,
                                       is.na(ch4_deployment_length) ~ NA_real_,
                                       TRUE ~ 999999999), # error flag
+    ch4_r2 = case_when(ch4_best_model =="linear" ~ ch4_lm_r2,
+                       ch4_best_model =="exponential" ~ ch4_ex_r2,
+                       is.na(ch4_best_model) ~ NA),
+    ch4flag = "NA",
     
     # CO2 next
     co2_drate_mg_h_best = case_when(co2_deployment_length >= 30 ~ co2_drate_mg_h_best,
@@ -95,6 +81,9 @@ dat_2016 <- dat_2016 %>%
     # can't calculate total is diffusion is NA
     co2_trate_mg_h = case_when(is.na(co2_drate_mg_h_best) ~ NA,
                                TRUE ~ co2_trate_mg_h),
+    co2_r2 = case_when(co2_best_model =="linear" ~ co2_lm_r2,
+                       co2_best_model =="exponential" ~ co2_ex_r2,
+                       is.na(co2_best_model) ~ NA),
     # set deployment time to NA if < 30 seconds
     co2_deployment_length = case_when(co2_deployment_length >= 30 ~ co2_deployment_length,
                                       co2_deployment_length < 30 ~ NA_real_,
@@ -103,8 +92,8 @@ dat_2016 <- dat_2016 %>%
   # grab required variables
   select(lake_name, site_id, 
          chla_sample, tn, tnh4, tno2, tno2_3, toc, tp, trp, 
-         ch4_drate_mg_h_best, ch4_erate_mg_h, ch4_trate_mg_h, #ch4_best_model,
-         co2_drate_mg_h_best, co2_erate_mg_h, co2_trate_mg_h, #co2_best_model,
+         ch4_drate_mg_h_best, ch4_erate_mg_h, ch4_trate_mg_h,ch4_r2, #ch4_best_model,
+         co2_drate_mg_h_best, co2_erate_mg_h, co2_trate_mg_h, co2_r2, #co2_best_model,
          n2o_erate_mg_h, 
          eb_ml_hr_m2, # volumetric_ebullition and volumetric_ebullition_units
          lat_samp, long_smp, # sample site coordinates lat and long
