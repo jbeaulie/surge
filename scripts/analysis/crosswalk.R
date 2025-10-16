@@ -229,4 +229,5 @@ surge_master_crosswalk_long <- pivot_longer(surge_master_crosswalk, 3:15,
   filter(join_id != "NA") |>
   unique()
 
-write_csv(surge_master_crosswalk_long, "output/crosswalk_long.csv")
+write_csv(surge_master_crosswalk_long,
+          "SuRGE_Sharepoint/data/siteDescriptors/crosswalk_long.csv")
